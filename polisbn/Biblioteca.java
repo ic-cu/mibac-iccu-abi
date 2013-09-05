@@ -124,9 +124,9 @@ public class Biblioteca
 		FileReader fr = null;
 		try
 		{
-			fr = new FileReader(new File("src/it/sbn/iccu/abi/polisbn/xmlmap.prop")); 
+			fr = new FileReader(new File("polisbn/xmlmap.prop")); 
 			xmlMap.load(fr);
-			fr = new FileReader(new File("src/it/sbn/iccu/abi/polisbn/outlook-from.map"));
+			fr = new FileReader(new File("polisbn/outlook-from.map"));
 			outlookMap.load(fr);
 			fr.close();
 		}
