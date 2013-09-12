@@ -19,7 +19,7 @@ public class DividiXML
 {
 
 	/*
-	 * Carica un file XML conforme al formato 1.5 e lo divide in file
+	 * Carica un file XML conforme al formato 1.6 e lo divide in file
 	 * più piccoli in base al numero di biblioteche
 	 */
 
@@ -34,7 +34,7 @@ public class DividiXML
 			 * esattamente il package contenente tutte le classi generate dal
 			 * compilatore XJC
 			 */
-			jc = JAXBContext.newInstance("it.sbn.iccu.abi.xml.xsd" );
+			jc = JAXBContext.newInstance("xml.xsd.v16" );
 
 			/* 
 			 * unmarshall è l'azione di caricare nelle classi create un file XML

@@ -14,7 +14,7 @@ public class TestXML
 		//t.lista(b);
 		System.out.println(t.controllaCodiciISIL(b));
 		//System.out.println(t.cercaCodiceCEI(b, new DB(DB.urlEsercizio)));
-		System.out.println(t.cercaInProvvisorio(b, new DB(DB.urlTest)));
+		System.out.println(t.cercaInProvvisorio(b, new DB(DB.urlTest, "abi",null)));
 	}
 }
 

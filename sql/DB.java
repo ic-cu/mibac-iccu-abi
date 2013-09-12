@@ -14,7 +14,8 @@ public class DB
 	public Connection conn;
 	public Connection connTest;
 	public static String urlTest = "jdbc:mysql://gauss/abi";
-	//public static String urlTest = "jdbc:postgresql://192.168.20.46:5432/abi_test3";
+	// public static String urlTest =
+	// "jdbc:postgresql://192.168.20.46:5432/abi_test3";
 	public static String urlEsercizio = "jdbc:postgresql://anagrafe.iccu.sbn.it:5432/abi2";
 	public static String urlEsercizioGiuliano = "jdbc:postgresql://192.168.20.131:5432/abi2";
 
@@ -38,7 +39,7 @@ public class DB
 		}
 		return temp;
 	}
-	
+
 	public ResultSet select(String query)
 	{
 		Statement stmt = null;
@@ -57,9 +58,11 @@ public class DB
 	}
 
 	/*
-	 * Costruttore parametrico
+	 * Costruttore parametrico. Le credenziali vanno ovviamente cambiate a seconda
+	 * delle reali implementazioni. Meglio sarebbe passare anche quelle al
+	 * costruttore, prelevandole magari da un file di Properties.
 	 */
-	public DB(String url)
+	public DB(String url, String username, String password)
 	{
 		try
 		{
@@ -71,33 +74,7 @@ public class DB
 		}
 		try
 		{
-			conn = DriverManager.getConnection(url, "abi", null);
-			if(conn == null)
-			{
-				err("Connessione nulla!");
-			}
-		}
-		catch(SQLException e)
-		{
-			err("ERROR: failed to connect!");
-		}
-	}
-
-	public DB()
-	{
-		try
-		{
-			Class.forName("org.postgresql.Driver");
-		}
-		catch(Exception e)
-		{
-			err("ERROR: failed to load JDBC driver.");
-		}
-		// String url = "jdbc:postgresql://192.168.20.131:5432/abi2";
-		String url = "jdbc:postgresql://anagrafe.iccu.sbn.it:5432/abi2";
-		try
-		{
-			conn = DriverManager.getConnection(url, "andrea", "andrea");
+			conn = DriverManager.getConnection(url, username, password);
 			if(conn == null)
 			{
 				err("Connessione nulla!");
@@ -114,8 +91,7 @@ public class DB
 		try
 		{
 			conn.close();
-			if(connTest != null)
-				connTest.close();
+			if(connTest != null) connTest.close();
 		}
 		catch(SQLException e)
 		{

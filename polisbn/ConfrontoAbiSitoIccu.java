@@ -136,9 +136,9 @@ public class ConfrontoAbiSitoIccu
 	 * metodi useranno il vettore di poli così prodotto, che è un membro privato
 	 * della classe
 	 */
-	public void caricaPoli(String args[])
+	public void caricaPoli(String italiaDirName)
 	{
-		File italiaDir = new File(args[0]);
+		File italiaDir = new File(italiaDirName);
 
 		// array di tutte le regioni, ordinato
 
@@ -380,8 +380,8 @@ public class ConfrontoAbiSitoIccu
 	public static void main(String[] args)
 	{
 		ConfrontoAbiSitoIccu c = new ConfrontoAbiSitoIccu();
-		c.db = new DB(DB.urlTest);
-		c.caricaPoli(args);
+		c.db = new DB(DB.urlTest, args[1], args[2]);
+		c.caricaPoli(args[0]);
 		c.cercaInAbi();
 		c.cercaInSitoIccu();
 		c.closeLog();
