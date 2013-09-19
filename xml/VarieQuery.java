@@ -21,8 +21,6 @@ import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
 import org.jdom.xpath.XPath;
 
-import sql.DB;
-
 /** Description of the Class */
 
 public class VarieQuery
@@ -39,20 +37,19 @@ public class VarieQuery
 		System.out.println(str);
 	}
 
-	public VarieQuery()
+	public VarieQuery(String driver, String url, String user, String pass)
 	{
 		try
 		{
-			Class.forName("com.mysql.jdbc.Driver");
+			Class.forName(driver);
 		}
 		catch(Exception e)
 		{
 			err("ERROR: failed to load JDBC driver.");
 		}
-		String url = DB.urlTest;
 		try
 		{
-			conn = DriverManager.getConnection(url, "abi", null);
+			conn = DriverManager.getConnection(url, user, pass);
 			if(conn == null)
 			{
 				err("Connessione nulla!");
@@ -90,7 +87,7 @@ public class VarieQuery
 			String valore2 = valore.replaceAll("\'", "\\\\'");
 
 			String query = "select " + campo + " from " + tabella;
-			query += " where " + campo + " like \'" + valore2 + "\'";
+			query += " where " + campo + " = \'" + valore2 + "\'";
 			//out(query);
 			ResultSet rs = stmt.executeQuery(query);
 			rs.last();
@@ -129,8 +126,13 @@ public class VarieQuery
 
 	public static void main(String[] args)
 	{
-		VarieQuery vq = new VarieQuery();
-		Document doc = vq.load(new File(args[0]));
+		String driver = args[0];
+		String url = args[1];
+		String user = args[2];
+		String pass = args[3];
+		String xml = args[4];
+		VarieQuery vq = new VarieQuery(driver, url, user, pass);
+		Document doc = vq.load(new File(xml));
 		try
 		{
 			BufferedReader conf = new BufferedReader(
