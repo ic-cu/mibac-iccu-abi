@@ -2,43 +2,40 @@
  * 
  */
 package polisbn;
-import java.io.*;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.Enumeration;
 import java.util.Properties;
 
-import org.jdom.*;
-import org.jdom.input.*;
+import org.jdom.Document;
+import org.jdom.Element;
+import org.jdom.JDOMException;
+import org.jdom.input.SAXBuilder;
 import org.jdom.xpath.XPath;
 
 /**
  * @author agiuliano
- *
+ * 
  */
 public class Biblioteca
 {
 
-// Parametri della biblioteca. Non sarebbe meglio un vettore di attributi?
-	
-	private String 
-		denominazione,
-		codiceSbnPolo, 
-		codiceSbnBiblioteca,
-		codiceISIL,
-		indirizzo,
-		cap,
-		località,
-		comune,
-		provincia,
-		regione,
-//		nazione,
-	//	telefono[],
-		//fax[],
-		email,
-		urlPrincipale,
-		//urlSecondarie[],
-		emailReferente,
-		daconteggiare;
-	
+	// Parametri della biblioteca. Non sarebbe meglio un vettore di attributi?
+
+	private String denominazione, codiceSbnPolo, codiceSbnBiblioteca, codiceISIL,
+			indirizzo, cap, localita, comune, provincia, regione,
+			// nazione,
+			// telefono[],
+			// fax[],
+			email, urlPrincipale,
+			// urlSecondarie[],
+			emailReferente, daconteggiare;
+
 	private Element root;
 
 	private Properties attributes;
@@ -47,12 +44,12 @@ public class Biblioteca
 	{
 		return attributes.getProperty(key);
 	}
-	
+
 	private void set(String key, String value)
 	{
 		attributes.setProperty(key, value);
 	}
-	
+
 	private String element(String path)
 	{
 		String value = null;
@@ -66,28 +63,28 @@ public class Biblioteca
 		}
 		return value;
 	}
-	
+
 	private Properties xmlMap, outlookMap;
-		
+
 	public void setCodiceSbnPolo(String str)
 	{
 		codiceSbnPolo = str;
 		attributes.setProperty("codice-sbn-polo", str);
 	}
-	
+
 	public String getDenominazione()
 	{
 		return denominazione;
 	}
-	
+
 	public String getEmail()
 	{
 		if(get("email") != null)
 			return get("email");
-		else	
+		else
 			return get("emailref");
 	}
-	
+
 	public String getISIL()
 	{
 		return codiceISIL;
@@ -101,31 +98,38 @@ public class Biblioteca
 	public String getCodiceSbnBiblioteca()
 	{
 		if(codiceSbnBiblioteca != null && codiceSbnBiblioteca.length() != 0)
-		return codiceSbnBiblioteca;
-		else return (String) null;
+			return codiceSbnBiblioteca;
+		else
+			return (String) null;
 	}
-	
-// Delimitatori per l'export CSV
-	
+
+	// Delimitatori per l'export CSV
+
 	private String cvsFieldDelim = ",";
 	private String cvsStringDelim = "\"";
 
 	/*
 	 * Carica una biblioteca usando attributi "dinamici" invece che statici.
-	 * Questo permette di gestire i dati con maggiore flessibilità, ma ho
-	 * paura che possa anche creare dei casini.
+	 * Questo permette di gestire i dati con maggiore flessibilità, ma ho paura
+	 * che possa anche creare dei casini.
 	 */
-	
+
 	public void init(File in)
 	{
 		attributes = new Properties();
 		xmlMap = new Properties();
 		outlookMap = new Properties();
 		FileReader fr = null;
+		/*
+		 * È necessario aprire e richiudere i FileReader, almeno finché non si trova
+		 * un modo di eitare il ricarico delle prop per ciascuna istanza di
+		 * Biblioteca. Forse delle variabili statiche.
+		 */
 		try
 		{
-			fr = new FileReader(new File("polisbn/xmlmap.prop")); 
+			fr = new FileReader(new File("polisbn/xmlmap.prop"));
 			xmlMap.load(fr);
+			fr.close();
 			fr = new FileReader(new File("polisbn/outlook-from.map"));
 			outlookMap.load(fr);
 			fr.close();
@@ -159,12 +163,12 @@ public class Biblioteca
 			}
 		}
 	}
-	
+
 	public Properties getAttributes()
 	{
 		return attributes;
 	}
-	
+
 	public Document load(File in)
 	{
 		Document doc = new Document();
@@ -183,16 +187,17 @@ public class Biblioteca
 		}
 		return doc;
 	}
-/*
- * Popola i dati di una biblioteca leggendo un file XML. Da notare che questo 
- * metodo non può impostare anche il codice di polo, che non è contenuto nel 
- * file XML 
- */
+
+	/*
+	 * Popola i dati di una biblioteca leggendo un file XML. Da notare che questo
+	 * metodo non può impostare anche il codice di polo, che non è contenuto nel
+	 * file XML
+	 */
 	public Biblioteca(String xml)
 	{
 		init(new File(xml));
 		Document doc = load(new File(xml));
-		//System.err.println("Elaboro file: " + xml);
+		// System.err.println("Elaboro file: " + xml);
 		try
 		{
 			Element root = doc.getRootElement();
@@ -204,23 +209,21 @@ public class Biblioteca
 				codiceISIL = bib.getChildText("codabi");
 				indirizzo = bib.getChildText("indirizzo");
 				cap = bib.getChildText("cap");
-				località = bib.getChildText("localita");
+				localita = bib.getChildText("localita");
 				comune = bib.getChildText("comune");
 				provincia = bib.getChildText("provincia");
 				regione = bib.getChildText("regione");
 				daconteggiare = bib.getChildText("daconteggiare");
-				urlPrincipale = bib.getChild("urlprincipale")
-					.getChildText("indirizzo");
+				urlPrincipale = bib.getChild("urlprincipale").getChildText("indirizzo");
 				if(bib.getChildText("email") != null)
 				{
 					email = new String(bib.getChildText("email"));
 				}
 				else if(bib.getChild("referente").getChildText("email_referente") != null)
 				{
-					email = bib.getChild("referente")
-					.getChildText("email_referente");
+					email = bib.getChild("referente").getChildText("email_referente");
 				}
-			}	
+			}
 		}
 		catch(java.lang.NullPointerException ex)
 		{
@@ -228,29 +231,28 @@ public class Biblioteca
 			System.err.println(ex.toString());
 		}
 	}
-	
-/*
- * Esportazione della biblioteca in formato CSV. C'è un metodo pubblico che
- * richiama un metodo privato per aggiungere un campo già nel modo giusto.
- * Si presume sia tutto stringa, delimitatore ";", e stringhe con doppio apice
- */
+
+	/*
+	 * Esportazione della biblioteca in formato CSV. C'è un metodo pubblico che
+	 * richiama un metodo privato per aggiungere un campo già nel modo giusto. Si
+	 * presume sia tutto stringa, delimitatore ";", e stringhe con doppio apice
+	 */
 	private String csvField(String field, boolean last)
 	{
 		String temp;
 		if(field != null)
-			temp =  cvsStringDelim + field + cvsStringDelim;
+			temp = cvsStringDelim + field + cvsStringDelim;
 		else
 			temp = cvsStringDelim + cvsStringDelim;
-		if(!last)
-			temp += cvsFieldDelim;
+		if(!last) temp += cvsFieldDelim;
 		return temp;
 	}
-	
+
 	public String csvField(String field)
 	{
 		return csvField(field, false);
 	}
-	
+
 	public String exportCSV()
 	{
 		StringWriter csvSW = new StringWriter();
@@ -259,7 +261,7 @@ public class Biblioteca
 		csv.print(csvField(codiceISIL));
 		csv.print(csvField(denominazione));
 		csv.print(csvField(indirizzo));
-		csv.print(csvField(località));
+		csv.print(csvField(localita));
 		csv.print(csvField(cap));
 		csv.print(csvField(comune));
 		csv.print(csvField(provincia));
@@ -269,7 +271,7 @@ public class Biblioteca
 		csv.print(csvField(emailReferente, true));
 		return csvSW.toString();
 	}
-	
+
 	public String exportISIL()
 	{
 		StringWriter csvSW = new StringWriter();
@@ -282,12 +284,12 @@ public class Biblioteca
 		csv.print(csvField(regione, true));
 		return csvSW.toString();
 	}
-	
+
 	public String exportCSV2()
 	{
 		StringWriter csvSW = new StringWriter();
 		PrintWriter csv = new PrintWriter(csvSW);
-		csv.print(csvField(attributes.getProperty("codice-sbn-polo") 
+		csv.print(csvField(attributes.getProperty("codice-sbn-polo")
 				+ attributes.getProperty("codice-sbn-biblioteca")));
 		csv.print(csvField(attributes.getProperty("codice-isil")));
 		csv.print(csvField(attributes.getProperty("denominazione")));
@@ -301,7 +303,7 @@ public class Biblioteca
 		csv.print(csvField(attributes.getProperty("email"), true));
 		return csvSW.toString();
 	}
-	
+
 	public String exportOutlook(String fields[])
 	{
 		StringWriter biblioSW = new StringWriter();
@@ -327,11 +329,11 @@ public class Biblioteca
 	}
 
 	public String exportLDIFold()
-	{		
+	{
 		StringWriter biblioSW = new StringWriter();
 		PrintWriter biblio = new PrintWriter(biblioSW);
 		biblio.println("dn: cn=" + denominazione + ",mail=" + email);
-		biblio.println("objectclass: top"); 
+		biblio.println("objectclass: top");
 		biblio.println("objectclass: person");
 		biblio.println("objectclass: organizationalPerson");
 		biblio.println("objectclass: inetOrgPerson");
@@ -342,17 +344,17 @@ public class Biblioteca
 	}
 
 	public String exportLDIF()
-	{		
+	{
 		StringWriter biblioSW = new StringWriter();
 		PrintWriter biblio = new PrintWriter(biblioSW);
-		//String email = getEmail();//("email");
-		//String nome = get("denominazione");
-		//if(email == "" || email == null)
-		//{
-			//email = get("emailref");
-		//}
+		// String email = getEmail();//("email");
+		// String nome = get("denominazione");
+		// if(email == "" || email == null)
+		// {
+		// email = get("emailref");
+		// }
 		biblio.println("dn: cn=" + getDenominazione() + ",mail=" + getEmail());
-		biblio.println("objectclass: top"); 
+		biblio.println("objectclass: top");
 		biblio.println("objectclass: person");
 		biblio.println("objectclass: organizationalPerson");
 		biblio.println("objectclass: inetOrgPerson");
@@ -384,8 +386,10 @@ public class Biblioteca
 
 	public boolean getDaconteggiare()
 	{
-		if(daconteggiare.equals("true")) return true;
-		else return false;
+		if(daconteggiare.equals("true"))
+			return true;
+		else
+			return false;
 	}
 
 	public String getCodiceSbnPolo()
