@@ -86,6 +86,35 @@ public class DB
 		}
 	}
 
+	/*
+	 * Costruttore parametrico. Le credenziali vanno ovviamente cambiate a seconda
+	 * delle reali implementazioni. Meglio sarebbe passare anche quelle al
+	 * costruttore, prelevandole magari da un file di Properties.
+	 */
+	public DB(String driver, String url, String username, String password)
+	{
+		try
+		{
+			Class.forName(driver);
+		}
+		catch(Exception e)
+		{
+			err("ERROR: failed to load JDBC driver.");
+		}
+		try
+		{
+			conn = DriverManager.getConnection(url, username, password);
+			if(conn == null)
+			{
+				err("Connessione nulla!");
+			}
+		}
+		catch(SQLException e)
+		{
+			err("ERROR: failed to connect!");
+		}
+	}
+
 	public void free()
 	{
 		try
