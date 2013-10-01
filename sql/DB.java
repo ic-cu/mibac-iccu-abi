@@ -13,7 +13,9 @@ public class DB
 {
 	public Connection conn;
 	public Connection connTest;
+	public static String mysqlDriver = "com.mysql.jdbc.Driver";
 	public static String urlTest = "jdbc:mysql://gauss/abi";
+	public static String urlGauss = "jdbc:mysql://gauss/abi";
 	// public static String urlTest =
 	// "jdbc:postgresql://192.168.20.46:5432/abi_test3";
 	public static String urlEsercizio = "jdbc:postgresql://anagrafe.iccu.sbn.it:5432/abi2";
