@@ -23,7 +23,7 @@ public class DividiXML
 	 * più piccoli in base al numero di biblioteche
 	 */
 
-	private static int maxBib = 100; 
+	private static int maxBib = 350; 
 	public static void main(String[] args)
 	{
 		JAXBContext jc;
