@@ -47,6 +47,7 @@ public class ConfrontoAbiSitoIccu
 			nosbnPW = new PrintWriter(new File(config.getProperty("file-nosbn")));
 			dupPW = new PrintWriter(new File(config.getProperty("file-duplicate")));
 			oldPW = new PrintWriter(new File(config.getProperty("file-obsolete")));
+			tuttePW = new PrintWriter(new File(config.getProperty("file-tutte")));
 		}
 		catch(FileNotFoundException e)
 		{
@@ -66,6 +67,7 @@ public class ConfrontoAbiSitoIccu
 	private PrintWriter nosbnPW = null;
 	private PrintWriter dupPW = null;
 	private PrintWriter oldPW = null;
+	private PrintWriter tuttePW = null;
 	private DB db;
 
 	public void setLog(String logFileName)
@@ -224,7 +226,10 @@ public class ConfrontoAbiSitoIccu
 	{
 		ResultSet rs = null;
 		PreparedStatement existsBib = db
-				.prepare("select id_biblioteca from biblioteca"
+				.prepare("select" 
+						+ " id_biblioteca,"
+						+ " denominazione_ufficiale denominazione"
+						+ " from biblioteca"
 						+ " where not id_stato_biblioteca_workflow=4"
 						+ " and concat(isil_provincia, lpad(isil_numero, 4, '0')) = ?");
 		PreparedStatement bibHasSBN = db.prepare("select count(*)"
@@ -271,7 +276,10 @@ public class ConfrontoAbiSitoIccu
 						if(rs.last())
 						{
 							// se arriva qui, esiste la biblioteca, quindi si
-							// può vedere se partecipa a SBN
+							// può vedere se partecipa a SBN.
+							// mette da parte un report con la denominazione ABI
+							String msg2 = isil + ";" + codPolo + codBiblio + ";" + rs.getString("denominazione");
+							log(msg2, tuttePW);
 							++ii;
 							int idBib = rs.getInt(1);
 							bibHasSBN.setInt(1, idBib);
