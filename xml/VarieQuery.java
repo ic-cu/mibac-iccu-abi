@@ -88,12 +88,18 @@ public class VarieQuery
 
 			String query = "select " + campo + " from " + tabella;
 			query += " where " + campo + " = \'" + valore2 + "\'";
+			// query += " where " + campo + " like \'" + valore2 + "\'";
+			// out(campo);
 			// out(query);
 			ResultSet rs = stmt.executeQuery(query);
 			rs.last();
-			if(rs.getRow() != 1)
+			if(rs.getRow() < 1)
 			{
 				out("  Valore mancante: " + valore);
+			}
+			if(rs.getRow() > 1)
+			{
+				out("  Valore duplicato: " + valore);
 			}
 			rs.close();
 			stmt.close();
@@ -172,71 +178,74 @@ public class VarieQuery
 				xpath = parti[0];
 				tabella = parti[1];
 				campo = parti[2];
-				vq.out("Percorso: " + xpath);
-				try
+				if(!xpath.startsWith("#"))
 				{
-					XPath xp = XPath.newInstance(xpath);
-					List list = xp.selectNodes(doc);
-					// vq.out(" " + list.size());
-
-					// itera sulla lista dei nodi estratti dal xpath
-					ts = new TreeSet();
-					ListIterator li = list.listIterator();
-					while(li.hasNext())
+					vq.out("Percorso: " + xpath);
+					try
 					{
-						Object e = li.next();
-						String c = e.getClass().getName();
-						if(c == "org.jdom.Element")
+						XPath xp = XPath.newInstance(xpath);
+						List list = xp.selectNodes(doc);
+						// vq.out(" " + list.size());
+
+						// itera sulla lista dei nodi estratti dal xpath
+						ts = new TreeSet();
+						ListIterator li = list.listIterator();
+						while(li.hasNext())
 						{
-							try
+							Object e = li.next();
+							String c = e.getClass().getName();
+							if(c == "org.jdom.Element")
 							{
-								ts.add(((Element) e).getText());
+								try
+								{
+									ts.add(((Element) e).getText());
+								}
+								catch(java.lang.NullPointerException ex)
+								{
+									vq.out(e.toString());
+								}
 							}
-							catch(java.lang.NullPointerException ex)
+							else if(c == "org.jdom.Attribute")
 							{
-								vq.out(e.toString());
+								try
+								{
+									ts.add(((Attribute) e).getValue());
+								}
+								catch(java.lang.NullPointerException ex)
+								{
+									vq.out(e.toString());
+								}
 							}
-						}
-						else if(c == "org.jdom.Attribute")
-						{
-							try
+							else if(c == "java.lang.String")
 							{
-								ts.add(((Attribute) e).getValue());
+								try
+								{
+									ts.add(e);
+									vq.out(e.toString());
+								}
+								catch(java.lang.NullPointerException ex)
+								{
+									vq.out(e.toString());
+								}
 							}
-							catch(java.lang.NullPointerException ex)
-							{
-								vq.out(e.toString());
-							}
-						}
-						else if(c == "java.lang.String")
-						{
-							try
-							{
-								ts.add(e);
-								vq.out(e.toString());
-							}
-							catch(java.lang.NullPointerException ex)
-							{
-								vq.out(e.toString());
-							}
+
 						}
 
+						// itera sul set, quindi stessi dati, ma in ordine e senza
+						// ripetizioni
+						// (e solo il contenuto)
+						Iterator i = ts.iterator();
+						while(i.hasNext())
+						{
+							String valore = (String) i.next();
+							// vq.out(tabella + ", " + campo + ", " + valore);
+							vq.verificaValore(tabella, campo, valore);
+						}
 					}
-
-					// itera sul set, quindi stessi dati, ma in ordine e senza
-					// ripetizioni
-					// (e solo il contenuto)
-					Iterator i = ts.iterator();
-					while(i.hasNext())
+					catch(JDOMException e)
 					{
-						String valore = (String) i.next();
-						//vq.out(tabella + ", " + campo + ", " + valore);
-						vq.verificaValore(tabella, campo, valore);
+						e.printStackTrace();
 					}
-				}
-				catch(JDOMException e)
-				{
-					e.printStackTrace();
 				}
 				// vq.out(riga);
 			}
