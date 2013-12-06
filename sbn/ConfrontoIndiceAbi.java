@@ -1,7 +1,5 @@
 package sbn;
 
-import sql.DB;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -11,12 +9,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
-import java.util.Arrays;
+import java.util.Collection;
 import java.util.Enumeration;
-import java.util.Iterator;
 import java.util.Properties;
-import java.util.TreeMap;
-import java.util.Vector;
+
+import sql.DB;
 
 /*
  * Classe per confrontare biblioteche SBN sul sito ICCU e sull'ABI, ai fini di
@@ -43,8 +40,8 @@ public class ConfrontoIndiceAbi
 			fr = new FileReader(new File("polisbn/config.prop"));
 			config.load(fr);
 			fr.close();
-			fr = new FileReader(new File("sbn-isil.properties"));
-			config.load(fr);
+			fr = new FileReader(new File("sbn/sbn-isil.properties"));
+			sbnIsil.load(fr);
 			fr.close();
 			logPW = new PrintWriter(new File(config.getProperty("file-log")));
 			statPW = new PrintWriter(new File(config.getProperty("file-statistiche")));
@@ -148,7 +145,7 @@ public class ConfrontoIndiceAbi
 		PreparedStatement existsBib = db.prepare("select" + " id_biblioteca,"
 				+ " denominazione_ufficiale denominazione" + " from biblioteca"
 				+ " where not id_stato_biblioteca_workflow=4"
-				+ " and concat(isil_provincia, lpad(isil_numero, 4, '0')) = ?");
+				+ " and concat('IT-', isil_provincia, lpad(isil_numero, 4, '0')) = ?");
 		PreparedStatement bibHasSBN = db.prepare("select count(*)"
 				+ " from partecipa_cataloghi_collettivi_materiale"
 				+ " where id_cataloghi_collettivi = 146" + " and id_biblioteca = ?");
@@ -159,10 +156,10 @@ public class ConfrontoIndiceAbi
 		{
 			String sbn = (String) i.nextElement();
 			String isil = sbnIsil.getProperty(sbn);
-			if(isil.length() != 6 || sbn.length() != 5
+			if(isil.length() != 9 || sbn.length() != 5
 					|| isil.substring(0, 2).equals("EX"))
 			{
-				log("* codice mal formato: [" + isil + ";" + sbn + "]", errorPW);
+				log("* codice mal formato: [" + isil + " - " + sbn + "]", errorPW);
 			}
 			else
 			{
@@ -211,14 +208,69 @@ public class ConfrontoIndiceAbi
 				+ " non partecipano al catalogo collettivo SBN", statPW);
 	}
 
+	/*
+	 * Cerchiamo sul sito ICCU le biblioteche ABI che partecipano al catalogo
+	 * collettivo SBN. Infatti alcune di queste potrebbero essere uscite da SBN ma
+	 * in ABI non è stata rimossa la loro partecipazione al catalogo.
+	 */
+	public void cercaInIndice()
+	{
+		ResultSet rs = null;
+		// elenchiamo le biblioteche ABI che partecipano a SBN
+		rs = db
+				.select("select isil_provincia, isil_numero,"
+						+ " valore sbn, denominazione_ufficiale denominazione"
+						+ " from biblioteca b,"
+						+ " partecipa_cataloghi_collettivi_materiale c," + " codici"
+						+ " where not b.id_stato_biblioteca_workflow=4"
+						+ " and c.id_cataloghi_collettivi= 146"
+						+ " and c.id_biblioteca = b.id_biblioteca"
+						+ " and codici.id_biblioteca = b.id_biblioteca"
+						+ " and codici.id_codici = 5"
+						+ " order by isil_provincia, isil_numero");
+		// popoliamo una mappa delle biblioteche dal sito ICCU
+		// per cercare più facilmente
+		// ora si può ciclare sul resultset e cercare le biblioteche sul sito
+
+		Collection<Object> isil = sbnIsil.values();
+		String isilPR, isilNR;
+		int ii = 0;
+		int jj = 0;
+		try
+		{
+			DecimalFormat df = new DecimalFormat("0000");
+			while(rs.next())
+			{
+				ii++;
+				isilPR = rs.getString("isil_provincia");
+				isilNR = df.format(rs.getInt("isil_numero"));
+				if(! isil.contains("IT-" + isilPR + isilNR))
+				{
+					jj++;
+					log(isilPR + isilNR + ";" + rs.getString("sbn") + ";"
+							+ rs.getString("denominazione"), oldPW);
+				}
+			}
+			log("Su " + ii
+					+ " biblioteche ABI partecipanti al catalogo collettivo SBN, " + jj
+					+ " non risultano in Indice", statPW);
+		}
+		catch(SQLException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
 	/**
 	 * L'argomento è la directory contenente le regioni.
 	 */
 	public static void main(String[] args)
 	{
 		ConfrontoIndiceAbi c = new ConfrontoIndiceAbi();
-		c.db = new DB(DB.urlTest, args[1], args[2]);
-		c.cercaInAbi();
+		c.db = new DB(DB.urlTest, args[0], args[1]);
+		//c.cercaInAbi();
+		c.cercaInIndice();
 		c.closeLog();
 		c.db.free();
 	}
