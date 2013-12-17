@@ -22,20 +22,56 @@
 
 	<xsl:template match="//biblioteca/anagrafica">
 		<xsl:element name="anagrafica">
-
 			<xsl:copy-of select="data-censimento"/>
 			<xsl:copy-of select="data-aggiornamento"/>
 
-			<xsl:element name="fonte">
+<!-- si inserisce il nuovo elemento fonte e si copia tutto il resto -->
 
+			<xsl:element name="fonte">
 				<xsl:element name="descrizione">Regione del Veneto - Direzione
 				Beni Culturali (aggiornamento: anagrafiche all’11.12.2013,
 				patrimonio e servizi al 31.12.2012)</xsl:element>
 				<xsl:element
 				name="url">http://bibliotecheweb.regione.veneto.it/BibliotecheWeb/</xsl:element>
 			</xsl:element>
-			<xsl:copy-of select="*"/>
+			<xsl:copy-of select="nomi"/>
+			<xsl:copy-of select="codici"/>
+			<xsl:copy-of select="indirizzo"/>
+
+<!-- 
+	I contatti si trattano a parte.	C'è una notevole differenza fra "//contatti" e
+	"contatti": il primo caso va a pescare tutti i "contatti" ovunque, il secondo
+	solo nell'elemento corrente. Il resto degli elementi anagrafici si copia.
+-->
+
+			<xsl:apply-templates select="contatti"/>
+			<xsl:copy-of select="edificio"/>
+			<xsl:copy-of select="istituzione"/>
 		</xsl:element>
+	</xsl:template>
+
+<!-- 
+	Soppressione dei contatti tipo URL con valore=NO. Prima serve un template che
+	copi i "telefonici" e invochi un altro template per gli "altri". Anche qui
+	bisogna fare attenzione a invocare i template senza i "//" iniziali.
+-->
+
+	<xsl:template match="//contatti">
+		<xsl:element name="contatti">
+			<xsl:apply-templates select="altri"/>
+		</xsl:element>
+	</xsl:template>
+
+	<xsl:template match="//contatti/altri">
+		<xsl:if test="altro">
+			<xsl:element name="altri">
+				<xsl:for-each select="altro">
+					<xsl:if test="not(@tipo = 'url' and valore = 'NO')">
+						<xsl:copy-of select="."/>
+					</xsl:if>
+				</xsl:for-each>
+			</xsl:element>
+		</xsl:if>
 	</xsl:template>
 
 <!--
