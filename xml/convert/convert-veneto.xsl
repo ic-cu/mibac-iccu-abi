@@ -28,8 +28,11 @@
 
 			<xsl:element name="fonte">
 
-				<xsl:element name="descrizione">Regione Veneto</xsl:element>
-				<xsl:element name="url">http://biblioteche.regione.veneto.it</xsl:element>
+				<xsl:element name="descrizione">Regione del Veneto - Direzione
+				Beni Culturali (aggiornamento: anagrafiche all’11.12.2013,
+				patrimonio e servizi al 31.12.2012)</xsl:element>
+				<xsl:element
+				name="url">http://bibliotecheweb.regione.veneto.it/BibliotecheWeb/</xsl:element>
 			</xsl:element>
 			<xsl:copy-of select="*"/>
 		</xsl:element>
@@ -40,7 +43,7 @@
 	un xsl:choose, altrimenti solo i casi positivi passano, i negativi no,
 	anche se sono proprio gli unici sicuramente corretti
 -->
-	<xsl:template match="//materiali/materiale">
+	<xsl:template match="//ZZmateriali/materiale">
 		<xsl:choose>
 		<xsl:when test="contains(@nome,'CARTOGRAFIA A STAMPA')">
 			<xsl:element name="materiale">
@@ -157,7 +160,7 @@ alterazioni, altrimenti non andrebbe in output -->
 <!-- per dire che una biblioteca è aperta o riservata va usato
 l'elemento apposito, non una modalità di accesso -->
 
-	<xsl:template match="//accesso">
+	<xsl:template match="//ZZaccesso">
 			<xsl:element name="accesso">
 		<xsl:if test="contains(modalita-accesso/modo,'APERT')">
 			<xsl:element name="aperta">s</xsl:element>
@@ -175,7 +178,7 @@ l'elemento apposito, non una modalità di accesso -->
 		<xsl:when test="contains(.,'POLO  BIBLIOTECARIO DI CASTELFRANCO VENETO')">
 		<xsl:element name="sistema">POLO BIBLIOTECARIO DI CASTELFRANCO VENETO</xsl:element>
 		</xsl:when>
-		<xsl:when test="contains(.,'PD3')">
+		<xsl:when test="contains(.,'ZZZPD3')">
 		<xsl:element name="sistema">CENTRO SERVIZI BIBLIOTECHE PROVINCIALE DI PADOVA, PD3</xsl:element>
 		</xsl:when>
 		<xsl:otherwise>
