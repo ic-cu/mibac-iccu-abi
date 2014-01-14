@@ -58,6 +58,7 @@
 
 	<xsl:template match="//contatti">
 		<xsl:element name="contatti">
+			<xsl:copy-of select="telefonici"/>
 			<xsl:apply-templates select="altri"/>
 		</xsl:element>
 	</xsl:template>
