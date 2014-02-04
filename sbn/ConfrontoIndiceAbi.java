@@ -269,7 +269,7 @@ public class ConfrontoIndiceAbi
 	{
 		ConfrontoIndiceAbi c = new ConfrontoIndiceAbi();
 		c.db = new DB(DB.urlTest, args[0], args[1]);
-		//c.cercaInAbi();
+		c.cercaInAbi();
 		c.cercaInIndice();
 		c.closeLog();
 		c.db.free();
