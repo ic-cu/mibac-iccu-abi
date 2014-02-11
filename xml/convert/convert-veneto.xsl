@@ -224,4 +224,12 @@ l'elemento apposito, non una modalità di accesso -->
 		</xsl:choose>
 	</xsl:template>
 
+	<xsl:template match="//utenti">
+	  <xsl:element name="utenti">
+			<xsl:copy-of select="ultimo-anno"/>
+	  	<xsl:element name="iscritti-prestito">0</xsl:element>
+	  	<xsl:copy-of select="minori-quattordici-anni"/>
+	  </xsl:element>
+	</xsl:template>
+
 </xsl:stylesheet>
