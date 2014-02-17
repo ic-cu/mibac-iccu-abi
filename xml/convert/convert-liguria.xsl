@@ -1,8 +1,6 @@
 <?xml version="1.0" ?>
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-
+<xsl:stylesheet version="1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   <xsl:output method="xml" indent="yes"/>
-
 <!--
 	c'è una perfetta corrispondenza fra "listof_scheda_BIBLIO" sorgente
 	e biblioteche nell'output, quindi si può partire da questo template
@@ -11,8 +9,10 @@
 -->
 	<xsl:template match="/listof_scheda_BIBLIO">
 	  <xsl:element name="biblioteche">
-		<!-- dataExport va poi cambiato a mano -->
-		  <xsl:element name="data-export">1970-01-01T00:00:00</xsl:element>
+<xsl:attribute name="xsi:noNamespaceSchemaLocation">http://anagrafe.iccu.sbn.it/opencms/opencms/informazioni/formato-di-scambio/biblioteca-1.6.xsd</xsl:attribute>
+	
+	<!-- dataExport va poi cambiato a mano -->
+		  <xsl:element name="data-export">2013-11-04T00:00:00</xsl:element>
 			<xsl:apply-templates select="scheda_BIBLIO"/>
 		</xsl:element>
   </xsl:template>
@@ -28,7 +28,7 @@
 		<xsl:element name="biblioteca">
 			<xsl:element name="anagrafica">
 				<xsl:apply-templates select="RELAZIONE"/>
-				<xsl:element name="nome">
+				<xsl:element name="nomi">
 					<xsl:element name="attuale">
 						<xsl:value-of select="NOMEBIB"/>
 					</xsl:element>
@@ -38,11 +38,11 @@
 						<xsl:value-of select="CODISIL"/>
 					</xsl:element>
 		<!-- solo se c'é IDPOLO si deve selezionare il codice SBN-->
+				<xsl:if test="string-length(IDPOLO)=3">
 				<xsl:element name="sbn">	
-					<xsl:if test="string-length(IDPOLO)=3">
-				<xsl:value-of select="concat(CODBIB,IDPOLO)"/>
-					</xsl:if>
-				</xsl:element>
+				<xsl:value-of select="concat(IDPOLO,CODBIB)"/>
+			</xsl:element>
+				</xsl:if>
 			</xsl:element>
 				<xsl:apply-templates select="RECAPITI"/>
 				<xsl:apply-templates select="ANNO"/>
@@ -50,50 +50,60 @@
 			<xsl:call-template name="patrimonio"/>
 			<xsl:call-template name="servizi"/>
 		</xsl:element>
-  </xsl:template>
-
-  <xsl:template match="//scheda_BIBLIO/RECAPITI"> 
-		<xsl:element name="indirizzo">
-			<xsl:element name="via">
-				<xsl:value-of select="INDIRIZZO"/>
-			</xsl:element>
-			<xsl:element name="cap">
-				<xsl:value-of select="CAP"/>
-			</xsl:element>
+  <!--</xsl:template>
+  
+  <xsl:template match="//scheda_BIBLIO/RECAPITI/COMUNE"> 
 			<xsl:element name="comune">
-				<xsl:value-of select="COMUNE"/>
+				<xsl:value-of select="."/>
 			</xsl:element>
-			<xsl:element name="provincia">
-				<xsl:value-of select="PROVINCIA"/>
-			</xsl:element>
-			</xsl:element>
-			
-<!-- il comune,ora obbligatorio andrà mappato con la tabella ISTAT -->
+	  -->	
+  </xsl:template> 
+
+ <xsl:import href="convert-liguria-comune.xsl"/>
+  
+  <xsl:template match="//scheda_BIBLIO/RECAPITI">
+	<xsl:element name="indirizzo">
+		<xsl:element name="via">
+			<xsl:value-of select="INDIRIZZO" />
+		</xsl:element>
+		<xsl:element name="cap">
+			<xsl:value-of select="CAP" />
+		</xsl:element>
+		<xsl:apply-templates select="COMUNE" />
+
+		<!--
+			metteremo in altro template <xsl:element name="comune"> <xsl:value-of
+			select="COMUNE"/> </xsl:element> <xsl:element name="provincia">
+			<xsl:value-of select="PROVINCIA"/> </xsl:element>
+		-->
+	</xsl:element>
+
+	<!-- il comune,ora obbligatorio andrà mappato con la tabella ISTAT -->
 	<xsl:element name="contatti">
-		 <!-- il prefisso è obbligatorio, ma è sempre +39 -->	
-			<xsl:element minOccurs="0" name="telefonici">
+		<!-- il prefisso è obbligatorio, ma è sempre +39 -->
+		<xsl:element name="telefonici">
 			<xsl:element name="telefonico">
 				<xsl:attribute name="tipo">telefono</xsl:attribute>
 				<xsl:element name="prefisso">+39</xsl:element>
 				<xsl:element name="numero">
-				<xsl:value-of select="TELEFONO"/>
+					<xsl:value-of select="TELEFONO" />
 				</xsl:element>
 			</xsl:element>
 			<xsl:element name="telefonico">
 				<xsl:attribute name="tipo">fax</xsl:attribute>
 				<xsl:element name="prefisso">+39</xsl:element>
 				<xsl:element name="numero">
-				<xsl:value-of select="FAX"/>
+					<xsl:value-of select="FAX" />
+				</xsl:element>
 			</xsl:element>
-			</xsl:element>
-			</xsl:element>
+		</xsl:element>
 		<xsl:element name="altri">
-		<xsl:element name="altro">
+			<xsl:element name="altro">
 				<xsl:attribute name="tipo">e-mail</xsl:attribute>
 				<xsl:element name="valore">
-					<xsl:value-of select="E_MAIL"/>
+					<xsl:value-of select="E_MAIL" />
 				</xsl:element>
-		</xsl:element>
+			</xsl:element>
 		</xsl:element>
 	</xsl:element>
 </xsl:template>
@@ -116,7 +126,7 @@
 		</xsl:element>
   </xsl:template>
   <xsl:template match="scheda_BIBLIO/ANNO">
-		<xsl:element name="Istituzione">
+		<xsl:element name="istituzione">
 			<xsl:element name="data-istituzione">
 				<xsl:value-of select="."/>
 			</xsl:element>
@@ -127,11 +137,26 @@
 
   <xsl:template name="patrimonio">
 		<xsl:element name="patrimonio">
-			<xsl:apply-templates select='CONSISTENZA/CATEGORIA'/>
-			<xsl:apply-templates select='FONDISPEC'/>
+			<xsl:apply-templates select='CONSISTENZA'/>
+			<xsl:if test="FONDISPEC">
+				<xsl:call-template name="FONDISPEC"/>
+			</xsl:if>
 			<xsl:apply-templates select='CONSISTENZA/TOTCONS'/>
 		</xsl:element>
   </xsl:template>
+
+<!-- fondi speciali, solo se esistono -->
+
+  <xsl:template name="FONDISPEC">
+			<xsl:element name="fondi-speciali">
+				<xsl:for-each select='FONDISPEC'>
+					<fondo-speciale>
+					<nome><xsl:value-of select="DENOMINAZIONE"/></nome>
+					<descrizione><xsl:value-of select="DESCRIZIONE"/></descrizione>
+					</fondo-speciale>
+				</xsl:for-each>
+			</xsl:element>
+	</xsl:template>
 
 	<!-- 
 	il totale-posseduto non viene creato se il sorgente è vuoto, come purtroppo abbiamo
@@ -147,9 +172,9 @@
 
   <!-- il posseduto di ogni materiale è ignorato se "" (sempre con string-length) 
   c'é da verificare se un materiali vuoto cancella tutto il precedente-->
-  <xsl:template match="//scheda_BIBLIO/CONSISTENZA/CATEGORIA">
+  <xsl:template match="//scheda_BIBLIO/CONSISTENZA">
 		<xsl:element name="materiali">
-		<xsl:for-each select="DETTAGLIO">
+		<xsl:for-each select="CATEGORIA/DETTAGLIO">
 		<xsl:element name="materiale">
 			<xsl:attribute name="nome">
 				<xsl:value-of select="@descrizione"/>
@@ -162,8 +187,7 @@
 		</xsl:element>
 		</xsl:for-each>
 		</xsl:element>
-		
-  </xsl:template>
+	 </xsl:template>
 
   <!-- spesso descrizioni vuote, testare anche qui con string-length? -->
   
@@ -193,8 +217,10 @@
 			contiene la stringa 'nformazion' (pare non funzionino "espressioni regolari", quindi
 			'nformazion' è il massimo che si possa fare) -->
 			<xsl:apply-templates select="SERVIZI/SERVIZIO[contains(., 'nformazion')]"/>
-			<xsl:element name="internet"/>
+			<xsl:element name="internet">
+						<xsl:attribute name="attivo">s</xsl:attribute>
 		</xsl:element>
+			</xsl:element>
   </xsl:template>
 
 <!-- 
@@ -240,9 +266,9 @@
 
   <xsl:template match="//scheda_BIBLIO/APERTURA/CHIUSURA">
 		<xsl:element name="chiusura">
-			<xsl:element name="note">
-				<xsl:value-of select="."/>
-			</xsl:element>
+			<!--  <xsl:element name="note"> -->
+			<note><xsl:value-of select="normalize-space(.)"/></note>
+			<!--  </xsl:element> -->
 		</xsl:element>
   </xsl:template>
 
