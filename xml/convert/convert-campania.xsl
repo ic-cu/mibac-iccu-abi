@@ -144,6 +144,10 @@ un altro foglio di stile, anche se si potrebbe includere qui la regola di esclus
 		<xsl:when test="contains(.,'libro parlato')">
 		<xsl:element name="sezione">audiolibri</xsl:element>
 		</xsl:when>
+		<xsl:when test="contains(.,'Fotodiapoteca')">
+		<sezione>fotografie</sezione>
+		<sezione>diapositive</sezione>
+		</xsl:when>
 		<xsl:otherwise>
 				<xsl:copy-of select="." />
 		</xsl:otherwise>
@@ -178,5 +182,22 @@ un altro foglio di stile, anche se si potrebbe includere qui la regola di esclus
 		</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
+
+<!-- gli utenti del prestito locale vanno scambiati a causa di un bug ancora
+non risolto nell'applicativo regionale -->
+
+	<xsl:template match="//utenti">
+	  <utenti>
+		  <xsl:if test="ultimo-anno">
+		  	<iscritti-prestito><xsl:value-of select="."/></iscritti-prestito>
+		  </xsl:if>
+		  <xsl:if test="iscritt-prestito">
+		  	<ultimo-anno><xsl:value-of select="."/></ultimo-anno>
+		  </xsl:if>
+			<xsl:copy-of select="minori-quattordici-anni" />
+		</utenti>
+	</xsl:template>
+
+
 
 </xsl:stylesheet>
