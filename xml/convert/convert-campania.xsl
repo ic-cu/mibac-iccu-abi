@@ -23,7 +23,8 @@
 
 <!-- Per escludere le biblioteche di fonte CEI, senza però rischiare di compromettere la copia
 completa di tutte le altre, serve un primo template solo per escludere dall'output qualunque
-cosa che non sia governato dal secondo, che copia una biblioteca non AICE per intero -->
+cosa che non sia governato dal secondo, che copia una biblioteca non AICE per intero; vengongo
+escluse anche le biblioteche di ente ecclesiastico, che saranno gestite caso per caso -->
 
 	<xsl:template match="/biblioteche">
 		<xsl:element name="biblioteche">
@@ -33,7 +34,8 @@ cosa che non sia governato dal secondo, che copia una biblioteca non AICE per in
 	</xsl:template>
 
 	<xsl:template match="//biblioteca">
-		<xsl:if test="not(contains(anagrafica/fonte/descrizione,'AICE'))">
+		<xsl:if test="not(contains(anagrafica/fonte/descrizione,'AICE')) 
+		and not(contains(amministrativa/ente/tipologia-amministrativa, 'Enti ecclesiastici'))">
 			<xsl:element name="biblioteca">
 				<xsl:apply-templates select="*" />
 			</xsl:element>
@@ -145,7 +147,7 @@ un altro foglio di stile, anche se si potrebbe includere qui la regola di esclus
 		<xsl:element name="sezione">audiolibri</xsl:element>
 		</xsl:when>
 		<xsl:when test="contains(.,'Fotodiapoteca')">
-		<sezione>fotografie</sezione>
+		<sezione>fotografia</sezione>
 		<sezione>diapositive</sezione>
 		</xsl:when>
 		<xsl:otherwise>
@@ -183,16 +185,14 @@ un altro foglio di stile, anche se si potrebbe includere qui la regola di esclus
 		</xsl:choose>
 	</xsl:template>
 
-<!-- gli utenti del prestito locale vanno scambiati a causa di un bug ancora
-non risolto nell'applicativo regionale -->
+<!-- gli utenti del prestito locale andreanno scambiati a causa di un bug ancora
+non risolto nell'applicativo regionale; in una prima fase si estrae solo 
+"ultimo-anno", esportandolo però come "iscritti-prestito" -->
 
 	<xsl:template match="//utenti">
 	  <utenti>
 		  <xsl:if test="ultimo-anno">
-		  	<iscritti-prestito><xsl:value-of select="."/></iscritti-prestito>
-		  </xsl:if>
-		  <xsl:if test="iscritt-prestito">
-		  	<ultimo-anno><xsl:value-of select="."/></ultimo-anno>
+		  	<iscritti-prestito><xsl:value-of select="ultimo-anno"/></iscritti-prestito>
 		  </xsl:if>
 			<xsl:copy-of select="minori-quattordici-anni" />
 		</utenti>
