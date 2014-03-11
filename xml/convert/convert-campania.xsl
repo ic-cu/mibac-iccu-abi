@@ -34,8 +34,12 @@ escluse anche le biblioteche di ente ecclesiastico, che saranno gestite caso per
 	</xsl:template>
 
 	<xsl:template match="//biblioteca">
+		<xsl:if test="not(contains(anagrafica/fonte/descrizione,'AICE'))">
+<!-- questa versione esclude anche le ecclesiastiche, oltre alle AICE -->
+<!-- 
 		<xsl:if test="not(contains(anagrafica/fonte/descrizione,'AICE')) 
 		and not(contains(amministrativa/ente/tipologia-amministrativa, 'Enti ecclesiastici'))">
+ -->		
 			<xsl:element name="biblioteca">
 				<xsl:apply-templates select="*" />
 			</xsl:element>
@@ -58,7 +62,7 @@ un altro foglio di stile, anche se si potrebbe includere qui la regola di esclus
 			<xsl:copy-of select="codici"/>
 			<xsl:copy-of select="indirizzo"/>
 			<xsl:copy-of select="contatti"/>
-			<xsl:copy-of select="edificio"/>
+			<xsl:apply-templates select="edificio"/>
 			<xsl:copy-of select="istituzione"/>
 		</xsl:element>
 	</xsl:template>
@@ -198,6 +202,35 @@ non risolto nell'applicativo regionale; in una prima fase si estrae solo
 		</utenti>
 	</xsl:template>
 
+<!-- 
+forse per un bug o per una configurazione incompleta, la url delle immagini 
+richiede l'inserimento di un ramo mancante; prima però serve un template per 
+copiare gli altri dati dell'edificio
+ -->
 
+	<xsl:template match="edificio">
+	  <edificio>
+			<xsl:copy-of select="denominazione"/>
+			<xsl:copy-of select="monumentale"/>
+			<xsl:copy-of select="appositamente-costruito"/>
+			<xsl:copy-of select="data-costruzione"/>
+			<xsl:apply-templates select="immagini"/>
+		</edificio>
+	</xsl:template>
+
+	<xsl:template match="immagini">
+		<immagini>
+	  <xsl:for-each select="immagine">
+	  <immagine>
+			<xsl:if test="starts-with(url, 'http://anagrafebiblioteche.regione.campania.it')">
+				<url><xsl:value-of select="concat('http://anagrafebiblioteche.regione.campania.it/abicampania', 
+				substring-after(url, 'http://anagrafebiblioteche.regione.campania.it'))"/>
+				</url>
+				<xsl:copy-of select="didascalia"/>
+			</xsl:if>
+			</immagine>
+		</xsl:for-each>
+		</immagini>
+	</xsl:template>
 
 </xsl:stylesheet>
