@@ -271,9 +271,9 @@
 			<!--  </xsl:element> -->
 		</xsl:element>
   </xsl:template>
-
 	<xsl:template match="//scheda_BIBLIO/SERVIZI/SERVIZIO">
 		<xsl:element name="informazioni-bibliografiche">
+		<xsl:attribute name="attivo">s</xsl:attribute>
 			<xsl:element name="servizio-interno">s</xsl:element>
 	</xsl:element>
 	</xsl:template>
