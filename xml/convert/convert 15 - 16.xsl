@@ -3,7 +3,7 @@
 
 <!-- Foglio di stile per la conversione di file 1.5 a file 1.6 -->
 
-  <xsl:output method="xml" indent="yes" encoding="ISO-8859-1"/>
+  <xsl:output method="xml" indent="yes" encoding="UTF-8"/>
   <xsl:template match="/biblioteche">
     <xsl:element name="biblioteche">
       <xsl:element name="data-export">
@@ -62,7 +62,7 @@
   <!-- Contenitori per i nomi -->
 
   <xsl:template match="//nome">
-    <xsl:element name="nome">
+    <xsl:element name="nomi">
       <xsl:copy-of select="attuale"/>
       <xsl:if test="precedente">
         <xsl:element name="precedenti">
