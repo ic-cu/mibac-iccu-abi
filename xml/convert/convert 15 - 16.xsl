@@ -314,7 +314,6 @@ Servizi, qui servono diversi template e va gestito l'attributo "attivo"
           <xsl:attribute name="attivo">s</xsl:attribute>
 					<xsl:element name="a-tempo">n</xsl:element>
 					<xsl:element name="a-pagamento">n</xsl:element>
-					<xsl:element name="con-proxy">n</xsl:element>
           <xsl:if test="internet/modo = 'limitato'">
 						<xsl:element name="con-proxy">s</xsl:element>
           </xsl:if>
