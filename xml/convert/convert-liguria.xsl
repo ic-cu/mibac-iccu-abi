@@ -271,10 +271,13 @@
 			<!--  </xsl:element> -->
 		</xsl:element>
   </xsl:template>
-
 	<xsl:template match="//scheda_BIBLIO/SERVIZI/SERVIZIO">
 		<xsl:element name="informazioni-bibliografiche">
+<<<<<<< HEAD
 			<xsl:attribute name="attivo">s</xsl:attribute>	
+=======
+		<xsl:attribute name="attivo">s</xsl:attribute>
+>>>>>>> branch 'master' of https://code.google.com/p/mibac-iccu-abi
 			<xsl:element name="servizio-interno">s</xsl:element>
 			</xsl:element>
 	</xsl:template>
