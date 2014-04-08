@@ -8,7 +8,7 @@ Non rimuove la fonte dalla url nei contatti, perché è molto più facile
 farlo con un grep.
 -->
 
-  <xsl:output method="xml" indent="yes" encoding="ISO-8859-1"/>
+  <xsl:output method="xml" indent="yes" encoding="UTF-8"/>
 
 <!--
 Template per l'elemento root che si limita a richiamare quello per ogni
