@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
+<xsl:stylesheet xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
 
 <!-- Foglio di stile per la conversione di file 1.5 a file 1.6 -->
 
@@ -13,6 +13,7 @@ un dataExport
 
   <xsl:template match="/biblioteche">
     <xsl:element name="biblioteche">
+ <xsl:attribute name="xsi:noNamespaceSchemaLocation">http://anagrafe.iccu.sbn.it/opencms/opencms/informazioni/formato-di-scambio/biblioteca-1.6.xsd</xsl:attribute>
       <xsl:if test="dataExport">
         <xsl:element name="data-export">
           <xsl:value-of select="dataExport"/>
@@ -218,10 +219,13 @@ un sottoelemento di ciascun materiale, che prima non era ripetibile
     <xsl:element name="cataloghi">
       <xsl:if test="catalogo-generale">
         <xsl:element name="cataloghi-generali">
+          <xsl:apply-templates select="catalogo-generale"/>  
+          <!--
           <xsl:for-each select="catalogo-generale">
             <xsl:copy-of select="."/>
-          </xsl:for-each>
-        </xsl:element>
+            </xsl:for-each>
+        
+          --></xsl:element>
       </xsl:if>
       <xsl:if test="catalogo-speciale">
         <xsl:element name="cataloghi-speciali">
@@ -552,4 +556,47 @@ sicuramente il template si può fare molto meglio di così -->
       <xsl:copy-of select="partita-iva"/>
     </xsl:element>
   </xsl:template>
+
+	<!--
+		I cataloghi generali con molteplici punti d'accesso sono spesso
+		arrivati vuoti. Quelli realmente tali acquistano
+		forma/digitale/supporto=online, e quelli che hanno già questo elemento
+		= "O" lo cambiano in "online", copiando eventuali altri contenuti.
+		Tutti gli altri sono copiati come sono.
+	-->
+
+	<xsl:template match="//catalogo-generale">
+	  <xsl:choose>
+      <xsl:when test="contains(./@tipo, 'olteplici') and not(*)">
+				<xsl:element name="catalogo-generale">
+					<xsl:attribute name="tipo">Molteplici punti d'accesso</xsl:attribute>
+					<forme>
+						<digitale>
+							<supporto>online</supporto>
+						</digitale>
+					</forme>
+				</xsl:element>
+      </xsl:when>
+      <xsl:when test="contains(./@tipo, 'olteplici') and (forme/digitale/supporto = 'O')">
+				<xsl:element name="catalogo-generale">
+					<xsl:attribute name="tipo">Molteplici punti d'accesso</xsl:attribute>
+					<forme>
+					  <xsl:copy-of select="forme/schede"/>
+					  <xsl:copy-of select="formevolume"/>
+					  <xsl:copy-of select="forme/microforme"/>
+						<digitale>
+							<supporto>online</supporto>
+						</digitale>
+					</forme>
+					<xsl:copy-of select="copertura"/>
+				</xsl:element>
+      </xsl:when>
+      <xsl:otherwise>
+      	<xsl:copy-of select="."/>
+      </xsl:otherwise>
+     </xsl:choose>
+	</xsl:template>
+
+
+
 </xsl:stylesheet>
