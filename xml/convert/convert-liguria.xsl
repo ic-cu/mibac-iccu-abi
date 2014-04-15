@@ -1,6 +1,5 @@
 <?xml version="1.0" ?>
 <xsl:stylesheet version="1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-	<xsl:import href="convert-liguria-comune.xsl"/>
   <xsl:output method="xml" indent="yes"/>
 <!--
 	c'è una perfetta corrispondenza fra "listof_scheda_BIBLIO" sorgente
@@ -8,7 +7,6 @@
 	che crea "biblioteche" e poi applicare il template per le singole
 	"scheda_BIBLIO" del sorgente
 -->
-
 	<xsl:template match="/listof_scheda_BIBLIO">
 	  <xsl:element name="biblioteche">
 <xsl:attribute name="xsi:noNamespaceSchemaLocation">http://anagrafe.iccu.sbn.it/opencms/opencms/informazioni/formato-di-scambio/biblioteca-1.6.xsd</xsl:attribute>
@@ -61,6 +59,8 @@
 	  -->	
   </xsl:template> 
 
+ <xsl:import href="convert-liguria-comune.xsl"/>
+  
   <xsl:template match="//scheda_BIBLIO/RECAPITI">
 	<xsl:element name="indirizzo">
 		<xsl:element name="via">
@@ -273,12 +273,8 @@
   </xsl:template>
 	<xsl:template match="//scheda_BIBLIO/SERVIZI/SERVIZIO">
 		<xsl:element name="informazioni-bibliografiche">
-<<<<<<< HEAD
-			<xsl:attribute name="attivo">s</xsl:attribute>	
-=======
 		<xsl:attribute name="attivo">s</xsl:attribute>
->>>>>>> branch 'master' of https://code.google.com/p/mibac-iccu-abi
 			<xsl:element name="servizio-interno">s</xsl:element>
-			</xsl:element>
+	</xsl:element>
 	</xsl:template>
 </xsl:stylesheet>
