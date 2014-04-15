@@ -3,8 +3,10 @@ package xml;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -19,6 +21,7 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
+import org.jdom.output.XMLOutputter;
 import org.jdom.xpath.XPath;
 
 /** Description of the Class */
@@ -130,6 +133,69 @@ public class VarieQuery
 		return doc;
 	}
 
+/*
+ * Finito il controllo delle voci d'autorità, proviamo a estrarre la lista di
+ * tutte le biblioteche "non censite". Si parte dal documento XML caricato.
+ */
+
+	public String isilNonCensite(Document doc)
+	{
+		String isilPath = "//biblioteca/anagrafica/codici/isil";
+		XPath xp;
+		String query = "select";
+		query += " concat('IT-', isil_provincia, lpad(isil_numero, 4, 0 ))";
+		query += " as isil,";
+		query += " sct.descrizione as stato";
+		query += " from biblioteca b, stato_catalogazione sc, stato_catalogazione_tipo sct";
+		query += " where concat('IT-', isil_provincia, lpad(isil_numero, 4, 0 )) = ?";
+		query += " and id_stato_biblioteca_workflow != 4";
+		query += " and sc.id_biblioteca = b.id_biblioteca";
+		query += " and sc.id_stato_catalogazione = sct.id_stato_catalogazione_tipo";
+		String ok = null;
+		int count = 0;
+		try
+		{
+			PreparedStatement isilStmt;
+			isilStmt = conn.prepareStatement(query,
+					ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+
+			xp = XPath.newInstance(isilPath);
+			XPath xp2 = XPath.newInstance("//biblioteca");
+			System.out.println("Trovate "
+					+ doc.getRootElement().getChildren("biblioteca").size()
+					+ " biblioteche nei documenti XML");
+			Iterator<Element> i = xp.selectNodes(doc).iterator();
+			while(i.hasNext())
+			{
+				count++;
+				String isil = i.next().getTextNormalize();
+				isilStmt.setString(1, isil);
+				ResultSet rs = isilStmt.executeQuery();
+				if(rs.next())
+				{
+					System.out.println(isil + " --> " + rs.getString("stato"));
+				}
+				else
+				{
+					ok += isil + "\n";
+				}
+			}
+			System.out.println("Totale biblioteche: " + count);
+			System.out
+					.println("==========\nElenco biblioteche con stato di catalogazione");
+			System.out.println("Biblioteche senza stato di catalogazione:\n" + ok);
+		}
+		catch(JDOMException e)
+		{
+			e.printStackTrace();
+		}
+		catch(SQLException e)
+		{
+			e.printStackTrace();
+		}
+		return ok;
+	}
+
 	public static void main(String[] args)
 	{
 		String driver = args[0];
@@ -145,8 +211,10 @@ public class VarieQuery
 		VarieQuery vq = new VarieQuery(driver, url, user, pass);
 		File[] dir = new File(xml).listFiles();
 		Set ts = null;
-		Document doc = null, doc2;
+		Document doc = new Document(new Element("biblioteche")), doc2;
+		System.out.println("root element: " +  doc.getRootElement().getName());
 		boolean trovato = false;
+		int biblioteche = 0;
 		for(int ii = 0; ii < dir.length; ii++)
 		{
 			if(dir[ii].isFile())
@@ -154,19 +222,31 @@ public class VarieQuery
 				doc2 = vq.load(dir[ii]);
 				Iterator ibib = doc2.getRootElement().getChildren("biblioteca")
 						.iterator();
-				if(!trovato)
+				while(ibib.hasNext())
 				{
-					doc = (Document) doc2.clone();
-					trovato = true;
+					Element bib2 = (Element) ibib.next();
+					Element bib = new Element("biblioteca");
+					bib.addContent(bib2.cloneContent());
+					doc.getRootElement().addContent(bib);
+					biblioteche++;
 				}
-				else
-					while(ibib.hasNext())
-					{
-						Element bib = (Element) ibib.next();
-						doc.getRootElement().addContent(bib.cloneContent());
-					}
 			}
 		}
+
+		System.out.println("Caricate " + biblioteche
+				+ " biblioteche (nel doc sono "
+				+ doc.getRootElement().getChildren("biblioteca").size() + ")");
+
+/*
+ * Si cercano le biblioteche che risultano non censite in ABI.
+ */
+		vq.isilNonCensite(doc);
+
+/*
+ * Si controllano le voci d'autorità
+ */
+
+		System.out.println("==========\nElenco voci d'autorità mancanti");
 		try
 		{
 			BufferedReader conf = new BufferedReader(
