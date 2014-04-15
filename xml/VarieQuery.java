@@ -183,7 +183,7 @@ public class VarieQuery
 			System.out.println("Totale biblioteche: " + count);
 			System.out
 					.println("==========\nElenco biblioteche con stato di catalogazione");
-			System.out.println("Biblioteche senza stato di catalogazione:\n" + ok);
+//			System.out.println("Biblioteche senza stato di catalogazione:\n" + ok);
 		}
 		catch(JDOMException e)
 		{
