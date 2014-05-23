@@ -4,7 +4,7 @@ db.pass =
 
 csv.fs = ;
 
-temp.dir = /tmp
+temp.dir = opendata/tmp
 
 censite.query = \
 	select \
