@@ -6,7 +6,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -64,7 +63,7 @@ public class OpenData
 		String user = config.getProperty("db.user");
 		String pass = config.getProperty("db.pass");
 		db = new DB(DB.mysqlDriver, url, user, pass);
-		
+
 		SimpleDateFormat sdf;
 		sdf = new SimpleDateFormat("yyyyMMdd");
 		today = sdf.format(new Date());
@@ -363,6 +362,67 @@ public class OpenData
 		return output.getBuffer().toString();
 	}
 
+	public Document dewey()
+	{
+		ResultSet bibs;
+		ResultSet bib;
+		PreparedStatement stmt;
+		stmt = db.prepare(config.getProperty("specializzazioni.query"));
+		bibs = db.select(config.getProperty("censite.query"));
+		String isil, dewey, deweyTesto;
+		Document doc = new Document();
+		Element root = new Element("biblioteche");
+		Element biblioteca;
+		Element element;
+		doc.setRootElement(root);
+		int limit = Integer.MAX_VALUE;
+		try
+		{
+			limit = Integer.parseInt(config.getProperty("censite.limit"));
+		}
+		catch(NumberFormatException e)
+		{
+			err("Massimo numero di biblioteche da elaborare ignorato, si userà il massimo intero possibile");
+		}
+		try
+		{
+			while(bibs.next() && limit > 0)
+			{
+				limit--;
+				isil = bibs.getString("isil");
+				biblioteca = new Element("biblioteca");
+				biblioteca.setAttribute("isil", isil);
+				stmt.setString(1, isil);
+				err(isil);
+				bib = stmt.executeQuery();
+				boolean ok = false;
+				while(bib.next())
+				{
+					ok = true;
+					dewey = bib.getString("codice");
+					deweyTesto = bib.getString("dewey-testo");
+					element = new Element("specializzazione");
+					if(dewey != null && dewey.trim() != "")
+					{
+						if(dewey.length() > 3)
+						{
+							dewey = dewey.substring(0, 3) + "." + dewey.substring(3);
+						}
+						element.setAttribute("codice", dewey);
+						element.setText(deweyTesto.trim());
+					}
+					biblioteca.addContent(element);
+				}
+				if(ok) root.addContent(biblioteca);
+			}
+		}
+		catch(SQLException e)
+		{
+			e.printStackTrace();
+		}
+		return doc;
+	}
+
 	public void zip(String fileName)
 	{
 		FileOutputStream fos = null;
@@ -428,46 +488,57 @@ public class OpenData
 		try
 		{
 			XMLOutputter xo = new XMLOutputter(Format.getPrettyFormat());
+			Document doc;
+			PrintWriter pw;
+			String tDir = od.tempDir + "/";
+			String tFile;
 			if(od.config.getProperty("territorio") != null)
 			{
-				PrintWriter pw = new PrintWriter(od.tempDir + "/" +
-						od.config.getProperty("territorio.file"));
+				tFile = od.config.getProperty("territorio.file");
+				pw = new PrintWriter(tDir + tFile);
 				pw.println(od.territorio());
 				pw.close();
-				od.zip(od.config.getProperty("territorio.file"));
-
+				od.zip(tFile);
 			}
 			if(od.config.getProperty("contatti") != null)
 			{
-				Document contatti = od.contatti();
-				xo.output(contatti,
-						new FileWriter(od.tempDir + "/" + od.config.getProperty("contatti.file")));
-				od.zip(od.config.getProperty("contatti.file"));
+				doc = od.contatti();
+				tFile = od.config.getProperty("contatti.file");
+				pw = new PrintWriter(tDir + tFile);
+				xo.output(doc, pw);
+				od.zip(tFile);
 			}
 			if(od.config.getProperty("patrimonio") != null)
 			{
-				Document patrimonio = od.patrimonio();
-				xo = new XMLOutputter(Format.getPrettyFormat());
-				xo.output(patrimonio,
-						new FileWriter(od.tempDir + "/" + od.config.getProperty("patrimonio.file")));
-				od.zip(od.config.getProperty("patrimonio.file"));
+				doc = od.patrimonio();
+				tFile = od.config.getProperty("patrimonio.file");
+				pw = new PrintWriter(tDir + tFile);
+				xo.output(doc, pw);
+				od.zip(tFile);
 			}
 			if(od.config.getProperty("fondi-speciali") != null)
 			{
-				Document fondiSpeciali = od.fondiSpeciali();
-				xo = new XMLOutputter(Format.getPrettyFormat());
-				xo.output(fondiSpeciali,
-						new FileWriter(od.tempDir + "/" + od.config.getProperty("fondi-speciali.file")));
-				od.zip(od.config.getProperty("fondi-speciali.file"));
-
+				doc = od.fondiSpeciali();
+				tFile = od.config.getProperty("fondi-speciali.file");
+				pw = new PrintWriter(tDir + tFile);
+				xo.output(doc, pw);
+				od.zip(tFile);
 			}
 			if(od.config.getProperty("tipologie") != null)
 			{
-				PrintWriter pw = new PrintWriter(
-						od.tempDir + "/" + od.config.getProperty("tipologie.file"));
+				tFile = od.config.getProperty("tipologie.file");
+				pw = new PrintWriter(tDir + tFile);
 				pw.println(od.tipologie());
 				pw.close();
-				od.zip(od.config.getProperty("tipologie.file"));
+				od.zip(tFile);
+			}
+			if(od.config.getProperty("specializzazioni") != null)
+			{
+				doc = od.dewey();
+				tFile = od.config.getProperty("specializzazioni.file");
+				pw = new PrintWriter(tDir + tFile);
+				xo.output(doc, pw);
+				od.zip(tFile);
 			}
 		}
 		catch(FileNotFoundException e)

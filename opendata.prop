@@ -17,13 +17,14 @@ censite.query = \
 		AND `b`.`id_stato_biblioteca_workflow` != 4 \
 	ORDER BY isil ASC
 	
-censite.limit =
+censite.limit = 100
 
 #territorio =
-#contatti =
+contatti =
 #patrimonio =
 #fondi-speciali =
 tipologie = 
+specializzazioni = 
 
 territorio.query = \
 	select \
@@ -131,3 +132,19 @@ tipologie.query = \
 	order by concat('IT-', isil_provincia, lpad(isil_numero, 4, 0))
 
 tipologie.file = tipologie.csv
+
+specializzazioni.query = \
+	SELECT \
+		`dewey`.`id_dewey` AS `codice`, \
+		`dewey`.`descrizione` AS 'dewey-testo' \
+	FROM \
+		`biblioteca_has_dewey` AS `biblioteca_has_dewey`, \
+		`biblioteca` AS `biblioteca`, \
+		`dewey` AS `dewey` \
+	WHERE \
+		`biblioteca_has_dewey`.`id_biblioteca` = `biblioteca`.`id_biblioteca` \
+		AND `biblioteca_has_dewey`.`id_dewey` = `dewey`.`id_dewey` \
+		AND CONCAT( 'IT-', `isil_provincia`, lpad( `isil_numero`, 4, 0 ) ) = ? \
+	order by `dewey`.`id_dewey`
+	
+specializzazioni.file = specializzazioni.xml
