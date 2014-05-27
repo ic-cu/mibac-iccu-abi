@@ -3,7 +3,6 @@ package xml;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -21,7 +20,6 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
-import org.jdom.output.XMLOutputter;
 import org.jdom.xpath.XPath;
 
 /** Description of the Class */
@@ -160,7 +158,6 @@ public class VarieQuery
 					ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
 
 			xp = XPath.newInstance(isilPath);
-			XPath xp2 = XPath.newInstance("//biblioteca");
 			System.out.println("Trovate "
 					+ doc.getRootElement().getChildren("biblioteca").size()
 					+ " biblioteche nei documenti XML");
