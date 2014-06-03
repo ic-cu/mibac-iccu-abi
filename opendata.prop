@@ -1,15 +1,15 @@
-db.url = jdbc:mysql://gauss/abi
-db.user = abi
+db.url = jdbc:mysql:///abi
+db.user = root
 db.pass =
 
-csv.fs = ;
+csv.fs = \t
 
 temp.dir = opendata/tmp
 
 censite.query = \
 	select \
 		concat('IT-', isil_provincia, lpad(isil_numero, 4, 0)) as isil, \
-		b.denominazione_ufficiale as nome \
+		b.denominazione_ufficiale as denominazione \
 	FROM \
 		`stato_catalogazione` RIGHT OUTER JOIN `biblioteca` as b ON `stato_catalogazione`.`id_biblioteca` = `b`.`id_biblioteca` \
 	where \
@@ -17,18 +17,19 @@ censite.query = \
 		AND `b`.`id_stato_biblioteca_workflow` != 4 \
 	ORDER BY isil ASC
 	
-censite.limit = 100
+censite.limit =
 
-#territorio =
-contatti =
-#patrimonio =
+territorio =
+#contatti =
+patrimonio =
 #fondi-speciali =
-tipologie = 
-specializzazioni = 
+#tipologie = 
+#specializzazioni = 
 
 territorio.query = \
 	select \
 		concat('IT-', isil_provincia, lpad(isil_numero, 4, 0)) as `codice isil`, \
+		b.denominazione_ufficiale as denominazione, \
 		b.`indirizzo`, \
 		`b`.`frazione`, \
 		`c`.`denominazione` AS `comune`, \
@@ -37,10 +38,17 @@ territorio.query = \
 		`r`.`denominazione` AS `regione`, \
 		`p`.`codice_istat` AS `codice istat provincia`, \
 		`g`.`latitudine`, \
-		`g`.`longitudine` \
+		`g`.`longitudine`, \
+		contatti.valore as contatto, \
+		contatti.note as note, \
+		contatti.id_contatti_tipi as tipo \
 	FROM \
-		`stato_catalogazione` RIGHT OUTER JOIN `biblioteca` as b ON `stato_catalogazione`.`id_biblioteca` = `b`.`id_biblioteca`, \
-		`comune` AS `c`, \
+		`stato_catalogazione` AS `stato_catalogazione` RIGHT OUTER JOIN \
+		`contatti` AS `contatti` RIGHT OUTER JOIN \
+		`biblioteca` AS `b` \
+		ON `contatti`.`id_biblioteca` = `b`.`id_biblioteca` \
+		ON `stato_catalogazione`.`id_biblioteca` = `b`.`id_biblioteca`, \
+ 		`comune` AS `c`, \
 		`provincia` AS `p`, \
 		`regione` AS `r`, \
 		`geolocalizzazione` AS `g` \
@@ -57,6 +65,7 @@ territorio.file = territorio.csv
 
 patrimonio.query = \
 	SELECT \
+		biblioteca.denominazione_ufficiale as denominazione, \
 		`patrimonio_specializzazione`.`descrizione` AS `nome`, \
 		`patrimonio_specializzazione_categoria`.`descrizione` AS `categoria`, \
 		`patrimonio`.`quantita`, \

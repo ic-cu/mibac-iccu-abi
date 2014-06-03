@@ -15,6 +15,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Properties;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
@@ -33,6 +34,7 @@ public class OpenData
 	private Properties config;
 	private String today;
 	private String tempDir;
+	private String csvSep;
 
 	private void err(String str)
 	{
@@ -72,44 +74,143 @@ public class OpenData
 		File tDir = null;
 		tDir = new File(tempDir);
 		tDir.mkdirs();
+
+		csvSep = config.getProperty("csv.fs");
+		err("[" + csvSep + "]");
 	}
 
 	public String territorio()
 	{
 		String query = config.getProperty("territorio.query");
-		ResultSet rs = db.select(query);
+		err(query);
+		ResultSet bib;
 		ResultSetMetaData rsmd;
 		StringWriter output = new StringWriter();
 		PrintWriter pw;
+		String isil = "", row = null, cell, contatto, note;
+		String tel = "", fax = "", mail = "", url = "";
+		String oldIsil = "";
+		int tipo;
+		int limit = Integer.MAX_VALUE;
+		int columns = 0;
+		int i;
 		try
 		{
+			limit = Integer.parseInt(config.getProperty("censite.limit"));
+		}
+		catch(NumberFormatException e)
+		{
+			err("Massimo numero di biblioteche da elaborare ignorato, si userà il massimo intero possibile");
+		}
+		try
+		{
+			boolean headerOk = false;
 			pw = new PrintWriter(output);
-			rsmd = rs.getMetaData();
-			int columns = rsmd.getColumnCount();
-			int i;
-			String header = "";
-			String row = "";
-			String cell = "";
-			for(i = 1; i < columns; i++)
+			bib = db.select(query);
+			while(bib.next() && limit-- > 0)
 			{
-				header += rsmd.getColumnLabel(i) + ";";
-			}
-			header += rsmd.getColumnLabel(i);
-			pw.println(header);
-			while(rs.next())
-			{
-				row = "";
-				for(i = 1; i < columns; i++)
+				isil = bib.getString(1);
+				try
 				{
-					cell = rs.getString(i);
-					if(cell == null)
+
+					// una sola volta si crea l'header
+					if(!headerOk)
 					{
+						rsmd = bib.getMetaData();
+						columns = rsmd.getColumnCount() - 3;
+						String header = "";
+						row = "";
 						cell = "";
+						for(i = 1; i < columns; i++)
+						{
+							header += rsmd.getColumnLabel(i) + csvSep;
+						}
+						header += rsmd.getColumnLabel(i) + csvSep;
+
+						// si aggiungono all'header quattro campi che saranno riempiti in
+						// base ai tipi di contatti rinvenuti
+
+						header += "telefono" + csvSep;
+						header += "fax" + csvSep;
+						header += "email" + csvSep;
+						header += "url";
+						pw.println(header);
+						headerOk = true;
 					}
-					row += cell.trim() + ";";
+
+					if(!isil.equals(oldIsil))
+					{
+						if(oldIsil != "")
+						{
+							err("nuova biblioteca: " + isil + " (" + oldIsil + ")");
+							row += tel + csvSep + fax + csvSep + mail + csvSep + url;
+							pw.println(row);
+							pw.flush();
+						}
+						row = "";
+						for(i = 1; i < columns; i++)
+						{
+							cell = bib.getString(i);
+							if(cell == null)
+							{
+								cell = "";
+							}
+							row += cell.trim() + csvSep;
+						}
+						row += bib.getString(i) + csvSep;
+						oldIsil = isil;
+						tel = fax = mail = url = "";
+					}
+
+					// vanno gestiti i possibili contatti
+					err("stessa biblioteca: " + isil + " (" + oldIsil + ")");
+					contatto = bib.getString("contatto");
+
+					note = bib.getString("note");
+					tipo = bib.getInt("tipo");
+					if(contatto != null)
+					{
+						contatto = contatto.trim();
+						if(note == null || note.trim() == "")
+						{
+							err(isil + " " + contatto);
+
+							/*
+							 * i contatti vanno selezionati per codice, perché il right join
+							 * non funziona se si estraggono anche i codici e le descrizioni
+							 */
+							switch(tipo)
+							{
+								case 1:
+									// telefono
+									if(tel == "") tel = contatto;
+									err("tel");
+									break;
+								case 2:
+									// fax
+									if(fax == "") fax = contatto;
+									err("fax");
+									break;
+								case 3:
+									// mail
+									if(mail == "") mail = contatto;
+									err("mail");
+									break;
+								case 5:
+									// url
+									if(url == "") url = contatto;
+									err("url");
+									break;
+								default:
+									break;
+							}
+						}
+					}
 				}
-				row += rs.getString(i);
-				pw.println(row);
+				catch(SQLException e)
+				{
+					err("Errore SQL: " + e.getMessage());
+				}
 			}
 			pw.close();
 		}
@@ -127,7 +228,7 @@ public class OpenData
 		PreparedStatement patrimonioStmt;
 		patrimonioStmt = db.prepare(config.getProperty("patrimonio.query"));
 		bibs = db.select(config.getProperty("censite.query"));
-		String isil, nome, categoria;
+		String isil, denominazione, nome, categoria;
 		int totalePosseduto, acquistiUltimoAnno;
 		Document doc = new Document();
 		Element root = new Element("biblioteche");
@@ -149,8 +250,10 @@ public class OpenData
 			{
 				limit--;
 				isil = bibs.getString("isil");
+				denominazione = bibs.getString("denominazione");
 				biblioteca = new Element("biblioteca");
 				biblioteca.setAttribute("isil", isil);
+				biblioteca.setAttribute("denominazione", denominazione);
 				patrimonioStmt.setString(1, isil);
 				bib = patrimonioStmt.executeQuery();
 				boolean ok = false;
@@ -485,6 +588,10 @@ public class OpenData
 	{
 		OpenData od = new OpenData();
 		od.out("Creazione file in formati open data");
+		GregorianCalendar gc = new GregorianCalendar();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+		od.err(sdf.format(gc.getTime()));
+		System.gc();
 		try
 		{
 			XMLOutputter xo = new XMLOutputter(Format.getPrettyFormat());
@@ -549,9 +656,10 @@ public class OpenData
 		{
 			od.err("Errore di I/O: " + e.getMessage());
 		}
-		catch(NullPointerException e)
-		{
-			od.err("Puntatore nullo: " + e.getMessage());
-		}
+		// catch(NullPointerException e)
+		// {
+		// od.err("Puntatore nullo: " + e.getMessage());
+		// }
+		od.err(sdf.format(gc.getTime()));
 	}
 }
