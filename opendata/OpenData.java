@@ -318,7 +318,7 @@ public class OpenData
 		PreparedStatement stmt;
 		stmt = db.prepare(config.getProperty("fondi-speciali.query"));
 		bibs = db.select(config.getProperty("censite.query"));
-		String isil, nome, descrizione, dewey, deweyTesto;
+		String nome, descrizione, dewey, deweyTesto;
 		Document doc = new Document();
 		Element root = new Element("biblioteche");
 		Element biblioteca;
@@ -338,10 +338,10 @@ public class OpenData
 			while(bibs.next() && limit > 0)
 			{
 				limit--;
-				isil = bibs.getString("isil");
 				biblioteca = new Element("biblioteca");
-				biblioteca.setAttribute("isil", isil);
-				stmt.setString(1, isil);
+				biblioteca.setAttribute("isil", bibs.getString("isil"));
+				biblioteca.setAttribute("denominazione", bibs.getString("denominazione"));
+				stmt.setInt(1, bibs.getInt("id"));
 				bib = stmt.executeQuery();
 				boolean ok = false;
 				while(bib.next())
@@ -387,9 +387,9 @@ public class OpenData
 		ResultSet bib;
 		PreparedStatement stmt;
 		stmt = db.prepare(config.getProperty("contatti.query"));
-		err(config.getProperty("censite.query"));
+		log.debug("Query: " + config.getProperty("censite.query"));
 		bibs = db.select(config.getProperty("censite.query"));
-		String isil, denominazione, contatto, tipo, note;
+		String contatto, tipo, note;
 		Document doc = new Document();
 		Element root = new Element("biblioteche");
 		Element biblioteca;
@@ -402,19 +402,17 @@ public class OpenData
 		}
 		catch(NumberFormatException e)
 		{
-			err("Massimo numero di biblioteche da elaborare ignorato, si userà il massimo intero possibile");
+			log.info("Massimo numero di biblioteche da elaborare ignorato, si userà il massimo intero possibile");
 		}
 		try
 		{
 			while(bibs.next() && limit > 0)
 			{
 				limit--;
-				isil = bibs.getString("isil");
-				denominazione = bibs.getString("denominazione");
 				biblioteca = new Element("biblioteca");
-				biblioteca.setAttribute("isil", isil);
-				biblioteca.setAttribute("denominazione", denominazione);
-				stmt.setString(1, isil);
+				biblioteca.setAttribute("isil", bibs.getString("isil"));
+				biblioteca.setAttribute("denominazione", bibs.getString("denominazione"));
+				stmt.setInt(1, bibs.getInt("id"));
 				bib = stmt.executeQuery();
 				boolean ok = false;
 				while(bib.next())
@@ -423,7 +421,6 @@ public class OpenData
 					contatto = bib.getString("contatto");
 					tipo = bib.getString("tipo");
 					note = bib.getString("note");
-					err(contatto);
 					contattoElement = new Element("contatto");
 					contattoElement.setAttribute("tipo", tipo.toLowerCase());
 					if(note != null && note.trim() != "")
@@ -509,7 +506,7 @@ public class OpenData
 		}
 		catch(NumberFormatException e)
 		{
-			err("Massimo numero di biblioteche da elaborare ignorato, si userà il massimo intero possibile");
+			log.info("Massimo numero di biblioteche da elaborare ignorato, si userà il massimo intero possibile");
 		}
 		try
 		{
@@ -518,9 +515,9 @@ public class OpenData
 				limit--;
 				isil = bibs.getString("isil");
 				biblioteca = new Element("biblioteca");
-				biblioteca.setAttribute("isil", isil);
-				stmt.setString(1, isil);
-				err(isil);
+				biblioteca.setAttribute("isil", bibs.getString("isil"));
+				biblioteca.setAttribute("denominazione", bibs.getString("denominazione"));
+				stmt.setInt(1, bibs.getInt("id"));
 				bib = stmt.executeQuery();
 				boolean ok = false;
 				while(bib.next())

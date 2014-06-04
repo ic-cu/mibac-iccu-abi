@@ -24,10 +24,10 @@ censite.limit =
 
 #territorio =
 #contatti =
-patrimonio =
+#patrimonio =
 #fondi-speciali =
 #tipologie = 
-#specializzazioni = 
+specializzazioni = 
 
 territorio.query = \
 	select \
@@ -89,13 +89,11 @@ contatti.query = \
 		`contatti`.`note`, \
 		`contatti_tipo`.`descrizione` as `tipo` \
 	FROM \
-		`stato_catalogazione` RIGHT OUTER JOIN `biblioteca` as biblioteca ON `stato_catalogazione`.`id_biblioteca` = `biblioteca`.`id_biblioteca`, \
 		`contatti` AS `contatti`, \
 		`contatti_tipo` AS `contatti_tipo` \
 	WHERE \
-		`contatti`.`id_biblioteca` = `biblioteca`.`id_biblioteca` \
+		`contatti`.`id_biblioteca` = ? \
 		AND `contatti`.`id_contatti_tipi` = `contatti_tipo`.`id_contatti_tipo` \
-		and CONCAT(isil_stato, '-', isil_provincia, lpad(isil_numero, 4, 0)) = ? \
   order by tipo
   
 contatti.file = contatti.xml
@@ -109,14 +107,11 @@ fondi-speciali.query = \
   FROM \
   	`fondi_speciali` AS `fondi_speciali`, \
   	`dewey` AS `dewey`, \
-  	`biblioteca_has_fondi_speciali` AS `biblioteca_has_fondi_speciali`, \
-		`stato_catalogazione` AS `stato_catalogazione` RIGHT OUTER JOIN `biblioteca` AS `biblioteca` ON `stato_catalogazione`.`id_biblioteca` = `biblioteca`.`id_biblioteca` \
+  	`biblioteca_has_fondi_speciali` AS `biblioteca_has_fondi_speciali` \
   WHERE \
   	`fondi_speciali`.`id_dewey` = `dewey`.`id_dewey` \
-  	AND `biblioteca_has_fondi_speciali`.`id_biblioteca` = `biblioteca`.`id_biblioteca` \
-  	AND `biblioteca_has_fondi_speciali`.`id_fondi_speciali` = `fondi_speciali`.`id_fondi_speciali` \
-  	AND CONCAT( 'IT-', `isil_provincia`, lpad( `isil_numero`, 4, 0 ) ) = ? \
-		AND `stato_catalogazione`.`id_stato_catalogazione` IS NULL
+  	AND `biblioteca_has_fondi_speciali`.`id_biblioteca` = ? \
+  	AND `biblioteca_has_fondi_speciali`.`id_fondi_speciali` = `fondi_speciali`.`id_fondi_speciali`
 		
 fondi-speciali.file = fondi-speciali.xml  
 
@@ -147,12 +142,10 @@ specializzazioni.query = \
 		`dewey`.`descrizione` AS 'dewey-testo' \
 	FROM \
 		`biblioteca_has_dewey` AS `biblioteca_has_dewey`, \
-		`biblioteca` AS `biblioteca`, \
 		`dewey` AS `dewey` \
 	WHERE \
-		`biblioteca_has_dewey`.`id_biblioteca` = `biblioteca`.`id_biblioteca` \
+		`biblioteca_has_dewey`.`id_biblioteca` = ? \
 		AND `biblioteca_has_dewey`.`id_dewey` = `dewey`.`id_dewey` \
-		AND CONCAT( 'IT-', `isil_provincia`, lpad( `isil_numero`, 4, 0 ) ) = ? \
 	order by `dewey`.`id_dewey`
 	
 specializzazioni.file = specializzazioni.xml
