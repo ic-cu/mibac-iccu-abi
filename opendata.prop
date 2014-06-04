@@ -5,13 +5,16 @@ db.pass =
 csv.fs = \t
 
 temp.dir = opendata/tmp
+log.file = opendata/tmp/opendata.log
 
 censite.query = \
 	select \
 		concat('IT-', isil_provincia, lpad(isil_numero, 4, 0)) as isil, \
-		b.denominazione_ufficiale as denominazione \
+		b.denominazione_ufficiale as denominazione, \
+		b.id_biblioteca as id \
 	FROM \
-		`stato_catalogazione` RIGHT OUTER JOIN `biblioteca` as b ON `stato_catalogazione`.`id_biblioteca` = `b`.`id_biblioteca` \
+		`stato_catalogazione` RIGHT OUTER JOIN `biblioteca` as b \
+		ON `stato_catalogazione`.`id_biblioteca` = `b`.`id_biblioteca` \
 	where \
 		stato_catalogazione.id_stato_catalogazione IS NULL \
 		AND `b`.`id_stato_biblioteca_workflow` != 4 \
@@ -19,7 +22,7 @@ censite.query = \
 	
 censite.limit =
 
-territorio =
+#territorio =
 #contatti =
 patrimonio =
 #fondi-speciali =
@@ -65,22 +68,18 @@ territorio.file = territorio.csv
 
 patrimonio.query = \
 	SELECT \
-		biblioteca.denominazione_ufficiale as denominazione, \
 		`patrimonio_specializzazione`.`descrizione` AS `nome`, \
 		`patrimonio_specializzazione_categoria`.`descrizione` AS `categoria`, \
 		`patrimonio`.`quantita`, \
 		`patrimonio`.`quantita_ultimo_anno` AS `acquisti-ultimo-anno` \
 	FROM \
-		`stato_catalogazione` RIGHT OUTER JOIN `biblioteca` as biblioteca ON `stato_catalogazione`.`id_biblioteca` = `biblioteca`.`id_biblioteca`, \
 		`patrimonio` AS `patrimonio`, \
 		`patrimonio_specializzazione` AS `patrimonio_specializzazione`, \
 		`patrimonio_specializzazione_categoria` AS `patrimonio_specializzazione_categoria` \
 	WHERE \
-		`patrimonio`.`id_biblioteca` = `biblioteca`.`id_biblioteca` \
-		AND `patrimonio`.`id_patrimonio_specializzazione` = `patrimonio_specializzazione`.`id_patrimonio_specializzazione` \
+		`patrimonio`.`id_patrimonio_specializzazione` = `patrimonio_specializzazione`.`id_patrimonio_specializzazione` \
 		AND `patrimonio_specializzazione`.`id_patrimonio_specializzazione_categoria` = `patrimonio_specializzazione_categoria`.`id_patrimonio_specializzazione_categoria` \
-		AND CONCAT( `isil_stato`, '-', `isil_provincia`, lpad( `isil_numero`, 4, 0 ) ) = ? \
-		AND `stato_catalogazione`.`id_stato_catalogazione` IS NULL
+		AND `patrimonio`.`id_biblioteca` = ?
 		
 patrimonio.file = patrimonio.xml
 

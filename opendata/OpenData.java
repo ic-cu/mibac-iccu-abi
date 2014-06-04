@@ -26,6 +26,11 @@ import org.jdom.Element;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PatternLayout;
+import org.apache.log4j.WriterAppender;
+
 import sql.DB;
 
 public class OpenData
@@ -35,7 +40,9 @@ public class OpenData
 	private String today;
 	private String tempDir;
 	private String csvSep;
-
+	private Logger log;
+	private static String	logLayout	= "%05r %p %C{1}.%M - %m%n";
+	
 	private void err(String str)
 	{
 		System.err.println(str);
@@ -46,16 +53,33 @@ public class OpenData
 		System.out.println(str);
 	}
 
+	private void initLogger() throws FileNotFoundException
+	{
+		// logger generico
+		log = Logger.getLogger("OPENDATA");
+		log.setLevel(Level.INFO);
+		PatternLayout pl = new PatternLayout(logLayout);
+		File lf = new File(config.getProperty("log.file"));
+		PrintWriter pw = new PrintWriter(lf);
+		WriterAppender wa = new WriterAppender(pl, pw);
+		log.addAppender(wa);
+		wa = new WriterAppender(pl, System.out);
+		log.addAppender(wa);
+		// BasicConfigurator.configure(wa);
+	}
+
+
 	public OpenData()
 	{
 		config = new Properties();
 		try
 		{
 			config.load(new FileReader("opendata.prop"));
+			initLogger();
 		}
 		catch(FileNotFoundException e)
 		{
-			err("File di configurazione non trovato: " + e.getMessage());
+			log.warn("File non trovato: " + e.getMessage());
 		}
 		catch(IOException e)
 		{
@@ -76,7 +100,7 @@ public class OpenData
 		tDir.mkdirs();
 
 		csvSep = config.getProperty("csv.fs");
-		err("[" + csvSep + "]");
+		log.info("Separatore campi per formato CSV [" + csvSep + "]");
 	}
 
 	public String territorio()
@@ -100,7 +124,7 @@ public class OpenData
 		}
 		catch(NumberFormatException e)
 		{
-			err("Massimo numero di biblioteche da elaborare ignorato, si userà il massimo intero possibile");
+			log.info("Massimo numero di biblioteche da elaborare ignorato, si userà il massimo intero possibile");
 		}
 		try
 		{
@@ -142,7 +166,6 @@ public class OpenData
 					{
 						if(oldIsil != "")
 						{
-							err("nuova biblioteca: " + isil + " (" + oldIsil + ")");
 							row += tel + csvSep + fax + csvSep + mail + csvSep + url;
 							pw.println(row);
 							pw.flush();
@@ -163,7 +186,6 @@ public class OpenData
 					}
 
 					// vanno gestiti i possibili contatti
-					err("stessa biblioteca: " + isil + " (" + oldIsil + ")");
 					contatto = bib.getString("contatto");
 
 					note = bib.getString("note");
@@ -173,8 +195,6 @@ public class OpenData
 						contatto = contatto.trim();
 						if(note == null || note.trim() == "")
 						{
-							err(isil + " " + contatto);
-
 							/*
 							 * i contatti vanno selezionati per codice, perché il right join
 							 * non funziona se si estraggono anche i codici e le descrizioni
@@ -209,14 +229,14 @@ public class OpenData
 				}
 				catch(SQLException e)
 				{
-					err("Errore SQL: " + e.getMessage());
+					log.error("Errore SQL: " + e.getMessage());
 				}
 			}
 			pw.close();
 		}
 		catch(SQLException e)
 		{
-			err("Errore SQL: " + e.getMessage());
+			log.error("Errore SQL: " + e.getMessage());
 		}
 		return output.getBuffer().toString();
 	}
@@ -225,11 +245,12 @@ public class OpenData
 	{
 		ResultSet bibs;
 		ResultSet bib;
-		PreparedStatement patrimonioStmt;
-		patrimonioStmt = db.prepare(config.getProperty("patrimonio.query"));
+		PreparedStatement stmt;
+		stmt = db.prepare(config.getProperty("patrimonio.query"));
 		bibs = db.select(config.getProperty("censite.query"));
 		String isil, denominazione, nome, categoria;
 		int totalePosseduto, acquistiUltimoAnno;
+		int idBib;
 		Document doc = new Document();
 		Element root = new Element("biblioteche");
 		Element biblioteca;
@@ -242,7 +263,7 @@ public class OpenData
 		}
 		catch(NumberFormatException e)
 		{
-			err("Massimo numero di biblioteche da elaborare ignorato, si userà il massimo intero possibile");
+			log.info("Massimo numero di biblioteche da elaborare ignorato, si userà il massimo intero possibile");
 		}
 		try
 		{
@@ -250,12 +271,13 @@ public class OpenData
 			{
 				limit--;
 				isil = bibs.getString("isil");
+				idBib = bibs.getInt("id");
 				denominazione = bibs.getString("denominazione");
 				biblioteca = new Element("biblioteca");
 				biblioteca.setAttribute("isil", isil);
 				biblioteca.setAttribute("denominazione", denominazione);
-				patrimonioStmt.setString(1, isil);
-				bib = patrimonioStmt.executeQuery();
+				stmt.setInt(1, idBib);
+				bib = stmt.executeQuery();
 				boolean ok = false;
 				while(bib.next())
 				{
@@ -363,11 +385,11 @@ public class OpenData
 	{
 		ResultSet bibs;
 		ResultSet bib;
-		PreparedStatement contattiStmt;
-		contattiStmt = db.prepare(config.getProperty("contatti.query"));
+		PreparedStatement stmt;
+		stmt = db.prepare(config.getProperty("contatti.query"));
 		err(config.getProperty("censite.query"));
 		bibs = db.select(config.getProperty("censite.query"));
-		String isil, contatto, tipo, note;
+		String isil, denominazione, contatto, tipo, note;
 		Document doc = new Document();
 		Element root = new Element("biblioteche");
 		Element biblioteca;
@@ -388,10 +410,12 @@ public class OpenData
 			{
 				limit--;
 				isil = bibs.getString("isil");
+				denominazione = bibs.getString("denominazione");
 				biblioteca = new Element("biblioteca");
 				biblioteca.setAttribute("isil", isil);
-				contattiStmt.setString(1, isil);
-				bib = contattiStmt.executeQuery();
+				biblioteca.setAttribute("denominazione", denominazione);
+				stmt.setString(1, isil);
+				bib = stmt.executeQuery();
 				boolean ok = false;
 				while(bib.next())
 				{
