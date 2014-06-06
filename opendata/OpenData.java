@@ -39,35 +39,51 @@ public class OpenData
 	private Properties config;
 	private String today;
 	private String tempDir;
-	private String csvSep;
+	private String csvFS, csvTS, csvBOM;
 	private Logger log;
-	private static String	logLayout	= "%05r %p %C{1}.%M - %m%n";
-	
+// private static String logLayout =
+// "%d{yyyy-MM-dd HH:mm:ss} %05r %p %C{1}.%M - %m%n";
+// private static String logLayout =
+// "%d{yyyy-MM-dd HH:mm:ss} %p %C{1}.%M - %m%n";
+	private long totalStart, totalStop, partialStart, partialStop;
+
 	private void err(String str)
 	{
 		System.err.println(str);
 	}
 
-	private void out(String str)
+	private String wrap(String field, boolean last)
 	{
-		System.out.println(str);
+		String tmp = csvTS + field + csvTS;
+		if(!last)
+		{
+			tmp += csvFS;
+		}
+		return tmp;
+	}
+
+	private String wrap(String field)
+	{
+		return wrap(field, false);
 	}
 
 	private void initLogger() throws FileNotFoundException
 	{
 		// logger generico
+		PatternLayout pl;
+		File lf;
+		PrintWriter pw;
+		WriterAppender wa;
 		log = Logger.getLogger("OPENDATA");
 		log.setLevel(Level.INFO);
-		PatternLayout pl = new PatternLayout(logLayout);
-		File lf = new File(config.getProperty("log.file"));
-		PrintWriter pw = new PrintWriter(lf);
-		WriterAppender wa = new WriterAppender(pl, pw);
+		pl = new PatternLayout(config.getProperty("log.pattern"));
+		lf = new File(config.getProperty("log.file"));
+		pw = new PrintWriter(lf);
+		wa = new WriterAppender(pl, pw);
 		log.addAppender(wa);
 		wa = new WriterAppender(pl, System.out);
 		log.addAppender(wa);
-		// BasicConfigurator.configure(wa);
 	}
-
 
 	public OpenData()
 	{
@@ -99,14 +115,20 @@ public class OpenData
 		tDir = new File(tempDir);
 		tDir.mkdirs();
 
-		csvSep = config.getProperty("csv.fs");
-		log.info("Separatore campi per formato CSV [" + csvSep + "]");
+		csvFS = config.getProperty("csv.fs");
+		csvTS = config.getProperty("csv.ts");
+		csvBOM = config.getProperty("csv.bom");
+		log.info("Separatore campi per formato CSV [" + csvFS + "]");
+		log.info("Separatore testo per formato CSV [" + csvTS + "]");
+
+		new GregorianCalendar();
+		sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 	}
 
 	public String territorio()
 	{
 		String query = config.getProperty("territorio.query");
-		err(query);
+		log.debug("Query: " + query);
 		ResultSet bib;
 		ResultSetMetaData rsmd;
 		StringWriter output = new StringWriter();
@@ -118,13 +140,15 @@ public class OpenData
 		int limit = Integer.MAX_VALUE;
 		int columns = 0;
 		int i;
+		log.info("Elaborazione territorio");
+		partialStart = System.nanoTime();
 		try
 		{
 			limit = Integer.parseInt(config.getProperty("censite.limit"));
 		}
 		catch(NumberFormatException e)
 		{
-			log.info("Massimo numero di biblioteche da elaborare ignorato, si userà il massimo intero possibile");
+			log.warn("Massimo numero di biblioteche da elaborare ignorato, si userà il massimo intero possibile");
 		}
 		try
 		{
@@ -137,27 +161,28 @@ public class OpenData
 				try
 				{
 
-					// una sola volta si crea l'header
+// una sola volta si crea l'header
+
 					if(!headerOk)
 					{
 						rsmd = bib.getMetaData();
 						columns = rsmd.getColumnCount() - 3;
-						String header = "";
+						String header = csvBOM;
 						row = "";
 						cell = "";
 						for(i = 1; i < columns; i++)
 						{
-							header += rsmd.getColumnLabel(i) + csvSep;
+							header += wrap(rsmd.getColumnLabel(i));
 						}
-						header += rsmd.getColumnLabel(i) + csvSep;
+						header += wrap(rsmd.getColumnLabel(i));
 
-						// si aggiungono all'header quattro campi che saranno riempiti in
-						// base ai tipi di contatti rinvenuti
+// si aggiungono all'header quattro campi che saranno riempiti in
+// base ai tipi di contatti rinvenuti
 
-						header += "telefono" + csvSep;
-						header += "fax" + csvSep;
-						header += "email" + csvSep;
-						header += "url";
+						header += wrap("telefono");
+						header += wrap("fax");
+						header += wrap("email");
+						header += wrap("url", true);
 						pw.println(header);
 						headerOk = true;
 					}
@@ -166,7 +191,7 @@ public class OpenData
 					{
 						if(oldIsil != "")
 						{
-							row += tel + csvSep + fax + csvSep + mail + csvSep + url;
+							row += wrap(tel) + wrap(fax) + wrap(mail) + wrap(url, true);
 							pw.println(row);
 							pw.flush();
 						}
@@ -178,9 +203,9 @@ public class OpenData
 							{
 								cell = "";
 							}
-							row += cell.trim() + csvSep;
+							row += wrap(cell.trim());
 						}
-						row += bib.getString(i) + csvSep;
+						row += wrap(bib.getString(i));
 						oldIsil = isil;
 						tel = fax = mail = url = "";
 					}
@@ -204,22 +229,18 @@ public class OpenData
 								case 1:
 									// telefono
 									if(tel == "") tel = contatto;
-									err("tel");
 									break;
 								case 2:
 									// fax
 									if(fax == "") fax = contatto;
-									err("fax");
 									break;
 								case 3:
 									// mail
 									if(mail == "") mail = contatto;
-									err("mail");
 									break;
 								case 5:
 									// url
 									if(url == "") url = contatto;
-									err("url");
 									break;
 								default:
 									break;
@@ -238,6 +259,9 @@ public class OpenData
 		{
 			log.error("Errore SQL: " + e.getMessage());
 		}
+		partialStop = System.nanoTime();
+		log.info("Elaborazione territorio terminata in "
+				+ (partialStop - partialStart) / 1000000000 + " secondi");
 		return output.getBuffer().toString();
 	}
 
@@ -257,13 +281,15 @@ public class OpenData
 		Element patrimonioElement;
 		doc.setRootElement(root);
 		int limit = Integer.MAX_VALUE;
+		log.info("Elaborazione patrimonio");
+		partialStart = System.nanoTime();
 		try
 		{
 			limit = Integer.parseInt(config.getProperty("censite.limit"));
 		}
 		catch(NumberFormatException e)
 		{
-			log.info("Massimo numero di biblioteche da elaborare ignorato, si userà il massimo intero possibile");
+			log.warn("Massimo numero di biblioteche da elaborare ignorato, si userà il massimo intero possibile");
 		}
 		try
 		{
@@ -286,7 +312,6 @@ public class OpenData
 					categoria = bib.getString("categoria");
 					totalePosseduto = bib.getInt("quantita");
 					acquistiUltimoAnno = bib.getInt("acquisti-ultimo-anno");
-					err(nome);
 					patrimonioElement = new Element("materiale");
 					patrimonioElement.setAttribute("categoria", categoria);
 					if(totalePosseduto != 0)
@@ -308,6 +333,9 @@ public class OpenData
 		{
 			e.printStackTrace();
 		}
+		partialStop = System.nanoTime();
+		log.info("Elaborazione patrimonio terminata in "
+				+ (partialStop - partialStart) / 1000000000 + " secondi");
 		return doc;
 	}
 
@@ -325,13 +353,15 @@ public class OpenData
 		Element element;
 		doc.setRootElement(root);
 		int limit = Integer.MAX_VALUE;
+		log.info("Elaborazione fondi speciali");
+		partialStart = System.nanoTime();
 		try
 		{
 			limit = Integer.parseInt(config.getProperty("censite.limit"));
 		}
 		catch(NumberFormatException e)
 		{
-			err("Massimo numero di biblioteche da elaborare ignorato, si userà il massimo intero possibile");
+			log.warn("Massimo numero di biblioteche da elaborare ignorato, si userà il massimo intero possibile");
 		}
 		try
 		{
@@ -340,7 +370,8 @@ public class OpenData
 				limit--;
 				biblioteca = new Element("biblioteca");
 				biblioteca.setAttribute("isil", bibs.getString("isil"));
-				biblioteca.setAttribute("denominazione", bibs.getString("denominazione"));
+				biblioteca.setAttribute("denominazione",
+						bibs.getString("denominazione"));
 				stmt.setInt(1, bibs.getInt("id"));
 				bib = stmt.executeQuery();
 				boolean ok = false;
@@ -351,7 +382,6 @@ public class OpenData
 					descrizione = bib.getString("descrizione");
 					dewey = bib.getString("dewey");
 					deweyTesto = bib.getString("dewey-testo");
-					err(nome);
 					element = new Element("fondo-speciale");
 					if(descrizione != null && descrizione.trim() != "")
 					{
@@ -378,6 +408,9 @@ public class OpenData
 		{
 			e.printStackTrace();
 		}
+		partialStop = System.nanoTime();
+		log.info("Elaborazione fondi speciali terminata in "
+				+ (partialStop - partialStart) / 1000000000 + " secondi");
 		return doc;
 	}
 
@@ -396,13 +429,15 @@ public class OpenData
 		Element contattoElement;
 		doc.setRootElement(root);
 		int limit = Integer.MAX_VALUE;
+		log.info("Elaborazione contatti");
+		partialStart = System.nanoTime();
 		try
 		{
 			limit = Integer.parseInt(config.getProperty("censite.limit"));
 		}
 		catch(NumberFormatException e)
 		{
-			log.info("Massimo numero di biblioteche da elaborare ignorato, si userà il massimo intero possibile");
+			log.warn("Massimo numero di biblioteche da elaborare ignorato, si userà il massimo intero possibile");
 		}
 		try
 		{
@@ -411,7 +446,8 @@ public class OpenData
 				limit--;
 				biblioteca = new Element("biblioteca");
 				biblioteca.setAttribute("isil", bibs.getString("isil"));
-				biblioteca.setAttribute("denominazione", bibs.getString("denominazione"));
+				biblioteca.setAttribute("denominazione",
+						bibs.getString("denominazione"));
 				stmt.setInt(1, bibs.getInt("id"));
 				bib = stmt.executeQuery();
 				boolean ok = false;
@@ -437,6 +473,9 @@ public class OpenData
 		{
 			e.printStackTrace();
 		}
+		partialStop = System.nanoTime();
+		log.info("Elaborazione contatti terminata in "
+				+ (partialStop - partialStart) / 1000000000 + " secondi");
 		return doc;
 	}
 
@@ -447,20 +486,22 @@ public class OpenData
 		ResultSetMetaData rsmd;
 		StringWriter output = new StringWriter();
 		PrintWriter pw;
+		log.info("Elaborazione tipologie");
+		partialStart = System.nanoTime();
 		try
 		{
 			pw = new PrintWriter(output);
 			rsmd = rs.getMetaData();
 			int columns = rsmd.getColumnCount();
 			int i;
-			String header = "";
+			String header = csvBOM;
 			String row = "";
 			String cell = "";
 			for(i = 1; i < columns; i++)
 			{
-				header += rsmd.getColumnLabel(i) + ";";
+				header += csvTS + rsmd.getColumnLabel(i) + csvTS + csvFS;
 			}
-			header += rsmd.getColumnLabel(i);
+			header += csvTS + rsmd.getColumnLabel(i) + csvTS;
 			pw.println(header);
 			while(rs.next())
 			{
@@ -472,9 +513,9 @@ public class OpenData
 					{
 						cell = "";
 					}
-					row += cell.trim() + ";";
+					row += csvTS + cell.trim() + csvTS + csvFS;
 				}
-				row += rs.getString(i);
+				row += csvTS + rs.getString(i) + csvTS;
 				pw.println(row);
 			}
 			pw.close();
@@ -483,6 +524,9 @@ public class OpenData
 		{
 			err("Errore SQL: " + e.getMessage());
 		}
+		partialStop = System.nanoTime();
+		log.info("Elaborazione tipologie terminata in "
+				+ (partialStop - partialStart) / 1000000000 + " secondi");
 		return output.getBuffer().toString();
 	}
 
@@ -493,30 +537,32 @@ public class OpenData
 		PreparedStatement stmt;
 		stmt = db.prepare(config.getProperty("specializzazioni.query"));
 		bibs = db.select(config.getProperty("censite.query"));
-		String isil, dewey, deweyTesto;
+		String dewey, deweyTesto;
 		Document doc = new Document();
 		Element root = new Element("biblioteche");
 		Element biblioteca;
 		Element element;
 		doc.setRootElement(root);
 		int limit = Integer.MAX_VALUE;
+		log.info("Elaborazione specializzazioni");
+		partialStart = System.nanoTime();
 		try
 		{
 			limit = Integer.parseInt(config.getProperty("censite.limit"));
 		}
 		catch(NumberFormatException e)
 		{
-			log.info("Massimo numero di biblioteche da elaborare ignorato, si userà il massimo intero possibile");
+			log.warn("Massimo numero di biblioteche da elaborare ignorato, si userà il massimo intero possibile");
 		}
 		try
 		{
 			while(bibs.next() && limit > 0)
 			{
 				limit--;
-				isil = bibs.getString("isil");
 				biblioteca = new Element("biblioteca");
 				biblioteca.setAttribute("isil", bibs.getString("isil"));
-				biblioteca.setAttribute("denominazione", bibs.getString("denominazione"));
+				biblioteca.setAttribute("denominazione",
+						bibs.getString("denominazione"));
 				stmt.setInt(1, bibs.getInt("id"));
 				bib = stmt.executeQuery();
 				boolean ok = false;
@@ -544,6 +590,9 @@ public class OpenData
 		{
 			e.printStackTrace();
 		}
+		partialStop = System.nanoTime();
+		log.info("Elaborazione specializzazioni terminata in "
+				+ (partialStop - partialStart) / 1000000000 + " secondi");
 		return doc;
 	}
 
@@ -608,11 +657,9 @@ public class OpenData
 	public static void main(String[] args)
 	{
 		OpenData od = new OpenData();
-		od.out("Creazione file in formati open data");
-		GregorianCalendar gc = new GregorianCalendar();
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-		od.err(sdf.format(gc.getTime()));
+		od.log.info("Creazione file in formati open data");
 		System.gc();
+		od.totalStart = System.nanoTime();
 		try
 		{
 			XMLOutputter xo = new XMLOutputter(Format.getPrettyFormat());
@@ -671,16 +718,14 @@ public class OpenData
 		}
 		catch(FileNotFoundException e)
 		{
-			od.err("File non trovato: " + e.getMessage());
+			od.log.error("File non trovato: " + e.getMessage());
 		}
 		catch(IOException e)
 		{
-			od.err("Errore di I/O: " + e.getMessage());
+			od.log.error("Errore di I/O: " + e.getMessage());
 		}
-		// catch(NullPointerException e)
-		// {
-		// od.err("Puntatore nullo: " + e.getMessage());
-		// }
-		od.err(sdf.format(gc.getTime()));
+		od.totalStop = System.nanoTime();
+		od.log.info("Esecuzione terminata in " + (od.totalStop - od.totalStart)
+				/ 1000000000 + " secondi");
 	}
 }
