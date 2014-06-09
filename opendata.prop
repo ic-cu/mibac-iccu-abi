@@ -15,6 +15,34 @@ csv.bom = \uFEFF
 temp.dir = opendata/tmp
 log.file = opendata/tmp/opendata.log
 log.pattern = %d{yyyy-MM-dd HH:mm:ss} %p %C{1}.%M - %m%n
+dateStamp.pattern = yyyy-MM-dd'T'HH:mm:ss
+
+## se non nullo, questo valore è il numero di biblioteche che saranno elaborate
+## è usato solo in fase di test
+
+censite.limit = 100
+
+## una serie di flag per indicare quali informazioni trattare; se non presenti,
+## indicano che una certa informazione non va trattata
+
+territorio =
+#contatti =
+#patrimonio =
+#fondi-speciali =
+#tipologie = 
+#specializzazioni = 
+
+## nomi dei file di output
+
+territorio.file = territorio.csv
+patrimonio.file = patrimonio.xml
+contatti.file = contatti.xml
+fondi-speciali.file = fondi-speciali.xml  
+tipologie.file = tipologie.csv
+specializzazioni.file = specializzazioni.xml
+tutto.file = opendata.zip
+## query per le biblioteche "censite"; riporta l'ISIL, ma per query ulteriori
+## viene usato l'id_biblioteca perché indicizzato
 
 censite.query = \
 	select \
@@ -28,15 +56,6 @@ censite.query = \
 		stato_catalogazione.id_stato_catalogazione IS NULL \
 		AND `b`.`id_stato_biblioteca_workflow` != 4 \
 	ORDER BY isil ASC
-	
-censite.limit =
-
-territorio =
-#contatti =
-#patrimonio =
-#fondi-speciali =
-tipologie = 
-specializzazioni = 
 
 territorio.query = \
 	select \
@@ -44,13 +63,14 @@ territorio.query = \
 		b.denominazione_ufficiale as denominazione, \
 		b.`indirizzo`, \
 		`b`.`frazione`, \
+		`b`.`cap`, \
 		`c`.`denominazione` AS `comune`, \
 		`c`.`codice_istat` AS `codice istat comune`, \
 		`p`.`denominazione` AS `provincia`, \
 		`r`.`denominazione` AS `regione`, \
 		`p`.`codice_istat` AS `codice istat provincia`, \
-		`g`.`latitudine`, \
-		`g`.`longitudine`, \
+		replace(`g`.`latitudine`, '.', ',') as latitudine, \
+		replace(`g`.`longitudine`, '.', ',') as longitudine, \
 		contatti.valore as contatto, \
 		contatti.note as note, \
 		contatti.id_contatti_tipi as tipo \
@@ -73,8 +93,6 @@ territorio.query = \
 		AND `b`.`id_stato_biblioteca_workflow` != 4 \
 	ORDER BY `codice isil` ASC, `comune` ASC, `provincia` ASC
 	
-territorio.file = territorio.csv
-
 patrimonio.query = \
 	SELECT \
 		`patrimonio_specializzazione`.`descrizione` AS `nome`, \
@@ -90,8 +108,6 @@ patrimonio.query = \
 		AND `patrimonio_specializzazione`.`id_patrimonio_specializzazione_categoria` = `patrimonio_specializzazione_categoria`.`id_patrimonio_specializzazione_categoria` \
 		AND `patrimonio`.`id_biblioteca` = ? \
   order by `patrimonio_specializzazione`.`descrizione`
-		
-patrimonio.file = patrimonio.xml
 
 contatti.query = \
 	SELECT \
@@ -106,8 +122,6 @@ contatti.query = \
 		AND `contatti`.`id_contatti_tipi` = `contatti_tipo`.`id_contatti_tipo` \
   order by tipo
   
-contatti.file = contatti.xml
-
 fondi-speciali.query = \
   SELECT \
   	`fondi_speciali`.`denominazione` AS `nome`, \
@@ -123,8 +137,6 @@ fondi-speciali.query = \
   	AND `biblioteca_has_fondi_speciali`.`id_biblioteca` = ? \
   	AND `biblioteca_has_fondi_speciali`.`id_fondi_speciali` = `fondi_speciali`.`id_fondi_speciali`
 		
-fondi-speciali.file = fondi-speciali.xml  
-
 tipologie.query = \
 	SELECT \
 		concat('IT-', isil_provincia, lpad(isil_numero, 4, 0)) as isil, \
@@ -145,8 +157,6 @@ tipologie.query = \
 		AND `b`.`id_stato_biblioteca_workflow` != 4 \
 	order by concat('IT-', isil_provincia, lpad(isil_numero, 4, 0))
 
-tipologie.file = tipologie.csv
-
 specializzazioni.query = \
 	SELECT \
 		`dewey`.`id_dewey` AS `codice`, \
@@ -158,5 +168,3 @@ specializzazioni.query = \
 		`dewey_libero`.`id_biblioteca` = ? \
 		AND `dewey_libero`.`id_dewey` = `dewey`.`id_dewey` \
 	order by `dewey`.`id_dewey`
-	
-specializzazioni.file = specializzazioni.xml

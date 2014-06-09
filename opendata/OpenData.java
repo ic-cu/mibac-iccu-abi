@@ -15,21 +15,19 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.Properties;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipOutputStream;
 
-import org.jdom.Document;
-import org.jdom.Element;
-import org.jdom.output.Format;
-import org.jdom.output.XMLOutputter;
-
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
 import org.apache.log4j.WriterAppender;
+import org.jdom.Document;
+import org.jdom.Element;
+import org.jdom.output.Format;
+import org.jdom.output.XMLOutputter;
 
 import sql.DB;
 
@@ -42,6 +40,7 @@ public class OpenData
 	private String csvFS, csvTS, csvBOM;
 	private Logger log;
 	private long totalStart, totalStop, partialStart, partialStop;
+	private SimpleDateFormat dateStampFormat;
 
 	private String wrap(String field, boolean last)
 	{
@@ -90,7 +89,8 @@ public class OpenData
 		}
 		catch(IOException e)
 		{
-			log.error("Impossibile leggere il file di configurazione: " + e.getMessage());
+			log.error("Impossibile leggere il file di configurazione: "
+					+ e.getMessage());
 		}
 		String url = config.getProperty("db.url");
 		String user = config.getProperty("db.user");
@@ -100,6 +100,8 @@ public class OpenData
 		SimpleDateFormat sdf;
 		sdf = new SimpleDateFormat("yyyyMMdd");
 		today = sdf.format(new Date());
+
+		dateStampFormat = new SimpleDateFormat(config.getProperty("dateStamp.pattern"));
 
 		tempDir = config.getProperty("temp.dir") + "/" + today;
 		File tDir = null;
@@ -111,9 +113,6 @@ public class OpenData
 		csvBOM = config.getProperty("csv.bom");
 		log.info("Separatore campi per formato CSV [" + csvFS + "]");
 		log.info("Separatore testo per formato CSV [" + csvTS + "]");
-
-		new GregorianCalendar();
-		sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 	}
 
 	public String territorio()
@@ -268,6 +267,7 @@ public class OpenData
 		int idBib;
 		Document doc = new Document();
 		Element root = new Element("biblioteche");
+		root.setAttribute("data-export", dateStampFormat.format(new Date()).replaceFirst("[0-9][0-9]$", ""));
 		Element biblioteca;
 		Element patrimonioElement;
 		doc.setRootElement(root);
@@ -337,9 +337,10 @@ public class OpenData
 		PreparedStatement stmt;
 		stmt = db.prepare(config.getProperty("fondi-speciali.query"));
 		bibs = db.select(config.getProperty("censite.query"));
-		String nome, descrizione, dewey, deweyTesto;
+		String descrizione, dewey, deweyTesto;
 		Document doc = new Document();
 		Element root = new Element("biblioteche");
+		root.setAttribute("data-export", dateStampFormat.format(new Date()));
 		Element biblioteca;
 		Element element;
 		doc.setRootElement(root);
@@ -369,7 +370,6 @@ public class OpenData
 				while(bib.next())
 				{
 					ok = true;
-					nome = bib.getString("nome");
 					descrizione = bib.getString("descrizione");
 					dewey = bib.getString("dewey");
 					deweyTesto = bib.getString("dewey-testo");
@@ -416,6 +416,7 @@ public class OpenData
 		String contatto, tipo, note;
 		Document doc = new Document();
 		Element root = new Element("biblioteche");
+		root.setAttribute("data-export", dateStampFormat.format(new Date()));
 		Element biblioteca;
 		Element contattoElement;
 		doc.setRootElement(root);
@@ -645,6 +646,81 @@ public class OpenData
 
 	}
 
+	public void zip()
+	{
+		FileOutputStream fos = null;
+		ZipOutputStream zos = null;
+		ZipEntry ze;
+		FileInputStream fis;
+		BufferedInputStream bis = null;
+
+		String zipFileName = config.getProperty("tutto.file");
+		try
+		{
+			fos = new FileOutputStream(tempDir + "/" + zipFileName);
+		}
+		catch(FileNotFoundException e1)
+		{
+			log.error("File zip non trovato: " + e1.getMessage());
+		}
+		zos = new ZipOutputStream(fos);
+
+		String[] fileNames = { config.getProperty("territorio.file"),
+				config.getProperty("contatti.file"),
+				config.getProperty("patrimonio.file"),
+				config.getProperty("fondi-speciali.file"),
+				config.getProperty("tipologie.file") };
+
+		log.info("Compressione di tutti i file...");
+		for(String fileName : fileNames)
+		{
+			log.info("Compressione di " + fileName);
+			try
+			{
+				byte[] data = new byte[2048];
+				ze = new ZipEntry(fileName);
+				fis = new FileInputStream(tempDir + "/" + fileName);
+				bis = new BufferedInputStream(fis, 2048);
+				zos.putNextEntry(ze);
+				int count;
+				while((count = bis.read(data, 0, 2048)) != -1)
+				{
+					zos.write(data, 0, count);
+					zos.flush();
+				}
+				zos.closeEntry();
+			}
+			catch(NullPointerException e)
+			{
+
+			}
+			catch(FileNotFoundException e)
+			{
+				log.error("File " + fileName + " non trovato: " + e.getMessage());
+			}
+			catch(IOException e)
+			{
+				e.printStackTrace();
+			}
+		}
+		try
+		{
+			bis.close();
+			zos.flush();
+			zos.close();
+			fos.close();
+		}
+		catch(ZipException e)
+		{
+			// e.printStackTrace();
+		}
+		catch(IOException e)
+		{
+			e.printStackTrace();
+		}
+
+	}
+
 	public static void main(String[] args)
 	{
 		OpenData od = new OpenData();
@@ -706,6 +782,7 @@ public class OpenData
 				xo.output(doc, pw);
 				od.zip(tFile);
 			}
+			od.zip();
 		}
 		catch(FileNotFoundException e)
 		{
