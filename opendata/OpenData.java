@@ -41,16 +41,7 @@ public class OpenData
 	private String tempDir;
 	private String csvFS, csvTS, csvBOM;
 	private Logger log;
-// private static String logLayout =
-// "%d{yyyy-MM-dd HH:mm:ss} %05r %p %C{1}.%M - %m%n";
-// private static String logLayout =
-// "%d{yyyy-MM-dd HH:mm:ss} %p %C{1}.%M - %m%n";
 	private long totalStart, totalStop, partialStart, partialStop;
-
-	private void err(String str)
-	{
-		System.err.println(str);
-	}
 
 	private String wrap(String field, boolean last)
 	{
@@ -99,7 +90,7 @@ public class OpenData
 		}
 		catch(IOException e)
 		{
-			err("Impossibile leggere il file di configurazione: " + e.getMessage());
+			log.error("Impossibile leggere il file di configurazione: " + e.getMessage());
 		}
 		String url = config.getProperty("db.url");
 		String user = config.getProperty("db.user");
@@ -522,7 +513,7 @@ public class OpenData
 		}
 		catch(SQLException e)
 		{
-			err("Errore SQL: " + e.getMessage());
+			log.error("Errore SQL: " + e.getMessage());
 		}
 		partialStop = System.nanoTime();
 		log.info("Elaborazione tipologie terminata in "

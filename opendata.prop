@@ -1,5 +1,5 @@
-db.url = jdbc:mysql:///abi
-db.user = root
+db.url = jdbc:mysql://192.168.21.72/abi
+db.user = abi
 db.pass =
 
 ## separatori di campo e di testo per CSV
@@ -9,8 +9,8 @@ csv.ts = \"
 
 ## eventuale BOM da inserire prima di tutto il resto per convincere
 ## Excel a usare l'encoding UTF-8
-csv.bom = \uFEFF
 
+csv.bom = \uFEFF
 
 temp.dir = opendata/tmp
 log.file = opendata/tmp/opendata.log
@@ -36,7 +36,7 @@ territorio =
 #patrimonio =
 #fondi-speciali =
 tipologie = 
-#specializzazioni = 
+specializzazioni = 
 
 territorio.query = \
 	select \
@@ -88,7 +88,8 @@ patrimonio.query = \
 	WHERE \
 		`patrimonio`.`id_patrimonio_specializzazione` = `patrimonio_specializzazione`.`id_patrimonio_specializzazione` \
 		AND `patrimonio_specializzazione`.`id_patrimonio_specializzazione_categoria` = `patrimonio_specializzazione_categoria`.`id_patrimonio_specializzazione_categoria` \
-		AND `patrimonio`.`id_biblioteca` = ?
+		AND `patrimonio`.`id_biblioteca` = ? \
+  order by `patrimonio_specializzazione`.`descrizione`
 		
 patrimonio.file = patrimonio.xml
 
@@ -151,11 +152,11 @@ specializzazioni.query = \
 		`dewey`.`id_dewey` AS `codice`, \
 		`dewey`.`descrizione` AS 'dewey-testo' \
 	FROM \
-		`biblioteca_has_dewey` AS `biblioteca_has_dewey`, \
+		`dewey_libero` AS `dewey_libero`, \
 		`dewey` AS `dewey` \
 	WHERE \
-		`biblioteca_has_dewey`.`id_biblioteca` = ? \
-		AND `biblioteca_has_dewey`.`id_dewey` = `dewey`.`id_dewey` \
+		`dewey_libero`.`id_biblioteca` = ? \
+		AND `dewey_libero`.`id_dewey` = `dewey`.`id_dewey` \
 	order by `dewey`.`id_dewey`
 	
 specializzazioni.file = specializzazioni.xml
