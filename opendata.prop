@@ -59,6 +59,37 @@ censite.query = \
 
 territorio.query = \
 	select \
+		b.`indirizzo`, \
+		`b`.`frazione`, \
+		`b`.`cap`, \
+		`c`.`denominazione` AS `comune`, \
+		concat('\\'', lpad(`c`.`codice_istat`, 6, 0)) AS `codice istat comune`, \
+		`p`.`denominazione` AS `provincia`, \
+		`r`.`denominazione` AS `regione`, \
+		concat('\\'', lpad(`p`.`codice_istat`, 3, 0)) AS `codice istat provincia`, \
+		replace(`g`.`latitudine`, '.', ',') as latitudine, \
+		replace(`g`.`longitudine`, '.', ',') as longitudine, \
+		contatti.valore as contatto, \
+		contatti.note as note, \
+		contatti.id_contatti_tipi as tipo \
+	FROM \
+		`contatti` AS `contatti` RIGHT OUTER JOIN \
+		`biblioteca` AS `b` \
+		ON `contatti`.`id_biblioteca` = `b`.`id_biblioteca`, \
+ 		`comune` AS `c`, \
+		`provincia` AS `p`, \
+		`regione` AS `r`, \
+		`geolocalizzazione` AS `g` \
+	WHERE \
+		`b`.`id_comune` = `c`.`id_comune` \
+		AND `c`.`id_provincia` = `p`.`id_provincia` \
+		AND `p`.`id_regione` = `r`.`id_regione` \
+		AND `g`.`id_biblioteca` = `b`.`id_biblioteca` \
+		AND `b`.`id_biblioteca` = ? \
+	ORDER BY `comune` ASC, `provincia` ASC
+	
+territorioOld.query = \
+	select \
 		concat('IT-', isil_provincia, lpad(isil_numero, 4, 0)) as `codice isil`, \
 		b.denominazione_ufficiale as denominazione, \
 		b.`indirizzo`, \

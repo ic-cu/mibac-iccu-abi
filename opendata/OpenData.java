@@ -101,7 +101,8 @@ public class OpenData
 		sdf = new SimpleDateFormat("yyyyMMdd");
 		today = sdf.format(new Date());
 
-		dateStampFormat = new SimpleDateFormat(config.getProperty("dateStamp.pattern"));
+		dateStampFormat = new SimpleDateFormat(
+				config.getProperty("dateStamp.pattern"));
 
 		tempDir = config.getProperty("temp.dir") + "/" + today;
 		File tDir = null;
@@ -117,13 +118,20 @@ public class OpenData
 
 	public String territorio()
 	{
+		ResultSet bibs;
+		ResultSet bib;
+		PreparedStatement stmt;
+		stmt = db.prepare(config.getProperty("territorio.query"));
+		bibs = db.select(config.getProperty("censite.query"));
+		String isil, denominazione, nome, categoria;
+		int totalePosseduto, acquistiUltimoAnno;
+		int idBib;
 		String query = config.getProperty("territorio.query");
 		log.debug("Query: " + query);
-		ResultSet bib;
 		ResultSetMetaData rsmd;
 		StringWriter output = new StringWriter();
-		PrintWriter pw;
-		String isil = "", row = null, cell, contatto, note;
+		PrintWriter pw = null;
+		String row = null, cell, contatto, note;
 		String tel = "", fax = "", mail = "", url = "";
 		String oldIsil = "";
 		int tipo;
@@ -140,115 +148,126 @@ public class OpenData
 		{
 			log.warn("Massimo numero di biblioteche da elaborare ignorato, si userà il massimo intero possibile");
 		}
+		partialStart = System.nanoTime();
 		try
 		{
 			boolean headerOk = false;
-			pw = new PrintWriter(output);
-			bib = db.select(query);
-			while(bib.next() && limit-- > 0)
+			while(bibs.next() && limit > 0)
 			{
-				isil = bib.getString(1);
-				try
+				limit--;
+				isil = bibs.getString("isil");
+				idBib = bibs.getInt("id");
+				denominazione = bibs.getString("denominazione");
+				pw = new PrintWriter(output);
+				stmt.setInt(1, idBib);
+				bib = stmt.executeQuery();
+				while(bib.next() && limit-- > 0)
 				{
+					try
+					{
 
 // una sola volta si crea l'header
 
-					if(!headerOk)
-					{
-						rsmd = bib.getMetaData();
-						columns = rsmd.getColumnCount() - 3;
-						String header = csvBOM;
-						row = "";
-						cell = "";
-						for(i = 1; i < columns; i++)
+						if(!headerOk)
 						{
+							rsmd = bib.getMetaData();
+							columns = rsmd.getColumnCount() - 3;
+							String header = csvBOM;
+							row = "";
+							cell = "";
+							header += wrap("isil");
+							header += wrap("denominazione");
+							for(i = 1; i < columns; i++)
+							{
+								header += wrap(rsmd.getColumnLabel(i));
+							}
 							header += wrap(rsmd.getColumnLabel(i));
-						}
-						header += wrap(rsmd.getColumnLabel(i));
 
 // si aggiungono all'header quattro campi che saranno riempiti in
 // base ai tipi di contatti rinvenuti
 
-						header += wrap("telefono");
-						header += wrap("fax");
-						header += wrap("email");
-						header += wrap("url", true);
-						pw.println(header);
-						headerOk = true;
-					}
-
-					if(!isil.equals(oldIsil))
-					{
-						if(oldIsil != "")
-						{
-							row += wrap(tel) + wrap(fax) + wrap(mail) + wrap(url, true);
-							pw.println(row);
-							pw.flush();
+							header += wrap("telefono");
+							header += wrap("fax");
+							header += wrap("email");
+							header += wrap("url", true);
+							pw.println(header);
+							headerOk = true;
 						}
-						row = "";
-						for(i = 1; i < columns; i++)
+
+						if(!isil.equals(oldIsil))
 						{
-							cell = bib.getString(i);
-							if(cell == null)
+							if(oldIsil != "")
 							{
-								cell = "";
+								row += wrap(tel) + wrap(fax) + wrap(mail) + wrap(url, true);
+								pw.println(row);
+								pw.flush();
 							}
-							row += wrap(cell.trim());
-						}
-						row += wrap(bib.getString(i));
-						oldIsil = isil;
-						tel = fax = mail = url = "";
-					}
-
-					// vanno gestiti i possibili contatti
-					contatto = bib.getString("contatto");
-
-					note = bib.getString("note");
-					tipo = bib.getInt("tipo");
-					if(contatto != null)
-					{
-						contatto = contatto.trim();
-						if(note == null || note.trim() == "")
-						{
-							/*
-							 * i contatti vanno selezionati per codice, perché il right join
-							 * non funziona se si estraggono anche i codici e le descrizioni
-							 */
-							switch(tipo)
+							row = "";
+							row += wrap(isil) + wrap(denominazione);
+							for(i = 1; i < columns; i++)
 							{
-								case 1:
-									// telefono
-									if(tel == "") tel = contatto;
-									break;
-								case 2:
-									// fax
-									if(fax == "") fax = contatto;
-									break;
-								case 3:
-									// mail
-									if(mail == "") mail = contatto;
-									break;
-								case 5:
-									// url
-									if(url == "") url = contatto;
-									break;
-								default:
-									break;
+								cell = bib.getString(i);
+								if(cell == null)
+								{
+									cell = "";
+								}
+								row += wrap(cell.trim());
+							}
+							row += wrap(bib.getString(i));
+							oldIsil = isil;
+							tel = fax = mail = url = "";
+						}
+
+						// vanno gestiti i possibili contatti
+						contatto = bib.getString("contatto");
+
+						note = bib.getString("note");
+						tipo = bib.getInt("tipo");
+						if(contatto != null)
+						{
+							contatto = contatto.trim();
+							if(note == null || note.trim() == "")
+							{
+								/*
+								 * i contatti vanno selezionati per codice, perché il right join
+								 * non funziona se si estraggono anche i codici e le descrizioni
+								 */
+								switch(tipo)
+								{
+									case 1:
+										// telefono
+										if(tel == "") tel = contatto;
+										break;
+									case 2:
+										// fax
+										if(fax == "") fax = contatto;
+										break;
+									case 3:
+										// mail
+										if(mail == "") mail = contatto;
+										break;
+									case 5:
+										// url
+										if(url == "") url = contatto;
+										break;
+									default:
+										break;
+								}
 							}
 						}
 					}
-				}
-				catch(SQLException e)
-				{
-					log.error("Errore SQL: " + e.getMessage());
+					catch(SQLException e)
+					{
+						log.error("Errore SQL: " + e.getMessage());
+					}
 				}
 			}
-			pw.close();
 		}
 		catch(SQLException e)
 		{
-			log.error("Errore SQL: " + e.getMessage());
+			e.printStackTrace();
 		}
+		pw.close();
 		partialStop = System.nanoTime();
 		log.info("Elaborazione territorio terminata in "
 				+ (partialStop - partialStart) / 1000000000 + " secondi");
@@ -267,7 +286,8 @@ public class OpenData
 		int idBib;
 		Document doc = new Document();
 		Element root = new Element("biblioteche");
-		root.setAttribute("data-export", dateStampFormat.format(new Date()).replaceFirst("[0-9][0-9]$", ""));
+		root.setAttribute("data-export", dateStampFormat.format(new Date())
+				.replaceFirst("[0-9][0-9]$", ""));
 		Element biblioteca;
 		Element patrimonioElement;
 		doc.setRootElement(root);
@@ -719,6 +739,146 @@ public class OpenData
 			e.printStackTrace();
 		}
 
+	}
+
+	public String territorioOld()
+	{
+		String query = config.getProperty("territorioOld.query");
+		log.debug("Query: " + query);
+		ResultSet bib;
+		ResultSetMetaData rsmd;
+		StringWriter output = new StringWriter();
+		PrintWriter pw;
+		String isil = "", row = null, cell, contatto, note;
+		String tel = "", fax = "", mail = "", url = "";
+		String oldIsil = "";
+		int tipo;
+		int limit = Integer.MAX_VALUE;
+		int columns = 0;
+		int i;
+		log.info("Elaborazione territorio");
+		partialStart = System.nanoTime();
+		try
+		{
+			limit = Integer.parseInt(config.getProperty("censite.limit"));
+		}
+		catch(NumberFormatException e)
+		{
+			log.warn("Massimo numero di biblioteche da elaborare ignorato, si userà il massimo intero possibile");
+		}
+		try
+		{
+			boolean headerOk = false;
+			pw = new PrintWriter(output);
+			bib = db.select(query);
+			while(bib.next() && limit-- > 0)
+			{
+				isil = bib.getString(1);
+				try
+				{
+
+					// una sola volta si crea l'header
+
+					if(!headerOk)
+					{
+						rsmd = bib.getMetaData();
+						columns = rsmd.getColumnCount() - 3;
+						String header = csvBOM;
+						row = "";
+						cell = "";
+						for(i = 1; i < columns; i++)
+						{
+							header += wrap(rsmd.getColumnLabel(i));
+						}
+						header += wrap(rsmd.getColumnLabel(i));
+
+						// si aggiungono all'header quattro campi che saranno riempiti in
+						// base ai tipi di contatti rinvenuti
+
+						header += wrap("telefono");
+						header += wrap("fax");
+						header += wrap("email");
+						header += wrap("url", true);
+						pw.println(header);
+						headerOk = true;
+					}
+
+					if(!isil.equals(oldIsil))
+					{
+						if(oldIsil != "")
+						{
+							row += wrap(tel) + wrap(fax) + wrap(mail) + wrap(url, true);
+							pw.println(row);
+							pw.flush();
+						}
+						row = "";
+						for(i = 1; i < columns; i++)
+						{
+							cell = bib.getString(i);
+							if(cell == null)
+							{
+								cell = "";
+							}
+							row += wrap(cell.trim());
+						}
+						row += wrap(bib.getString(i));
+						oldIsil = isil;
+						tel = fax = mail = url = "";
+					}
+
+					// vanno gestiti i possibili contatti
+					contatto = bib.getString("contatto");
+
+					note = bib.getString("note");
+					tipo = bib.getInt("tipo");
+					if(contatto != null)
+					{
+						contatto = contatto.trim();
+						if(note == null || note.trim() == "")
+						{
+							/*
+							 * i contatti vanno selezionati per codice, perché il right join
+							 * non funziona se si estraggono anche i codici e le descrizioni
+							 */
+							switch(tipo)
+							{
+								case 1:
+									// telefono
+									if(tel == "") tel = contatto;
+									break;
+								case 2:
+									// fax
+									if(fax == "") fax = contatto;
+									break;
+								case 3:
+									// mail
+									if(mail == "") mail = contatto;
+									break;
+								case 5:
+									// url
+									if(url == "") url = contatto;
+									break;
+								default:
+									break;
+							}
+						}
+					}
+				}
+				catch(SQLException e)
+				{
+					log.error("Errore SQL: " + e.getMessage());
+				}
+			}
+			pw.close();
+		}
+		catch(SQLException e)
+		{
+			log.error("Errore SQL: " + e.getMessage());
+		}
+		partialStop = System.nanoTime();
+		log.info("Elaborazione territorio terminata in "
+				+ (partialStop - partialStart) / 1000000000 + " secondi");
+		return output.getBuffer().toString();
 	}
 
 	public static void main(String[] args)
