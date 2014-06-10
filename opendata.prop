@@ -141,9 +141,9 @@ tipologie.query = \
 	SELECT \
 		concat('IT-', isil_provincia, lpad(isil_numero, 4, 0)) as isil, \
 		b.denominazione_ufficiale as denominazione, \
-		`tipologia_funzionale`.`descrizione` AS `tipologia biblioteca`, \
+		`tipologia_funzionale`.`descrizione` AS `tipologia funzionale`, \
 		`ente`.`denominazione` AS `ente`, \
-		`ente_tipologia_amministrativa`.`descrizione` AS `tipologia ente` \
+		`ente_tipologia_amministrativa`.`descrizione` AS `tipologia amministrativa` \
 	FROM \
 		`stato_catalogazione` RIGHT OUTER JOIN `biblioteca` as b ON `stato_catalogazione`.`id_biblioteca` = `b`.`id_biblioteca`, \
 		`ente` AS `ente`, \
