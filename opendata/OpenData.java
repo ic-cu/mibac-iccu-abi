@@ -41,6 +41,7 @@ public class OpenData
 	private Logger log;
 	private long totalStart, totalStop, partialStart, partialStop;
 	private SimpleDateFormat dateStampFormat;
+	private String labelIsil;
 
 	private String wrap(String field, boolean last)
 	{
@@ -112,6 +113,7 @@ public class OpenData
 		csvFS = config.getProperty("csv.fs");
 		csvTS = config.getProperty("csv.ts");
 		csvBOM = config.getProperty("csv.bom");
+		labelIsil = config.getProperty("label.xml.isil");
 		log.info("Separatore campi per formato CSV [" + csvFS + "]");
 		log.info("Separatore testo per formato CSV [" + csvTS + "]");
 	}
@@ -175,7 +177,7 @@ public class OpenData
 							String header = csvBOM;
 							row = "";
 							cell = "";
-							header += wrap("isil");
+							header += wrap(labelIsil);
 							header += wrap("denominazione");
 							for(i = 1; i < columns; i++)
 							{
@@ -311,7 +313,7 @@ public class OpenData
 				idBib = bibs.getInt("id");
 				denominazione = bibs.getString("denominazione");
 				biblioteca = new Element("biblioteca");
-				biblioteca.setAttribute("isil", isil);
+				biblioteca.setAttribute(labelIsil, isil);
 				biblioteca.setAttribute("denominazione", denominazione);
 				stmt.setInt(1, idBib);
 				bib = stmt.executeQuery();
@@ -381,7 +383,7 @@ public class OpenData
 			{
 				limit--;
 				biblioteca = new Element("biblioteca");
-				biblioteca.setAttribute("isil", bibs.getString("isil"));
+				biblioteca.setAttribute(labelIsil, bibs.getString("isil"));
 				biblioteca.setAttribute("denominazione",
 						bibs.getString("denominazione"));
 				stmt.setInt(1, bibs.getInt("id"));
@@ -394,6 +396,9 @@ public class OpenData
 					dewey = bib.getString("dewey");
 					deweyTesto = bib.getString("dewey-testo");
 					element = new Element("fondo-speciale");
+					Element denominazione = new Element("denominazione");
+					denominazione.setText(bib.getString("denominazione").trim());
+					element.addContent(denominazione);
 					if(descrizione != null && descrizione.trim() != "")
 					{
 						element.addContent(new Element("descrizione").setText(descrizione
@@ -457,7 +462,7 @@ public class OpenData
 			{
 				limit--;
 				biblioteca = new Element("biblioteca");
-				biblioteca.setAttribute("isil", bibs.getString("isil"));
+				biblioteca.setAttribute(labelIsil, bibs.getString("isil"));
 				biblioteca.setAttribute("denominazione",
 						bibs.getString("denominazione"));
 				stmt.setInt(1, bibs.getInt("id"));

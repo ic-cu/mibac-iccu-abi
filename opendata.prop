@@ -17,19 +17,22 @@ log.file = opendata/tmp/opendata.log
 log.pattern = %d{yyyy-MM-dd HH:mm:ss} %p %C{1}.%M - %m%n
 dateStamp.pattern = yyyy-MM-dd'T'HH:mm:ss
 
+## varie label che è meglio esternalizzare
+label.xml.isil = codice-isil
+
 ## se non nullo, questo valore è il numero di biblioteche che saranno elaborate
 ## è usato solo in fase di test
 
-censite.limit = 100
+censite.limit = 
 
 ## una serie di flag per indicare quali informazioni trattare; se non presenti,
 ## indicano che una certa informazione non va trattata
 
 territorio =
-#contatti =
-#patrimonio =
-#fondi-speciali =
-#tipologie = 
+contatti =
+patrimonio =
+fondi-speciali =
+tipologie = 
 #specializzazioni = 
 
 ## nomi dei file di output
@@ -155,7 +158,7 @@ contatti.query = \
   
 fondi-speciali.query = \
   SELECT \
-  	`fondi_speciali`.`denominazione` AS `nome`, \
+  	`fondi_speciali`.`denominazione`, \
   	`fondi_speciali`.`descrizione` AS `descrizione`, \
   	`fondi_speciali`.`id_dewey` AS `dewey`, \
   	`dewey`.`descrizione` AS `dewey-testo` \
@@ -170,10 +173,10 @@ fondi-speciali.query = \
 		
 tipologie.query = \
 	SELECT \
-		concat('IT-', isil_provincia, lpad(isil_numero, 4, 0)) as isil, \
-		b.denominazione_ufficiale as denominazione, \
+		concat('IT-', isil_provincia, lpad(isil_numero, 4, 0)) as 'codice isil', \
+		b.denominazione_ufficiale as 'denominazione biblioteca', \
 		`tipologia_funzionale`.`descrizione` AS `tipologia funzionale`, \
-		`ente`.`denominazione` AS `ente`, \
+		`ente`.`denominazione` AS `denominazione ente`, \
 		`ente_tipologia_amministrativa`.`descrizione` AS `tipologia amministrativa` \
 	FROM \
 		`stato_catalogazione` RIGHT OUTER JOIN `biblioteca` as b ON `stato_catalogazione`.`id_biblioteca` = `b`.`id_biblioteca`, \
