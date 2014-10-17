@@ -1,9 +1,14 @@
-.gitignore
+*.class
 .metadata
 .settings
-*.class
-# Package Files #
-*.jar
-*.war
-*.ear
 /tmp/
+/.gitignore
+/duplicate.csv
+/errors.txt
+/log.txt
+/nosbn.csv
+/obsolete.csv
+/stats.txt
+/tabelle.html
+/tabelle.xml
+/tutte.csv
