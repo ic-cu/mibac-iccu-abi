@@ -2,9 +2,9 @@
 <classpath>
 	<classpathentry kind="src" path=""/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="/home/DOMICCU/agiuliano/lib/java/jdom.jar"/>
-	<classpathentry kind="lib" path="/home/DOMICCU/agiuliano/lib/java/jaxen-1.1.1.jar"/>
-	<classpathentry kind="lib" path="/home/DOMICCU/agiuliano/lib/java/mysql-connector-java-5.0.7-bin.jar"/>
-	<classpathentry kind="lib" path="/home/DOMICCU/agiuliano/lib/eclipse/mibac-icar-siassas/lib/log4j-1.2.17.jar"/>
+	<classpathentry kind="lib" path="lib/jaxen-1.1.1.jar"/>
+	<classpathentry kind="lib" path="lib/jdom.jar"/>
+	<classpathentry kind="lib" path="lib/log4j-1.2.17.jar"/>
+	<classpathentry kind="lib" path="lib/mysql-connector-java-5.0.7-bin.jar"/>
 	<classpathentry kind="output" path=""/>
 </classpath>
