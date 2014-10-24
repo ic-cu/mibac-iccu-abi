@@ -24,6 +24,7 @@
 <xsl:when test=". = 'AVEGNO'">008016</xsl:when>
 <xsl:when test=". = 'BADALUCCO'">008017</xsl:when>
 <xsl:when test=". = 'BAJARDO'">008018</xsl:when>
+<xsl:when test=". = 'BAIARDO'">008018</xsl:when>
 <xsl:when test=". = 'BALESTRINO'">008019</xsl:when>
 <xsl:when test=". = 'BARDINETO'">008020</xsl:when>
 <xsl:when test=". = 'BARGAGLI'">008021</xsl:when>
