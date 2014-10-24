@@ -28,6 +28,10 @@
 		<xsl:element name="biblioteca">
 			<xsl:element name="anagrafica">
 				<xsl:apply-templates select="RELAZIONE"/>
+				<fonte>
+				<descrizione>Regione Liguria</descrizione>
+				<url>http://www.culturainliguria.it/cultura/it/Temi/Luoghivisita/biblioteche.do</url>
+				</fonte>
 				<xsl:element name="nomi">
 					<xsl:element name="attuale">
 						<xsl:value-of select="NOMEBIB"/>
