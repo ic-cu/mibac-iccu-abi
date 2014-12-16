@@ -17,15 +17,15 @@
 	</xsl:template>
 
 	<xsl:template match="//biblioteca">
-
-	<xsl:if test="not(contains(anagrafica/fonte/descrizione,'AICE'))
-and(contains(amministrativa/ente/tipologia-amministrativa, 'Enti
-ecclesiastici'))">
     
 <xsl:value-of select="anagrafica/codici/isil"/>
 <xsl:text>
 </xsl:text>
 	</xsl:if>
+
+	<xsl:if test="not(contains(anagrafica/fonte/descrizione,'AICE'))
+and(contains(amministrativa/ente/tipologia-amministrativa, 'Enti
+ecclesiastici'))">
 
 	</xsl:template>
 </xsl:stylesheet>
