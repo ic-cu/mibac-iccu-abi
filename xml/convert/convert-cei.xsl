@@ -547,7 +547,7 @@
 						</xsl:element>
 					</xsl:if>
 					<xsl:copy-of select="locale/durata" />
-					<xsl:copy-of select="locale/utenti-ammessi" />
+					<xsl:apply-templates select="locale/utenti-ammessi" />
 					<xsl:copy-of select="locale/totale-prestiti" />
 				</xsl:element>
 			</xsl:if>
@@ -559,6 +559,29 @@
 			</xsl:if>
 		</xsl:element>
 	</xsl:template>
+
+	<xsl:template match="locale/utenti-ammessi" name="tokenize">
+		<xsl:param name="text" select="text()" />
+		<xsl:param name="separator" select="','" />
+		<xsl:choose>
+			<xsl:when test="not(contains($text, $separator))">
+				<utenti-ammessi>
+					<xsl:value-of select="normalize-space($text)" />
+				</utenti-ammessi>
+			</xsl:when>
+			<xsl:otherwise>
+				<utenti-ammessi>
+					<xsl:value-of
+						select="normalize-space(substring-before($text, $separator))" />
+				</utenti-ammessi>
+				<xsl:call-template name="tokenize">
+					<xsl:with-param name="text"
+						select="substring-after($text, $separator)" />
+				</xsl:call-template>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
 
 	<!--
 		Orario, qualche elemento contenitore. Sarebbe opportuno non copiare elementi
