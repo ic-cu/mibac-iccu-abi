@@ -4,251 +4,248 @@
 	<xsl:output method="xml" indent="yes" />
 
 	<xsl:template match="//scheda_BIBLIO/RECAPITI/COMUNE">
-		<xsl:element name="comune">
 			<xsl:choose>
-<xsl:when test=". = 'AIROLE'">008001</xsl:when>
-<xsl:when test=". = 'APRICALE'">008002</xsl:when>
-<xsl:when test=". = 'AQUILA D&amp;apos;ARROSCIA'">008003</xsl:when>
-<xsl:when test=". = 'ARMO'">008004</xsl:when>
-<xsl:when test=". = 'AURIGO'">008005</xsl:when>
-<xsl:when test=". = 'BADALUCCO'">008006</xsl:when>
-<xsl:when test=". = 'BAJARDO'">008007</xsl:when>
-<xsl:when test=". = 'BAIARDO'">008007</xsl:when>
-<xsl:when test=". = 'BORDIGHERA'">008008</xsl:when>
-<xsl:when test=". = 'BORGHETTO D&amp;apos;ARROSCIA'">008009</xsl:when>
-<xsl:when test=". = 'BORGOMARO'">008010</xsl:when>
-<xsl:when test=". = 'CAMPOROSSO'">008011</xsl:when>
-<xsl:when test=". = 'CARAVONICA'">008012</xsl:when>
-<xsl:when test=". = 'CARPASIO'">008013</xsl:when>
-<xsl:when test=". = 'CASTELLARO'">008014</xsl:when>
-<xsl:when test=". = 'CASTEL VITTORIO'">008015</xsl:when>
-<xsl:when test=". = 'CERIANA'">008016</xsl:when>
-<xsl:when test=". = 'CERVO'">008017</xsl:when>
-<xsl:when test=". = 'CESIO'">008018</xsl:when>
-<xsl:when test=". = 'CHIUSANICO'">008019</xsl:when>
-<xsl:when test=". = 'CHIUSAVECCHIA'">008020</xsl:when>
-<xsl:when test=". = 'CIPRESSA'">008021</xsl:when>
-<xsl:when test=". = 'CIVEZZA'">008022</xsl:when>
-<xsl:when test=". = 'COSIO D&amp;apos;ARROSCIA'">008023</xsl:when>
-<xsl:when test=". = 'COSTARAINERA'">008024</xsl:when>
-<xsl:when test=". = 'DIANO ARENTINO'">008025</xsl:when>
-<xsl:when test=". = 'DIANO CASTELLO'">008026</xsl:when>
-<xsl:when test=". = 'DIANO MARINA'">008027</xsl:when>
-<xsl:when test=". = 'DIANO SAN PIETRO'">008028</xsl:when>
-<xsl:when test=". = 'DOLCEACQUA'">008029</xsl:when>
-<xsl:when test=". = 'DOLCEDO'">008030</xsl:when>
-<xsl:when test=". = 'IMPERIA'">008031</xsl:when>
-<xsl:when test=". = 'ISOLABONA'">008032</xsl:when>
-<xsl:when test=". = 'LUCINASCO'">008033</xsl:when>
-<xsl:when test=". = 'MENDATICA'">008034</xsl:when>
-<xsl:when test=". = 'MOLINI DI TRIORA'">008035</xsl:when>
-<xsl:when test=". = 'MONTALTO LIGURE'">008036</xsl:when>
-<xsl:when test=". = 'MONTEGROSSO PIAN LATTE'">008037</xsl:when>
-<xsl:when test=". = 'OLIVETTA SAN MICHELE'">008038</xsl:when>
-<xsl:when test=". = 'OSPEDALETTI'">008039</xsl:when>
-<xsl:when test=". = 'PERINALDO'">008040</xsl:when>
-<xsl:when test=". = 'PIETRABRUNA'">008041</xsl:when>
-<xsl:when test=". = 'PIEVE DI TECO'">008042</xsl:when>
-<xsl:when test=". = 'PIGNA'">008043</xsl:when>
-<xsl:when test=". = 'POMPEIANA'">008044</xsl:when>
-<xsl:when test=". = 'PONTEDASSIO'">008045</xsl:when>
-<xsl:when test=". = 'PORNASSIO'">008046</xsl:when>
-<xsl:when test=". = 'PRELÀ'">008047</xsl:when>
-<xsl:when test=". = 'RANZO'">008048</xsl:when>
-<xsl:when test=". = 'REZZO'">008049</xsl:when>
-<xsl:when test=". = 'RIVA LIGURE'">008050</xsl:when>
-<xsl:when test=". = 'ROCCHETTA NERVINA'">008051</xsl:when>
-<xsl:when test=". = 'SAN BARTOLOMEO AL MARE'">008052</xsl:when>
-<xsl:when test=". = 'SAN BIAGIO DELLA CIMA'">008053</xsl:when>
-<xsl:when test=". = 'SAN LORENZO AL MARE'">008054</xsl:when>
-<xsl:when test=". = 'SANREMO'">008055</xsl:when>
-<xsl:when test=". = 'SAN REMO'">008055</xsl:when>
-<xsl:when test=". = 'SANTO STEFANO AL MARE'">008056</xsl:when>
-<xsl:when test=". = 'SEBORGA'">008057</xsl:when>
-<xsl:when test=". = 'SOLDANO'">008058</xsl:when>
-<xsl:when test=". = 'TAGGIA'">008059</xsl:when>
-<xsl:when test=". = 'TERZORIO'">008060</xsl:when>
-<xsl:when test=". = 'TRIORA'">008061</xsl:when>
-<xsl:when test=". = 'VALLEBONA'">008062</xsl:when>
-<xsl:when test=". = 'VALLECROSIA'">008063</xsl:when>
-<xsl:when test=". = 'VASIA'">008064</xsl:when>
-<xsl:when test=". = 'VENTIMIGLIA'">008065</xsl:when>
-<xsl:when test=". = 'VESSALICO'">008066</xsl:when>
-<xsl:when test=". = 'VILLA FARALDI'">008067</xsl:when>
-<xsl:when test=". = 'ALASSIO'">009001</xsl:when>
-<xsl:when test=". = 'ALBENGA'">009002</xsl:when>
-<xsl:when test=". = 'ALBISSOLA MARINA'">009003</xsl:when>
-<xsl:when test=". = 'ALBISOLA SUPERIORE'">009004</xsl:when>
-<xsl:when test=". = 'ALTARE'">009005</xsl:when>
-<xsl:when test=". = 'ANDORA'">009006</xsl:when>
-<xsl:when test=". = 'ARNASCO'">009007</xsl:when>
-<xsl:when test=". = 'BALESTRINO'">009008</xsl:when>
-<xsl:when test=". = 'BARDINETO'">009009</xsl:when>
-<xsl:when test=". = 'BERGEGGI'">009010</xsl:when>
-<xsl:when test=". = 'BOISSANO'">009011</xsl:when>
-<xsl:when test=". = 'BORGHETTO SANTO SPIRITO'">009012</xsl:when>
-<xsl:when test=". = 'BORGIO VEREZZI'">009013</xsl:when>
-<xsl:when test=". = 'BORMIDA'">009014</xsl:when>
-<xsl:when test=". = 'CAIRO MONTENOTTE'">009015</xsl:when>
-<xsl:when test=". = 'CALICE LIGURE'">009016</xsl:when>
-<xsl:when test=". = 'CALIZZANO'">009017</xsl:when>
-<xsl:when test=". = 'CARCARE'">009018</xsl:when>
-<xsl:when test=". = 'CASANOVA LERRONE'">009019</xsl:when>
-<xsl:when test=". = 'CASTELBIANCO'">009020</xsl:when>
-<xsl:when test=". = 'CASTELVECCHIO DI ROCCA BARBENA'">009021</xsl:when>
-<xsl:when test=". = 'CELLE LIGURE'">009022</xsl:when>
-<xsl:when test=". = 'CENGIO'">009023</xsl:when>
-<xsl:when test=". = 'CERIALE'">009024</xsl:when>
-<xsl:when test=". = 'CISANO SUL NEVA'">009025</xsl:when>
-<xsl:when test=". = 'COSSERIA'">009026</xsl:when>
-<xsl:when test=". = 'DEGO'">009027</xsl:when>
-<xsl:when test=". = 'ERLI'">009028</xsl:when>
-<xsl:when test=". = 'FINALE LIGURE'">009029</xsl:when>
-<xsl:when test=". = 'GARLENDA'">009030</xsl:when>
-<xsl:when test=". = 'GIUSTENICE'">009031</xsl:when>
-<xsl:when test=". = 'GIUSVALLA'">009032</xsl:when>
-<xsl:when test=". = 'LAIGUEGLIA'">009033</xsl:when>
-<xsl:when test=". = 'LOANO'">009034</xsl:when>
-<xsl:when test=". = 'MAGLIOLO'">009035</xsl:when>
-<xsl:when test=". = 'MALLARE'">009036</xsl:when>
-<xsl:when test=". = 'MASSIMINO'">009037</xsl:when>
-<xsl:when test=". = 'MILLESIMO'">009038</xsl:when>
-<xsl:when test=". = 'MIOGLIA'">009039</xsl:when>
-<xsl:when test=". = 'MURIALDO'">009040</xsl:when>
-<xsl:when test=". = 'NASINO'">009041</xsl:when>
-<xsl:when test=". = 'NOLI'">009042</xsl:when>
-<xsl:when test=". = 'ONZO'">009043</xsl:when>
-<xsl:when test=". = 'ORCO FEGLINO'">009044</xsl:when>
-<xsl:when test=". = 'ORTOVERO'">009045</xsl:when>
-<xsl:when test=". = 'OSIGLIA'">009046</xsl:when>
-<xsl:when test=". = 'PALLARE'">009047</xsl:when>
-<xsl:when test=". = 'PIANA CRIXIA'">009048</xsl:when>
-<xsl:when test=". = 'PIETRA LIGURE'">009049</xsl:when>
-<xsl:when test=". = 'PLODIO'">009050</xsl:when>
-<xsl:when test=". = 'PONTINVREA'">009051</xsl:when>
-<xsl:when test=". = 'QUILIANO'">009052</xsl:when>
-<xsl:when test=". = 'RIALTO'">009053</xsl:when>
-<xsl:when test=". = 'ROCCAVIGNALE'">009054</xsl:when>
-<xsl:when test=". = 'SASSELLO'">009055</xsl:when>
-<xsl:when test=". = 'SAVONA'">009056</xsl:when>
-<xsl:when test=". = 'SPOTORNO'">009057</xsl:when>
-<xsl:when test=". = 'STELLA'">009058</xsl:when>
-<xsl:when test=". = 'STELLANELLO'">009059</xsl:when>
-<xsl:when test=". = 'TESTICO'">009060</xsl:when>
-<xsl:when test=". = 'TOIRANO'">009061</xsl:when>
-<xsl:when test=". = 'TOVO SAN GIACOMO'">009062</xsl:when>
-<xsl:when test=". = 'URBE'">009063</xsl:when>
-<xsl:when test=". = 'VADO LIGURE'">009064</xsl:when>
-<xsl:when test=". = 'VARAZZE'">009065</xsl:when>
-<xsl:when test=". = 'VENDONE'">009066</xsl:when>
-<xsl:when test=". = 'VEZZI PORTIO'">009067</xsl:when>
-<xsl:when test=". = 'VILLANOVA D&amp;apos;ALBENGA'">009068</xsl:when>
-<xsl:when test=". = 'ZUCCARELLO'">009069</xsl:when>
-<xsl:when test=". = 'ARENZANO'">010001</xsl:when>
-<xsl:when test=". = 'AVEGNO'">010002</xsl:when>
-<xsl:when test=". = 'BARGAGLI'">010003</xsl:when>
-<xsl:when test=". = 'BOGLIASCO'">010004</xsl:when>
-<xsl:when test=". = 'BORZONASCA'">010005</xsl:when>
-<xsl:when test=". = 'BUSALLA'">010006</xsl:when>
-<xsl:when test=". = 'CAMOGLI'">010007</xsl:when>
-<xsl:when test=". = 'CAMPO LIGURE'">010008</xsl:when>
-<xsl:when test=". = 'CAMPOMORONE'">010009</xsl:when>
-<xsl:when test=". = 'CARASCO'">010010</xsl:when>
-<xsl:when test=". = 'CASARZA LIGURE'">010011</xsl:when>
-<xsl:when test=". = 'CASELLA'">010012</xsl:when>
-<xsl:when test=". = 'CASTIGLIONE CHIAVARESE'">010013</xsl:when>
-<xsl:when test=". = 'CERANESI'">010014</xsl:when>
-<xsl:when test=". = 'CHIAVARI'">010015</xsl:when>
-<xsl:when test=". = 'CICAGNA'">010016</xsl:when>
-<xsl:when test=". = 'COGOLETO'">010017</xsl:when>
-<xsl:when test=". = 'COGORNO'">010018</xsl:when>
-<xsl:when test=". = 'COREGLIA LIGURE'">010019</xsl:when>
-<xsl:when test=". = 'CROCEFIESCHI'">010020</xsl:when>
-<xsl:when test=". = 'DAVAGNA'">010021</xsl:when>
-<xsl:when test=". = 'FASCIA'">010022</xsl:when>
-<xsl:when test=". = 'FAVALE DI MALVARO'">010023</xsl:when>
-<xsl:when test=". = 'FONTANIGORDA'">010024</xsl:when>
-<xsl:when test=". = 'GENOVA'">010025</xsl:when>
-<xsl:when test=". = 'GORRETO'">010026</xsl:when>
-<xsl:when test=". = 'ISOLA DEL CANTONE'">010027</xsl:when>
-<xsl:when test=". = 'LAVAGNA'">010028</xsl:when>
-<xsl:when test=". = 'LEIVI'">010029</xsl:when>
-<xsl:when test=". = 'LORSICA'">010030</xsl:when>
-<xsl:when test=". = 'LUMARZO'">010031</xsl:when>
-<xsl:when test=". = 'MASONE'">010032</xsl:when>
-<xsl:when test=". = 'MELE'">010033</xsl:when>
-<xsl:when test=". = 'MEZZANEGO'">010034</xsl:when>
-<xsl:when test=". = 'MIGNANEGO'">010035</xsl:when>
-<xsl:when test=". = 'MOCONESI'">010036</xsl:when>
-<xsl:when test=". = 'MONEGLIA'">010037</xsl:when>
-<xsl:when test=". = 'MONTEBRUNO'">010038</xsl:when>
-<xsl:when test=". = 'MONTOGGIO'">010039</xsl:when>
-<xsl:when test=". = 'NE'">010040</xsl:when>
-<xsl:when test=". = 'NEIRONE'">010041</xsl:when>
-<xsl:when test=". = 'ORERO'">010042</xsl:when>
-<xsl:when test=". = 'PIEVE LIGURE'">010043</xsl:when>
-<xsl:when test=". = 'PORTOFINO'">010044</xsl:when>
-<xsl:when test=". = 'PROPATA'">010045</xsl:when>
-<xsl:when test=". = 'RAPALLO'">010046</xsl:when>
-<xsl:when test=". = 'RECCO'">010047</xsl:when>
-<xsl:when test=". = 'REZZOAGLIO'">010048</xsl:when>
-<xsl:when test=". = 'RONCO SCRIVIA'">010049</xsl:when>
-<xsl:when test=". = 'RONDANINA'">010050</xsl:when>
-<xsl:when test=". = 'ROSSIGLIONE'">010051</xsl:when>
-<xsl:when test=". = 'ROVEGNO'">010052</xsl:when>
-<xsl:when test=". = 'SAN COLOMBANO CERTENOLI'">010053</xsl:when>
-<xsl:when test=". = 'SANTA MARGHERITA LIGURE'">010054</xsl:when>
-<xsl:when test=". = 'SANT&amp;apos;OLCESE'">010055</xsl:when>
-<xsl:when test=". = 'SANTO STEFANO D&amp;apos;AVETO'">010056</xsl:when>
-<xsl:when test=". = 'SAVIGNONE'">010057</xsl:when>
-<xsl:when test=". = 'SERRA RICCÒ'">010058</xsl:when>
-<xsl:when test=". = 'SESTRI LEVANTE'">010059</xsl:when>
-<xsl:when test=". = 'SORI'">010060</xsl:when>
-<xsl:when test=". = 'TIGLIETO'">010061</xsl:when>
-<xsl:when test=". = 'TORRIGLIA'">010062</xsl:when>
-<xsl:when test=". = 'TRIBOGNA'">010063</xsl:when>
-<xsl:when test=". = 'USCIO'">010064</xsl:when>
-<xsl:when test=". = 'VALBREVENNA'">010065</xsl:when>
-<xsl:when test=". = 'VOBBIA'">010066</xsl:when>
-<xsl:when test=". = 'ZOAGLI'">010067</xsl:when>
-<xsl:when test=". = 'AMEGLIA'">011001</xsl:when>
-<xsl:when test=". = 'ARCOLA'">011002</xsl:when>
-<xsl:when test=". = 'BEVERINO'">011003</xsl:when>
-<xsl:when test=". = 'BOLANO'">011004</xsl:when>
-<xsl:when test=". = 'BONASSOLA'">011005</xsl:when>
-<xsl:when test=". = 'BORGHETTO DI VARA'">011006</xsl:when>
-<xsl:when test=". = 'BRUGNATO'">011007</xsl:when>
-<xsl:when test=". = 'CALICE AL CORNOVIGLIO'">011008</xsl:when>
-<xsl:when test=". = 'CARRO'">011009</xsl:when>
-<xsl:when test=". = 'CARRODANO'">011010</xsl:when>
-<xsl:when test=". = 'CASTELNUOVO MAGRA'">011011</xsl:when>
-<xsl:when test=". = 'DEIVA MARINA'">011012</xsl:when>
-<xsl:when test=". = 'FOLLO'">011013</xsl:when>
-<xsl:when test=". = 'FRAMURA'">011014</xsl:when>
-<xsl:when test=". = 'LA SPEZIA'">011015</xsl:when>
-<xsl:when test=". = 'LERICI'">011016</xsl:when>
-<xsl:when test=". = 'LEVANTO'">011017</xsl:when>
-<xsl:when test=". = 'MAISSANA'">011018</xsl:when>
-<xsl:when test=". = 'MONTEROSSO AL MARE'">011019</xsl:when>
-<xsl:when test=". = 'ORTONOVO'">011020</xsl:when>
-<xsl:when test=". = 'PIGNONE'">011021</xsl:when>
-<xsl:when test=". = 'PORTOVENERE'">011022</xsl:when>
-<xsl:when test=". = 'RICCÒ DEL GOLFO DI SPEZIA'">011023</xsl:when>
-<xsl:when test=". = 'RICCO&amp;apos; DEL GOLFO DI SPEZIA'">011023</xsl:when>
-<xsl:when test=". = 'RIOMAGGIORE'">011024</xsl:when>
-<xsl:when test=". = 'ROCCHETTA DI VARA'">011025</xsl:when>
-<xsl:when test=". = 'SANTO STEFANO DI MAGRA'">011026</xsl:when>
-<xsl:when test=". = 'SARZANA'">011027</xsl:when>
-<xsl:when test=". = 'SESTA GODANO'">011028</xsl:when>
-<xsl:when test=". = 'VARESE LIGURE'">011029</xsl:when>
-<xsl:when test=". = 'VERNAZZA'">011030</xsl:when>
-<xsl:when test=". = 'VEZZANO LIGURE'">011031</xsl:when>
-<xsl:when test=". = 'ZIGNAGO'">011032</xsl:when>
+<xsl:when test=". = 'AIROLE'"><comune>008001</comune><provincia>008</provincia></xsl:when>
+<xsl:when test=". = 'APRICALE'"><comune>008002</comune><provincia>008</provincia></xsl:when>
+<xsl:when test=". = 'AQUILA D&amp;apos;ARROSCIA'"><comune>008003</comune><provincia>008</provincia></xsl:when>
+<xsl:when test=". = 'ARMO'"><comune>008004</comune><provincia>008</provincia></xsl:when>
+<xsl:when test=". = 'AURIGO'"><comune>008005</comune><provincia>008</provincia></xsl:when>
+<xsl:when test=". = 'BADALUCCO'"><comune>008006</comune><provincia>008</provincia></xsl:when>
+<xsl:when test=". = 'BAJARDO'"><comune>008007</comune><provincia>008</provincia></xsl:when>
+<xsl:when test=". = 'BAIARDO'"><comune>008007</comune><provincia>008</provincia></xsl:when>
+<xsl:when test=". = 'BORDIGHERA'"><comune>008008</comune><provincia>008</provincia></xsl:when>
+<xsl:when test=". = 'BORGHETTO D&amp;apos;ARROSCIA'"><comune>008009</comune><provincia>008</provincia></xsl:when>
+<xsl:when test=". = 'BORGOMARO'"><comune>008010</comune><provincia>008</provincia></xsl:when>
+<xsl:when test=". = 'CAMPOROSSO'"><comune>008011</comune><provincia>008</provincia></xsl:when>
+<xsl:when test=". = 'CARAVONICA'"><comune>008012</comune><provincia>008</provincia></xsl:when>
+<xsl:when test=". = 'CARPASIO'"><comune>008013</comune><provincia>008</provincia></xsl:when>
+<xsl:when test=". = 'CASTELLARO'"><comune>008014</comune><provincia>008</provincia></xsl:when>
+<xsl:when test=". = 'CASTEL VITTORIO'"><comune>008015</comune><provincia>008</provincia></xsl:when>
+<xsl:when test=". = 'CERIANA'"><comune>008016</comune><provincia>008</provincia></xsl:when>
+<xsl:when test=". = 'CERVO'"><comune>008017</comune><provincia>008</provincia></xsl:when>
+<xsl:when test=". = 'CESIO'"><comune>008018</comune><provincia>008</provincia></xsl:when>
+<xsl:when test=". = 'CHIUSANICO'"><comune>008019</comune><provincia>008</provincia></xsl:when>
+<xsl:when test=". = 'CHIUSAVECCHIA'"><comune>008020</comune><provincia>008</provincia></xsl:when>
+<xsl:when test=". = 'CIPRESSA'"><comune>008021</comune><provincia>008</provincia></xsl:when>
+<xsl:when test=". = 'CIVEZZA'"><comune>008022</comune><provincia>008</provincia></xsl:when>
+<xsl:when test=". = 'COSIO D&amp;apos;ARROSCIA'"><comune>008023</comune><provincia>008</provincia></xsl:when>
+<xsl:when test=". = 'COSTARAINERA'"><comune>008024</comune><provincia>008</provincia></xsl:when>
+<xsl:when test=". = 'DIANO ARENTINO'"><comune>008025</comune><provincia>008</provincia></xsl:when>
+<xsl:when test=". = 'DIANO CASTELLO'"><comune>008026</comune><provincia>008</provincia></xsl:when>
+<xsl:when test=". = 'DIANO MARINA'"><comune>008027</comune><provincia>008</provincia></xsl:when>
+<xsl:when test=". = 'DIANO SAN PIETRO'"><comune>008028</comune><provincia>008</provincia></xsl:when>
+<xsl:when test=". = 'DOLCEACQUA'"><comune>008029</comune><provincia>008</provincia></xsl:when>
+<xsl:when test=". = 'DOLCEDO'"><comune>008030</comune><provincia>008</provincia></xsl:when>
+<xsl:when test=". = 'IMPERIA'"><comune>008031</comune><provincia>008</provincia></xsl:when>
+<xsl:when test=". = 'ISOLABONA'"><comune>008032</comune><provincia>008</provincia></xsl:when>
+<xsl:when test=". = 'LUCINASCO'"><comune>008033</comune><provincia>008</provincia></xsl:when>
+<xsl:when test=". = 'MENDATICA'"><comune>008034</comune><provincia>008</provincia></xsl:when>
+<xsl:when test=". = 'MOLINI DI TRIORA'"><comune>008035</comune><provincia>008</provincia></xsl:when>
+<xsl:when test=". = 'MONTALTO LIGURE'"><comune>008036</comune><provincia>008</provincia></xsl:when>
+<xsl:when test=". = 'MONTEGROSSO PIAN LATTE'"><comune>008037</comune><provincia>008</provincia></xsl:when>
+<xsl:when test=". = 'OLIVETTA SAN MICHELE'"><comune>008038</comune><provincia>008</provincia></xsl:when>
+<xsl:when test=". = 'OSPEDALETTI'"><comune>008039</comune><provincia>008</provincia></xsl:when>
+<xsl:when test=". = 'PERINALDO'"><comune>008040</comune><provincia>008</provincia></xsl:when>
+<xsl:when test=". = 'PIETRABRUNA'"><comune>008041</comune><provincia>008</provincia></xsl:when>
+<xsl:when test=". = 'PIEVE DI TECO'"><comune>008042</comune><provincia>008</provincia></xsl:when>
+<xsl:when test=". = 'PIGNA'"><comune>008043</comune><provincia>008</provincia></xsl:when>
+<xsl:when test=". = 'POMPEIANA'"><comune>008044</comune><provincia>008</provincia></xsl:when>
+<xsl:when test=". = 'PONTEDASSIO'"><comune>008045</comune><provincia>008</provincia></xsl:when>
+<xsl:when test=". = 'PORNASSIO'"><comune>008046</comune><provincia>008</provincia></xsl:when>
+<xsl:when test=". = 'PRELÀ'"><comune>008047</comune><provincia>008</provincia></xsl:when>
+<xsl:when test=". = 'RANZO'"><comune>008048</comune><provincia>008</provincia></xsl:when>
+<xsl:when test=". = 'REZZO'"><comune>008049</comune><provincia>008</provincia></xsl:when>
+<xsl:when test=". = 'RIVA LIGURE'"><comune>008050</comune><provincia>008</provincia></xsl:when>
+<xsl:when test=". = 'ROCCHETTA NERVINA'"><comune>008051</comune><provincia>008</provincia></xsl:when>
+<xsl:when test=". = 'SAN BARTOLOMEO AL MARE'"><comune>008052</comune><provincia>008</provincia></xsl:when>
+<xsl:when test=". = 'SAN BIAGIO DELLA CIMA'"><comune>008053</comune><provincia>008</provincia></xsl:when>
+<xsl:when test=". = 'SAN LORENZO AL MARE'"><comune>008054</comune><provincia>008</provincia></xsl:when>
+<xsl:when test=". = 'SANREMO'"><comune>008055</comune><provincia>008</provincia></xsl:when>
+<xsl:when test=". = 'SAN REMO'"><comune>008055</comune><provincia>008</provincia></xsl:when>
+<xsl:when test=". = 'SANTO STEFANO AL MARE'"><comune>008056</comune><provincia>008</provincia></xsl:when>
+<xsl:when test=". = 'SEBORGA'"><comune>008057</comune><provincia>008</provincia></xsl:when>
+<xsl:when test=". = 'SOLDANO'"><comune>008058</comune><provincia>008</provincia></xsl:when>
+<xsl:when test=". = 'TAGGIA'"><comune>008059</comune><provincia>008</provincia></xsl:when>
+<xsl:when test=". = 'TERZORIO'"><comune>008060</comune><provincia>008</provincia></xsl:when>
+<xsl:when test=". = 'TRIORA'"><comune>008061</comune><provincia>008</provincia></xsl:when>
+<xsl:when test=". = 'VALLEBONA'"><comune>008062</comune><provincia>008</provincia></xsl:when>
+<xsl:when test=". = 'VALLECROSIA'"><comune>008063</comune><provincia>008</provincia></xsl:when>
+<xsl:when test=". = 'VASIA'"><comune>008064</comune><provincia>008</provincia></xsl:when>
+<xsl:when test=". = 'VENTIMIGLIA'"><comune>008065</comune><provincia>008</provincia></xsl:when>
+<xsl:when test=". = 'VESSALICO'"><comune>008066</comune><provincia>008</provincia></xsl:when>
+<xsl:when test=". = 'VILLA FARALDI'"><comune>008067</comune><provincia>008</provincia></xsl:when>
+<xsl:when test=". = 'ALASSIO'"><comune>009001</comune><provincia>009</provincia></xsl:when>
+<xsl:when test=". = 'ALBENGA'"><comune>009002</comune><provincia>009</provincia></xsl:when>
+<xsl:when test=". = 'ALBISSOLA MARINA'"><comune>009003</comune><provincia>009</provincia></xsl:when>
+<xsl:when test=". = 'ALBISOLA SUPERIORE'"><comune>009004</comune><provincia>009</provincia></xsl:when>
+<xsl:when test=". = 'ALTARE'"><comune>009005</comune><provincia>009</provincia></xsl:when>
+<xsl:when test=". = 'ANDORA'"><comune>009006</comune><provincia>009</provincia></xsl:when>
+<xsl:when test=". = 'ARNASCO'"><comune>009007</comune><provincia>009</provincia></xsl:when>
+<xsl:when test=". = 'BALESTRINO'"><comune>009008</comune><provincia>009</provincia></xsl:when>
+<xsl:when test=". = 'BARDINETO'"><comune>009009</comune><provincia>009</provincia></xsl:when>
+<xsl:when test=". = 'BERGEGGI'"><comune>009010</comune><provincia>009</provincia></xsl:when>
+<xsl:when test=". = 'BOISSANO'"><comune>009011</comune><provincia>009</provincia></xsl:when>
+<xsl:when test=". = 'BORGHETTO SANTO SPIRITO'"><comune>009012</comune><provincia>009</provincia></xsl:when>
+<xsl:when test=". = 'BORGIO VEREZZI'"><comune>009013</comune><provincia>009</provincia></xsl:when>
+<xsl:when test=". = 'BORMIDA'"><comune>009014</comune><provincia>009</provincia></xsl:when>
+<xsl:when test=". = 'CAIRO MONTENOTTE'"><comune>009015</comune><provincia>009</provincia></xsl:when>
+<xsl:when test=". = 'CALICE LIGURE'"><comune>009016</comune><provincia>009</provincia></xsl:when>
+<xsl:when test=". = 'CALIZZANO'"><comune>009017</comune><provincia>009</provincia></xsl:when>
+<xsl:when test=". = 'CARCARE'"><comune>009018</comune><provincia>009</provincia></xsl:when>
+<xsl:when test=". = 'CASANOVA LERRONE'"><comune>009019</comune><provincia>009</provincia></xsl:when>
+<xsl:when test=". = 'CASTELBIANCO'"><comune>009020</comune><provincia>009</provincia></xsl:when>
+<xsl:when test=". = 'CASTELVECCHIO DI ROCCA BARBENA'"><comune>009021</comune><provincia>009</provincia></xsl:when>
+<xsl:when test=". = 'CELLE LIGURE'"><comune>009022</comune><provincia>009</provincia></xsl:when>
+<xsl:when test=". = 'CENGIO'"><comune>009023</comune><provincia>009</provincia></xsl:when>
+<xsl:when test=". = 'CERIALE'"><comune>009024</comune><provincia>009</provincia></xsl:when>
+<xsl:when test=". = 'CISANO SUL NEVA'"><comune>009025</comune><provincia>009</provincia></xsl:when>
+<xsl:when test=". = 'COSSERIA'"><comune>009026</comune><provincia>009</provincia></xsl:when>
+<xsl:when test=". = 'DEGO'"><comune>009027</comune><provincia>009</provincia></xsl:when>
+<xsl:when test=". = 'ERLI'"><comune>009028</comune><provincia>009</provincia></xsl:when>
+<xsl:when test=". = 'FINALE LIGURE'"><comune>009029</comune><provincia>009</provincia></xsl:when>
+<xsl:when test=". = 'GARLENDA'"><comune>009030</comune><provincia>009</provincia></xsl:when>
+<xsl:when test=". = 'GIUSTENICE'"><comune>009031</comune><provincia>009</provincia></xsl:when>
+<xsl:when test=". = 'GIUSVALLA'"><comune>009032</comune><provincia>009</provincia></xsl:when>
+<xsl:when test=". = 'LAIGUEGLIA'"><comune>009033</comune><provincia>009</provincia></xsl:when>
+<xsl:when test=". = 'LOANO'"><comune>009034</comune><provincia>009</provincia></xsl:when>
+<xsl:when test=". = 'MAGLIOLO'"><comune>009035</comune><provincia>009</provincia></xsl:when>
+<xsl:when test=". = 'MALLARE'"><comune>009036</comune><provincia>009</provincia></xsl:when>
+<xsl:when test=". = 'MASSIMINO'"><comune>009037</comune><provincia>009</provincia></xsl:when>
+<xsl:when test=". = 'MILLESIMO'"><comune>009038</comune><provincia>009</provincia></xsl:when>
+<xsl:when test=". = 'MIOGLIA'"><comune>009039</comune><provincia>009</provincia></xsl:when>
+<xsl:when test=". = 'MURIALDO'"><comune>009040</comune><provincia>009</provincia></xsl:when>
+<xsl:when test=". = 'NASINO'"><comune>009041</comune><provincia>009</provincia></xsl:when>
+<xsl:when test=". = 'NOLI'"><comune>009042</comune><provincia>009</provincia></xsl:when>
+<xsl:when test=". = 'ONZO'"><comune>009043</comune><provincia>009</provincia></xsl:when>
+<xsl:when test=". = 'ORCO FEGLINO'"><comune>009044</comune><provincia>009</provincia></xsl:when>
+<xsl:when test=". = 'ORTOVERO'"><comune>009045</comune><provincia>009</provincia></xsl:when>
+<xsl:when test=". = 'OSIGLIA'"><comune>009046</comune><provincia>009</provincia></xsl:when>
+<xsl:when test=". = 'PALLARE'"><comune>009047</comune><provincia>009</provincia></xsl:when>
+<xsl:when test=". = 'PIANA CRIXIA'"><comune>009048</comune><provincia>009</provincia></xsl:when>
+<xsl:when test=". = 'PIETRA LIGURE'"><comune>009049</comune><provincia>009</provincia></xsl:when>
+<xsl:when test=". = 'PLODIO'"><comune>009050</comune><provincia>009</provincia></xsl:when>
+<xsl:when test=". = 'PONTINVREA'"><comune>009051</comune><provincia>009</provincia></xsl:when>
+<xsl:when test=". = 'QUILIANO'"><comune>009052</comune><provincia>009</provincia></xsl:when>
+<xsl:when test=". = 'RIALTO'"><comune>009053</comune><provincia>009</provincia></xsl:when>
+<xsl:when test=". = 'ROCCAVIGNALE'"><comune>009054</comune><provincia>009</provincia></xsl:when>
+<xsl:when test=". = 'SASSELLO'"><comune>009055</comune><provincia>009</provincia></xsl:when>
+<xsl:when test=". = 'SAVONA'"><comune>009056</comune><provincia>009</provincia></xsl:when>
+<xsl:when test=". = 'SPOTORNO'"><comune>009057</comune><provincia>009</provincia></xsl:when>
+<xsl:when test=". = 'STELLA'"><comune>009058</comune><provincia>009</provincia></xsl:when>
+<xsl:when test=". = 'STELLANELLO'"><comune>009059</comune><provincia>009</provincia></xsl:when>
+<xsl:when test=". = 'TESTICO'"><comune>009060</comune><provincia>009</provincia></xsl:when>
+<xsl:when test=". = 'TOIRANO'"><comune>009061</comune><provincia>009</provincia></xsl:when>
+<xsl:when test=". = 'TOVO SAN GIACOMO'"><comune>009062</comune><provincia>009</provincia></xsl:when>
+<xsl:when test=". = 'URBE'"><comune>009063</comune><provincia>009</provincia></xsl:when>
+<xsl:when test=". = 'VADO LIGURE'"><comune>009064</comune><provincia>009</provincia></xsl:when>
+<xsl:when test=". = 'VARAZZE'"><comune>009065</comune><provincia>009</provincia></xsl:when>
+<xsl:when test=". = 'VENDONE'"><comune>009066</comune><provincia>009</provincia></xsl:when>
+<xsl:when test=". = 'VEZZI PORTIO'"><comune>009067</comune><provincia>009</provincia></xsl:when>
+<xsl:when test=". = 'VILLANOVA D&amp;apos;ALBENGA'"><comune>009068</comune><provincia>009</provincia></xsl:when>
+<xsl:when test=". = 'ZUCCARELLO'"><comune>009069</comune><provincia>009</provincia></xsl:when>
+<xsl:when test=". = 'ARENZANO'"><comune>010001</comune><provincia>010</provincia></xsl:when>
+<xsl:when test=". = 'AVEGNO'"><comune>010002</comune><provincia>010</provincia></xsl:when>
+<xsl:when test=". = 'BARGAGLI'"><comune>010003</comune><provincia>010</provincia></xsl:when>
+<xsl:when test=". = 'BOGLIASCO'"><comune>010004</comune><provincia>010</provincia></xsl:when>
+<xsl:when test=". = 'BORZONASCA'"><comune>010005</comune><provincia>010</provincia></xsl:when>
+<xsl:when test=". = 'BUSALLA'"><comune>010006</comune><provincia>010</provincia></xsl:when>
+<xsl:when test=". = 'CAMOGLI'"><comune>010007</comune><provincia>010</provincia></xsl:when>
+<xsl:when test=". = 'CAMPO LIGURE'"><comune>010008</comune><provincia>010</provincia></xsl:when>
+<xsl:when test=". = 'CAMPOMORONE'"><comune>010009</comune><provincia>010</provincia></xsl:when>
+<xsl:when test=". = 'CARASCO'"><comune>010010</comune><provincia>010</provincia></xsl:when>
+<xsl:when test=". = 'CASARZA LIGURE'"><comune>010011</comune><provincia>010</provincia></xsl:when>
+<xsl:when test=". = 'CASELLA'"><comune>010012</comune><provincia>010</provincia></xsl:when>
+<xsl:when test=". = 'CASTIGLIONE CHIAVARESE'"><comune>010013</comune><provincia>010</provincia></xsl:when>
+<xsl:when test=". = 'CERANESI'"><comune>010014</comune><provincia>010</provincia></xsl:when>
+<xsl:when test=". = 'CHIAVARI'"><comune>010015</comune><provincia>010</provincia></xsl:when>
+<xsl:when test=". = 'CICAGNA'"><comune>010016</comune><provincia>010</provincia></xsl:when>
+<xsl:when test=". = 'COGOLETO'"><comune>010017</comune><provincia>010</provincia></xsl:when>
+<xsl:when test=". = 'COGORNO'"><comune>010018</comune><provincia>010</provincia></xsl:when>
+<xsl:when test=". = 'COREGLIA LIGURE'"><comune>010019</comune><provincia>010</provincia></xsl:when>
+<xsl:when test=". = 'CROCEFIESCHI'"><comune>010020</comune><provincia>010</provincia></xsl:when>
+<xsl:when test=". = 'DAVAGNA'"><comune>010021</comune><provincia>010</provincia></xsl:when>
+<xsl:when test=". = 'FASCIA'"><comune>010022</comune><provincia>010</provincia></xsl:when>
+<xsl:when test=". = 'FAVALE DI MALVARO'"><comune>010023</comune><provincia>010</provincia></xsl:when>
+<xsl:when test=". = 'FONTANIGORDA'"><comune>010024</comune><provincia>010</provincia></xsl:when>
+<xsl:when test=". = 'GENOVA'"><comune>010025</comune><provincia>010</provincia></xsl:when>
+<xsl:when test=". = 'GORRETO'"><comune>010026</comune><provincia>010</provincia></xsl:when>
+<xsl:when test=". = 'ISOLA DEL CANTONE'"><comune>010027</comune><provincia>010</provincia></xsl:when>
+<xsl:when test=". = 'LAVAGNA'"><comune>010028</comune><provincia>010</provincia></xsl:when>
+<xsl:when test=". = 'LEIVI'"><comune>010029</comune><provincia>010</provincia></xsl:when>
+<xsl:when test=". = 'LORSICA'"><comune>010030</comune><provincia>010</provincia></xsl:when>
+<xsl:when test=". = 'LUMARZO'"><comune>010031</comune><provincia>010</provincia></xsl:when>
+<xsl:when test=". = 'MASONE'"><comune>010032</comune><provincia>010</provincia></xsl:when>
+<xsl:when test=". = 'MELE'"><comune>010033</comune><provincia>010</provincia></xsl:when>
+<xsl:when test=". = 'MEZZANEGO'"><comune>010034</comune><provincia>010</provincia></xsl:when>
+<xsl:when test=". = 'MIGNANEGO'"><comune>010035</comune><provincia>010</provincia></xsl:when>
+<xsl:when test=". = 'MOCONESI'"><comune>010036</comune><provincia>010</provincia></xsl:when>
+<xsl:when test=". = 'MONEGLIA'"><comune>010037</comune><provincia>010</provincia></xsl:when>
+<xsl:when test=". = 'MONTEBRUNO'"><comune>010038</comune><provincia>010</provincia></xsl:when>
+<xsl:when test=". = 'MONTOGGIO'"><comune>010039</comune><provincia>010</provincia></xsl:when>
+<xsl:when test=". = 'NE'"><comune>010040</comune><provincia>010</provincia></xsl:when>
+<xsl:when test=". = 'NEIRONE'"><comune>010041</comune><provincia>010</provincia></xsl:when>
+<xsl:when test=". = 'ORERO'"><comune>010042</comune><provincia>010</provincia></xsl:when>
+<xsl:when test=". = 'PIEVE LIGURE'"><comune>010043</comune><provincia>010</provincia></xsl:when>
+<xsl:when test=". = 'PORTOFINO'"><comune>010044</comune><provincia>010</provincia></xsl:when>
+<xsl:when test=". = 'PROPATA'"><comune>010045</comune><provincia>010</provincia></xsl:when>
+<xsl:when test=". = 'RAPALLO'"><comune>010046</comune><provincia>010</provincia></xsl:when>
+<xsl:when test=". = 'RECCO'"><comune>010047</comune><provincia>010</provincia></xsl:when>
+<xsl:when test=". = 'REZZOAGLIO'"><comune>010048</comune><provincia>010</provincia></xsl:when>
+<xsl:when test=". = 'RONCO SCRIVIA'"><comune>010049</comune><provincia>010</provincia></xsl:when>
+<xsl:when test=". = 'RONDANINA'"><comune>010050</comune><provincia>010</provincia></xsl:when>
+<xsl:when test=". = 'ROSSIGLIONE'"><comune>010051</comune><provincia>010</provincia></xsl:when>
+<xsl:when test=". = 'ROVEGNO'"><comune>010052</comune><provincia>010</provincia></xsl:when>
+<xsl:when test=". = 'SAN COLOMBANO CERTENOLI'"><comune>010053</comune><provincia>010</provincia></xsl:when>
+<xsl:when test=". = 'SANTA MARGHERITA LIGURE'"><comune>010054</comune><provincia>010</provincia></xsl:when>
+<xsl:when test=". = 'SANT&amp;apos;OLCESE'"><comune>010055</comune><provincia>010</provincia></xsl:when>
+<xsl:when test=". = 'SANTO STEFANO D&amp;apos;AVETO'"><comune>010056</comune><provincia>010</provincia></xsl:when>
+<xsl:when test=". = 'SAVIGNONE'"><comune>010057</comune><provincia>010</provincia></xsl:when>
+<xsl:when test=". = 'SERRA RICCÒ'"><comune>010058</comune><provincia>010</provincia></xsl:when>
+<xsl:when test=". = 'SESTRI LEVANTE'"><comune>010059</comune><provincia>010</provincia></xsl:when>
+<xsl:when test=". = 'SORI'"><comune>010060</comune><provincia>010</provincia></xsl:when>
+<xsl:when test=". = 'TIGLIETO'"><comune>010061</comune><provincia>010</provincia></xsl:when>
+<xsl:when test=". = 'TORRIGLIA'"><comune>010062</comune><provincia>010</provincia></xsl:when>
+<xsl:when test=". = 'TRIBOGNA'"><comune>010063</comune><provincia>010</provincia></xsl:when>
+<xsl:when test=". = 'USCIO'"><comune>010064</comune><provincia>010</provincia></xsl:when>
+<xsl:when test=". = 'VALBREVENNA'"><comune>010065</comune><provincia>010</provincia></xsl:when>
+<xsl:when test=". = 'VOBBIA'"><comune>010066</comune><provincia>010</provincia></xsl:when>
+<xsl:when test=". = 'ZOAGLI'"><comune>010067</comune><provincia>010</provincia></xsl:when>
+<xsl:when test=". = 'AMEGLIA'"><comune>011001</comune><provincia>011</provincia></xsl:when>
+<xsl:when test=". = 'ARCOLA'"><comune>011002</comune><provincia>011</provincia></xsl:when>
+<xsl:when test=". = 'BEVERINO'"><comune>011003</comune><provincia>011</provincia></xsl:when>
+<xsl:when test=". = 'BOLANO'"><comune>011004</comune><provincia>011</provincia></xsl:when>
+<xsl:when test=". = 'BONASSOLA'"><comune>011005</comune><provincia>011</provincia></xsl:when>
+<xsl:when test=". = 'BORGHETTO DI VARA'"><comune>011006</comune><provincia>011</provincia></xsl:when>
+<xsl:when test=". = 'BRUGNATO'"><comune>011007</comune><provincia>011</provincia></xsl:when>
+<xsl:when test=". = 'CALICE AL CORNOVIGLIO'"><comune>011008</comune><provincia>011</provincia></xsl:when>
+<xsl:when test=". = 'CARRO'"><comune>011009</comune><provincia>011</provincia></xsl:when>
+<xsl:when test=". = 'CARRODANO'"><comune>011010</comune><provincia>011</provincia></xsl:when>
+<xsl:when test=". = 'CASTELNUOVO MAGRA'"><comune>011011</comune><provincia>011</provincia></xsl:when>
+<xsl:when test=". = 'DEIVA MARINA'"><comune>011012</comune><provincia>011</provincia></xsl:when>
+<xsl:when test=". = 'FOLLO'"><comune>011013</comune><provincia>011</provincia></xsl:when>
+<xsl:when test=". = 'FRAMURA'"><comune>011014</comune><provincia>011</provincia></xsl:when>
+<xsl:when test=". = 'LA SPEZIA'"><comune>011015</comune><provincia>011</provincia></xsl:when>
+<xsl:when test=". = 'LERICI'"><comune>011016</comune><provincia>011</provincia></xsl:when>
+<xsl:when test=". = 'LEVANTO'"><comune>011017</comune><provincia>011</provincia></xsl:when>
+<xsl:when test=". = 'MAISSANA'"><comune>011018</comune><provincia>011</provincia></xsl:when>
+<xsl:when test=". = 'MONTEROSSO AL MARE'"><comune>011019</comune><provincia>011</provincia></xsl:when>
+<xsl:when test=". = 'ORTONOVO'"><comune>011020</comune><provincia>011</provincia></xsl:when>
+<xsl:when test=". = 'PIGNONE'"><comune>011021</comune><provincia>011</provincia></xsl:when>
+<xsl:when test=". = 'PORTOVENERE'"><comune>011022</comune><provincia>011</provincia></xsl:when>
+<xsl:when test=". = 'RICCÒ DEL GOLFO DI SPEZIA'"><comune>011023</comune><provincia>011</provincia></xsl:when>
+<xsl:when test=". = 'RIOMAGGIORE'"><comune>011024</comune><provincia>011</provincia></xsl:when>
+<xsl:when test=". = 'ROCCHETTA DI VARA'"><comune>011025</comune><provincia>011</provincia></xsl:when>
+<xsl:when test=". = 'SANTO STEFANO DI MAGRA'"><comune>011026</comune><provincia>011</provincia></xsl:when>
+<xsl:when test=". = 'SARZANA'"><comune>011027</comune><provincia>011</provincia></xsl:when>
+<xsl:when test=". = 'SESTA GODANO'"><comune>011028</comune><provincia>011</provincia></xsl:when>
+<xsl:when test=". = 'VARESE LIGURE'"><comune>011029</comune><provincia>011</provincia></xsl:when>
+<xsl:when test=". = 'VERNAZZA'"><comune>011030</comune><provincia>011</provincia></xsl:when>
+<xsl:when test=". = 'VEZZANO LIGURE'"><comune>011031</comune><provincia>011</provincia></xsl:when>
+<xsl:when test=". = 'ZIGNAGO'"><comune>011032</comune><provincia>011</provincia></xsl:when>
 				<xsl:otherwise>
 					<xsl:value-of select="."/>
 				</xsl:otherwise>
 			</xsl:choose>
-		</xsl:element>
 	</xsl:template>
 	<!-- TODO: Auto-generated template -->
 </xsl:stylesheet>
