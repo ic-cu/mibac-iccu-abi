@@ -174,24 +174,8 @@
 		</xsl:if>
   </xsl:template>
 
-  <!-- il posseduto di ogni materiale è ignorato se "" (sempre con string-length) 
-  c'é da verificare se un materiali vuoto cancella tutto il precedente-->
-  <xsl:template match="//scheda_BIBLIO/CONSISTENZA">
-		<xsl:element name="materiali">
-		<xsl:for-each select="CATEGORIA/DETTAGLIO">
-		<xsl:element name="materiale">
-			<xsl:attribute name="nome">
-				<xsl:value-of select="@descrizione"/>
-			</xsl:attribute>
-			<xsl:if test="not(string-length(@quantita)=0)">
-				<xsl:attribute name="posseduto">
-					<xsl:value-of select="@quantita"/>
-				</xsl:attribute>
-			</xsl:if>
-		</xsl:element>
-		</xsl:for-each>
-		</xsl:element>
-	 </xsl:template>
+
+ <xsl:import href="convert-liguria-patrimonio.xsl"/>
 
   <!-- spesso descrizioni vuote, testare anche qui con string-length? -->
   

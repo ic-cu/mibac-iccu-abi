@@ -81,8 +81,7 @@ public class VarieQuery
 	{
 		try
 		{
-			Statement stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
-					ResultSet.CONCUR_UPDATABLE);
+			Statement stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
 
 			// questo sembra l'unico modo di mandare al DB la sequenza "\'"...
 			String valore2 = valore.replaceAll("\'", "\\\\'");
@@ -154,33 +153,32 @@ public class VarieQuery
 		try
 		{
 			PreparedStatement isilStmt;
-			isilStmt = conn.prepareStatement(query,
-					ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+			isilStmt = conn.prepareStatement(query, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
 
 			xp = XPath.newInstance(isilPath);
-			System.out.println("Trovate "
-					+ doc.getRootElement().getChildren("biblioteca").size()
-					+ " biblioteche nei documenti XML");
+			System.out.println("Trovate " + doc.getRootElement().getChildren("biblioteca").size() + " biblioteche nei documenti XML");
 			Iterator<Element> i = xp.selectNodes(doc).iterator();
+			System.out.println("==========\nElenco biblioteche con stato di catalogazione:");
 			while(i.hasNext())
 			{
-				count++;
 				String isil = i.next().getTextNormalize();
-				isilStmt.setString(1, isil);
-				ResultSet rs = isilStmt.executeQuery();
-				if(rs.next())
+				if(isil.length() > 0)
 				{
-					System.out.println(isil + " --> " + rs.getString("stato"));
-				}
-				else
-				{
-					ok += isil + "\n";
+					count++;
+					isilStmt.setString(1, isil);
+					ResultSet rs = isilStmt.executeQuery();
+					if(rs.next())
+					{
+						System.out.println(isil + " --> " + rs.getString("stato"));
+					}
+					else
+					{
+						ok += isil + "\n";
+					}
 				}
 			}
-			System.out.println("Totale biblioteche: " + count);
-			System.out
-					.println("==========\nElenco biblioteche con stato di catalogazione");
-//			System.out.println("Biblioteche senza stato di catalogazione:\n" + ok);
+			System.out.println("==========\nTotale biblioteche con ISIL: " + count);
+// System.out.println("Biblioteche senza stato di catalogazione:\n" + ok);
 		}
 		catch(JDOMException e)
 		{
@@ -209,7 +207,7 @@ public class VarieQuery
 		File[] dir = new File(xml).listFiles();
 		Set ts = null;
 		Document doc = new Document(new Element("biblioteche")), doc2;
-		System.out.println("root element: " +  doc.getRootElement().getName());
+		System.out.println("root element: " + doc.getRootElement().getName());
 		boolean trovato = false;
 		int biblioteche = 0;
 		for(int ii = 0; ii < dir.length; ii++)
@@ -217,8 +215,7 @@ public class VarieQuery
 			if(dir[ii].isFile())
 			{
 				doc2 = vq.load(dir[ii]);
-				Iterator ibib = doc2.getRootElement().getChildren("biblioteca")
-						.iterator();
+				Iterator ibib = doc2.getRootElement().getChildren("biblioteca").iterator();
 				while(ibib.hasNext())
 				{
 					Element bib2 = (Element) ibib.next();
@@ -230,9 +227,8 @@ public class VarieQuery
 			}
 		}
 
-		System.out.println("Caricate " + biblioteche
-				+ " biblioteche (nel doc sono "
-				+ doc.getRootElement().getChildren("biblioteca").size() + ")");
+		System.out.println("Caricate " + biblioteche + " biblioteche (nel doc sono " + doc.getRootElement().getChildren("biblioteca").size()
+				+ ")");
 
 /*
  * Si cercano le biblioteche che risultano non censite in ABI.
@@ -246,8 +242,7 @@ public class VarieQuery
 		System.out.println("==========\nElenco voci d'autorità mancanti");
 		try
 		{
-			BufferedReader conf = new BufferedReader(
-					new FileReader("VarieQuery.conf"));
+			BufferedReader conf = new BufferedReader(new FileReader("VarieQuery.conf"));
 			while(conf.ready())
 			{
 				riga = conf.readLine();
