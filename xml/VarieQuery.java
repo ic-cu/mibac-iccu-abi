@@ -161,7 +161,8 @@ public class VarieQuery
 			System.out.println("==========\nElenco biblioteche con stato di catalogazione:");
 			while(i.hasNext())
 			{
-				String isil = i.next().getTextNormalize();
+				Element node = i.next();
+				String isil = node.getTextNormalize();
 				if(isil.length() > 0)
 				{
 					count++;
@@ -175,6 +176,11 @@ public class VarieQuery
 					{
 						ok += isil + "\n";
 					}
+				}
+				else
+				{
+					System.out.print("IT-?????? --> ");
+					System.out.println(node.getParentElement().getParentElement().getChild("nomi").getChildText("attuale"));
 				}
 			}
 			System.out.println("==========\nTotale biblioteche con ISIL: " + count);
