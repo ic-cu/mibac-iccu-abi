@@ -16,7 +16,7 @@
 <xsl:when test="@descrizione = 'Edizioni sec. XVIII'"><materiale nome="edizioni del '700" posseduto="{@quantita}"/></xsl:when>
 <xsl:when test="@descrizione = 'Edizioni sec. XIX'"><materiale nome="edizioni del '800" posseduto="{@quantita}"/></xsl:when>
 <xsl:when test="@descrizione = 'Edizioni sec. XX-XXI (per adulti)'"><materiale nome="volumi ed opuscoli" posseduto="{@quantita}"/></xsl:when>
-<xsl:when test="@descrizione = 'Edizioni sec. XX-XXI (per ragazzi)'"><materiale nome="volumi ed opuscoli" posseduto="{@quantita}"/></xsl:when>
+<xsl:when test="@descrizione = 'Edizioni sec. XX-XXI (per ragazzi)'"><materiale nome="libri per ragazzi" posseduto="{@quantita}"/></xsl:when>
 <xsl:when test="@descrizione = 'Documenti cartografici moderni'"><materiale nome="documenti cartografici" posseduto="{@quantita}"/></xsl:when>
 <xsl:when test="@descrizione = 'Documenti cartografici antichi (fino al 1830)'"><materiale nome="documenti cartografici" posseduto="{@quantita}"/></xsl:when>
 <xsl:when test="@descrizione = 'Musica a stampa'"><materiale nome="documenti musicali a stampa" posseduto="{@quantita}"/></xsl:when>

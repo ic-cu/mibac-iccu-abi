@@ -41,7 +41,7 @@
 					<xsl:element name="isil">
 						<xsl:value-of select="CODISIL"/>
 					</xsl:element>
-		<!-- solo se c'é IDPOLO si deve selezionare il codice SBN-->
+		<!-- solo se c'è IDPOLO si deve selezionare il codice SBN-->
 				<xsl:if test="string-length(IDPOLO)=3">
 				<xsl:element name="sbn">	
 				<xsl:value-of select="concat(IDPOLO,CODBIB)"/>
@@ -108,9 +108,16 @@
 					<xsl:value-of select="E_MAIL" />
 				</xsl:element>
 			</xsl:element>
+			<xsl:element name="altro">
+				<xsl:attribute name="tipo">url</xsl:attribute>
+				<xsl:element name="valore">
+					<xsl:value-of select="HOMEPAGE" />
+				</xsl:element>
+			</xsl:element>
 		</xsl:element>
 	</xsl:element>
 </xsl:template>
+
 <xsl:template match="//scheda_BIBLIO/RECAPITI/HOMEPAGE">
 		<xsl:element name="altro">
 			<xsl:attribute name="tipo">url</xsl:attribute>
