@@ -14,7 +14,7 @@
 			<xsl:element name="data-export">
 				2013-11-04T00:00:00
 			</xsl:element>
-			<xsl:apply-templates select="scheda_BIBLIO" />
+			<xsl:apply-templates select="scheda_BIBLIO[not(normalize-space(CONSISTENZA/TOTCONS)) = '']" />
 		</xsl:element>
 	</xsl:template>
 	<!--
@@ -25,7 +25,7 @@
 		il template per adesso è in grado di creare "anagrafica" con nome,
 		indirizzo e contatti, poi crea anche patrimonio e servizi
 	-->
-	<xsl:template match="scheda_BIBLIO">
+	<xsl:template match="scheda_BIBLIO[not(normalize-space(CONSISTENZA/TOTCONS)) = '']">
 		<xsl:element name="biblioteca">
 			<xsl:element name="anagrafica">
 				<xsl:apply-templates select="RELAZIONE" />
