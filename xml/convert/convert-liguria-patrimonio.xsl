@@ -32,7 +32,7 @@
 <xsl:when test="@descrizione = 'DVD dati'"><materiale nome="DVD" posseduto="{@quantita}"/></xsl:when>
 <xsl:when test="@descrizione = 'Stampe e incisioni'"><materiale nome="stampe" posseduto="{@quantita}"/><materiale nome="incisioni" posseduto="{@quantita}"/></xsl:when>
 <xsl:when test="@descrizione = 'Ebook'"><materiale nome="e-book" posseduto="{@quantita}"/></xsl:when>
-<xsl:when test="@descrizione = 'Cinquecentine'"><materiale nome="Edizioni del '500" posseduto="{@quantita}"/></xsl:when>
+<xsl:when test="@descrizione = 'Registrazioni video'"><materiale nome="documenti audiovisivi" posseduto="{@quantita}"/></xsl:when>
 <xsl:when test="@descrizione = 'Cinquecentine'"><materiale nome="Edizioni del '500" posseduto="{@quantita}"/></xsl:when>
 <xsl:when test="@descrizione = 'Cinquecentine'"><materiale nome="Edizioni del '500" posseduto="{@quantita}"/></xsl:when>
 <xsl:when test="@descrizione = 'Cinquecentine'"><materiale nome="Edizioni del '500" posseduto="{@quantita}"/></xsl:when>
@@ -46,6 +46,19 @@
 				</xsl:attribute>
 			</xsl:if>
 		</xsl:for-each>
+		
+<!--
+I periodici sono quantificati fuori dalla consistenza, ma per noi sono un materiale
+e quindi si cerca di includerli qui. Da notare che, per evitare periodici=0, il valore
+da usare nel test dev'essere numerico, non stringa (cioè non '0', ma solo 0). 
+
+ -->		
+		<xsl:if test="not(normalize-space(../PERIODICI)) = '' and not(normalize-space(../PERIODICI)) = 0">
+		<xsl:element name="materiale">
+		<xsl:attribute name="nome">periodici</xsl:attribute>
+		<xsl:attribute name="posseduto"><xsl:value-of select="../PERIODICI"/></xsl:attribute>
+		</xsl:element> 
+		</xsl:if>
 		</materiali>
 	</xsl:template>
 	<!-- TODO: Auto-generated template -->

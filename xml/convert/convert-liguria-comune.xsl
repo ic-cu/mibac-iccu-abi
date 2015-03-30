@@ -232,7 +232,7 @@
 <xsl:when test=". = 'ORTONOVO'"><comune>011020</comune><provincia>011</provincia></xsl:when>
 <xsl:when test=". = 'PIGNONE'"><comune>011021</comune><provincia>011</provincia></xsl:when>
 <xsl:when test=". = 'PORTOVENERE'"><comune>011022</comune><provincia>011</provincia></xsl:when>
-<xsl:when test=". = 'RICCÒ DEL GOLFO DI SPEZIA'"><comune>011023</comune><provincia>011</provincia></xsl:when>
+<xsl:when test="starts-with(., 'RICCO')"><comune>011023</comune><provincia>011</provincia></xsl:when>
 <xsl:when test=". = 'RIOMAGGIORE'"><comune>011024</comune><provincia>011</provincia></xsl:when>
 <xsl:when test=". = 'ROCCHETTA DI VARA'"><comune>011025</comune><provincia>011</provincia></xsl:when>
 <xsl:when test=". = 'SANTO STEFANO DI MAGRA'"><comune>011026</comune><provincia>011</provincia></xsl:when>
@@ -242,9 +242,15 @@
 <xsl:when test=". = 'VERNAZZA'"><comune>011030</comune><provincia>011</provincia></xsl:when>
 <xsl:when test=". = 'VEZZANO LIGURE'"><comune>011031</comune><provincia>011</provincia></xsl:when>
 <xsl:when test=". = 'ZIGNAGO'"><comune>011032</comune><provincia>011</provincia></xsl:when>
+<!--
+Non può esserci otherwise, perché non si può inventare una provincia e mappare anche quelle 
+sarebbe seccante
+-->
+<!--  
 				<xsl:otherwise>
-					<xsl:value-of select="."/>
+					<comune><xsl:value-of select="."/></comune>
 				</xsl:otherwise>
+ -->				
 			</xsl:choose>
 	</xsl:template>
 	<!-- TODO: Auto-generated template -->

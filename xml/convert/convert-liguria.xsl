@@ -95,14 +95,16 @@
 					<numero><xsl:value-of select="FAX" /></numero>
 				</xsl:element>
 			</xsl:element>
-			<xsl:element name="altri">
+			
+			<xsl:if test="not(normalize-space(E_MAIL)) = '' or not(normalize-space(HOMEPAGE)) = '' or not(normalize-space(PEC)) = ''">
+			
+			<altri>
 				<xsl:if test="not(normalize-space(E_MAIL)) = ''">
-					<xsl:element name="altro">
-						<xsl:attribute name="tipo">e-mail</xsl:attribute>
-						<xsl:element name="valore">
+					<altro tipo="e-mail">
+						<valore>
 							<xsl:value-of select="E_MAIL" />
-						</xsl:element>
-					</xsl:element>
+						</valore>
+					</altro>
 				</xsl:if>
 				<xsl:if test="not(normalize-space(HOMEPAGE)) = ''">
 					<altro tipo="url">
@@ -111,7 +113,15 @@
 						</valore>
 					</altro>
 				</xsl:if>
-			</xsl:element>
+				<xsl:if test="not(normalize-space(PEC)) = ''">
+					<altro tipo="url">
+						<valore>
+							<xsl:value-of select="PEC" />
+						</valore>
+					</altro>
+				</xsl:if>
+			 </altri>
+			</xsl:if>
 		</xsl:element>
 	</xsl:template>
 	
@@ -261,9 +271,7 @@
 	<xsl:template match="//scheda_BIBLIO/SERVIZI/SERVIZIO">
 		<xsl:element name="informazioni-bibliografiche">
 			<xsl:attribute name="attivo">s</xsl:attribute>
-			<xsl:element name="servizio-interno">
-				s
-			</xsl:element>
+			<servizio-interno>s</servizio-interno>
 		</xsl:element>
 	</xsl:template>
 	<xsl:template name="amministrativa">
