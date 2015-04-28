@@ -40,11 +40,12 @@
 					<materiale nome="{@descrizione}" posseduto="{@quantita}"/>
 				</xsl:otherwise>
 			</xsl:choose>
-			<xsl:if test="not(string-length(@quantita)=0)">
+<!-- 			<xsl:if test="not(string-length(@quantita)=0)">
 				<xsl:attribute name="posseduto">
 					<xsl:value-of select="@quantita"/>
 				</xsl:attribute>
 			</xsl:if>
+ -->
 		</xsl:for-each>
 		
 <!--
