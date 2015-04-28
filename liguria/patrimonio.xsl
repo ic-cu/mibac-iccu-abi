@@ -3,10 +3,6 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
 	<xsl:import href="consistenza.xsl" />
-	
-	  <!-- il posseduto di ogni materiale è ignorato se "" (sempre con string-length) 
-  c'é da verificare se un materiali vuoto cancella tutto il precedente-->
-
 	<xsl:output method="xml" indent="yes" />
 
 	<!-- patrimonio, solo se esiste (ma purtroppo a volte è vuoto) -->
@@ -38,18 +34,6 @@
 		</xsl:element>
 	</xsl:template>
 	
-	
-	<!--
-		il totale-posseduto non viene creato se il sorgente è vuoto, come purtroppo abbiamo
-		verificato; il trucco è string-length
-	-->
-	<xsl:template match="//scheda_BIBLIO/CONSISTENZA/TOTCONS">
-		<xsl:if test="not(string-length()=0)">
-			<xsl:element name="totale-posseduto">
-				<xsl:value-of select="." />
-			</xsl:element>
-		</xsl:if>
-	</xsl:template>
 		
 	<!-- spesso descrizioni vuote, testare anche qui con string-length? -->
 	<xsl:template match="//scheda_BIBLIO/FONDISPEC">

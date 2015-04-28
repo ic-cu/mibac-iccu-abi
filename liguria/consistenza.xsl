@@ -2,65 +2,72 @@
 <xsl:stylesheet version="1.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
-  <!-- il posseduto di ogni materiale è ignorato se "" (sempre con string-length) 
-  c'é da verificare se un materiali vuoto cancella tutto il precedente-->
-
+	<xsl:import href="mappa.xsl"/>
 	<xsl:output method="xml" indent="yes" />
 
 	<xsl:template match="//scheda_BIBLIO/CONSISTENZA">
-	<materiali>
-		<xsl:for-each select="CATEGORIA/DETTAGLIO">
-			<xsl:choose>
-<xsl:when test="@descrizione = 'Cinquecentine'"><materiale nome="edizioni del '500" posseduto="{@quantita}"/></xsl:when>
-<xsl:when test="@descrizione = 'Edizioni sec. XVII'"><materiale nome="edizioni del '600" posseduto="{@quantita}"/></xsl:when>
-<xsl:when test="@descrizione = 'Edizioni sec. XVIII'"><materiale nome="edizioni del '700" posseduto="{@quantita}"/></xsl:when>
-<xsl:when test="@descrizione = 'Edizioni sec. XIX'"><materiale nome="edizioni del '800" posseduto="{@quantita}"/></xsl:when>
-<xsl:when test="@descrizione = 'Edizioni sec. XX-XXI (per adulti)'"><materiale nome="volumi ed opuscoli" posseduto="{@quantita}"/></xsl:when>
-<xsl:when test="@descrizione = 'Edizioni sec. XX-XXI (per ragazzi)'"><materiale nome="libri per ragazzi" posseduto="{@quantita}"/></xsl:when>
-<xsl:when test="@descrizione = 'Documenti cartografici moderni'"><materiale nome="documenti cartografici" posseduto="{@quantita}"/></xsl:when>
-<xsl:when test="@descrizione = 'Documenti cartografici antichi (fino al 1830)'"><materiale nome="documenti cartografici" posseduto="{@quantita}"/></xsl:when>
-<xsl:when test="@descrizione = 'Musica a stampa'"><materiale nome="documenti musicali a stampa" posseduto="{@quantita}"/></xsl:when>
-<xsl:when test="@descrizione = 'carteggi'"><materiale nome="Edizioni del '500" posseduto="{@quantita}"/></xsl:when>
-<xsl:when test="starts-with(@descrizione, 'Manoscritti')"><materiale nome="manoscritti" posseduto="{@quantita}"/></xsl:when>
-<xsl:when test="@descrizione = 'Bobine cinematografiche'"><materiale nome="filmati" posseduto="{@quantita}"/></xsl:when>
-<xsl:when test="@descrizione = 'CD dati'"><materiale nome="CD-ROM" posseduto="{@quantita}"/></xsl:when>
-<xsl:when test="@descrizione = 'Compact disc audio'"><materiale nome="compact disc" posseduto="{@quantita}"/></xsl:when>
-<xsl:when test="@descrizione = 'Altri supporti per dati'"><materiale nome="basi di dati" posseduto="{@quantita}"/></xsl:when>
-<xsl:when test="@descrizione = 'DVD e Blue Ray video'"><materiale nome="DVD-video" posseduto="{@quantita}"/></xsl:when>
-<xsl:when test="@descrizione = 'DVD audio'"><materiale nome="audiovisivi" posseduto="{@quantita}"/></xsl:when>
-<xsl:when test="@descrizione = 'DVD video'"><materiale nome="DVD-video" posseduto="{@quantita}"/></xsl:when>
-<xsl:when test="@descrizione = 'DVD dati'"><materiale nome="DVD" posseduto="{@quantita}"/></xsl:when>
-<xsl:when test="@descrizione = 'Stampe e incisioni'"><materiale nome="stampe" posseduto="{@quantita}"/><materiale nome="incisioni" posseduto="{@quantita}"/></xsl:when>
-<xsl:when test="@descrizione = 'Ebook'"><materiale nome="e-book" posseduto="{@quantita}"/></xsl:when>
-<xsl:when test="@descrizione = 'Registrazioni video'"><materiale nome="documenti audiovisivi" posseduto="{@quantita}"/></xsl:when>
-<xsl:when test="@descrizione = 'Cinquecentine'"><materiale nome="Edizioni del '500" posseduto="{@quantita}"/></xsl:when>
-<xsl:when test="@descrizione = 'Cinquecentine'"><materiale nome="Edizioni del '500" posseduto="{@quantita}"/></xsl:when>
-<xsl:when test="@descrizione = 'Cinquecentine'"><materiale nome="Edizioni del '500" posseduto="{@quantita}"/></xsl:when>
-				<xsl:otherwise>
-					<materiale nome="{@descrizione}" posseduto="{@quantita}"/>
-				</xsl:otherwise>
-			</xsl:choose>
-<!-- 			<xsl:if test="not(string-length(@quantita)=0)">
-				<xsl:attribute name="posseduto">
-					<xsl:value-of select="@quantita"/>
-				</xsl:attribute>
+		<materiali>
+
+<!--
+questo test dovrebbe condizionare l'elemento contenitore, piuttosto che i 
+contenuti: se non c'è DETTAGLIO né PERIODICI è inutile creare il contenitore;
+per adesso il test si limita a non creare elementi "materiale" 
+-->	
+	
+			<xsl:if test="CATEGORIA/DETTAGLIO">
+				<xsl:for-each select="CATEGORIA/DETTAGLIO">
+			
+<!-- 
+per ogni DETTAGLIO trovato mette via la quantità, poi mette in una variabile $n
+il risultato della mappatura, se questa è possibile
+ -->		
+		
+					<xsl:variable name="q"><xsl:value-of select="@quantita"/></xsl:variable>
+					<xsl:variable name="n">
+						<xsl:call-template name="mappa">
+							<xsl:with-param name="d">
+								<xsl:value-of select="@descrizione"/>
+							</xsl:with-param>
+						</xsl:call-template>
+					</xsl:variable>
+					<materiale nome="{$n}">
+						<xsl:if test="not(string-length($q)=0) and not($q = 0)">
+							<xsl:attribute name="posseduto"><xsl:value-of select="$q"/></xsl:attribute>
+						</xsl:if>
+					</materiale>
+				</xsl:for-each>
 			</xsl:if>
- -->
-		</xsl:for-each>
 		
 <!--
 I periodici sono quantificati fuori dalla consistenza, ma per noi sono un materiale
 e quindi si cerca di includerli qui. Da notare che, per evitare periodici=0, il valore
 da usare nel test dev'essere numerico, non stringa (cioè non '0', ma solo 0). 
-
- -->		
-		<xsl:if test="not(normalize-space(../PERIODICI)) = '' and not(normalize-space(../PERIODICI)) = 0">
-		<xsl:element name="materiale">
-		<xsl:attribute name="nome">periodici</xsl:attribute>
-		<xsl:attribute name="posseduto"><xsl:value-of select="../PERIODICI"/></xsl:attribute>
-		</xsl:element> 
-		</xsl:if>
+-->
+			<xsl:variable name="p">
+				<xsl:value-of select="normalize-space(../PERIODICI)"/>
+			</xsl:variable>
+			<xsl:if test="not($p = '') and not($p = 0)">
+				<xsl:element name="materiale">
+					<xsl:attribute name="nome">periodici</xsl:attribute>
+					<xsl:attribute name="posseduto">
+						<xsl:value-of select="$p"/>
+					</xsl:attribute>
+				</xsl:element> 
+			</xsl:if>
 		</materiali>
 	</xsl:template>
-	<!-- TODO: Auto-generated template -->
+	
+<!--
+	il totale-posseduto non viene creato se il sorgente è vuoto, come purtroppo abbiamo
+	verificato; il trucco è string-length
+-->
+
+	<xsl:template match="//scheda_BIBLIO/CONSISTENZA/TOTCONS">
+		<xsl:if test="not(string-length()=0)">
+			<xsl:element name="totale-posseduto">
+				<xsl:value-of select="." />
+			</xsl:element>
+		</xsl:if>
+	</xsl:template>
+	
 </xsl:stylesheet>
