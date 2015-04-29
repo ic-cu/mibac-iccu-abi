@@ -12,6 +12,7 @@
 				<xsl:apply-templates select="APERTURA/ORARIO[contains(@descrizione,'stivo')]" />
 				<xsl:apply-templates select="APERTURA/CHIUSURA" />
 			</xsl:element>
+			<xsl:apply-templates select="SERVIZI/SERVIZIO[contains(., 'utomatizzato')]"/>
 			<!-- questa è stata una fatica: invoca il template solo se l'elemento SERVIZIO
 				contiene la stringa 'nformazion' (pare non funzionino "espressioni regolari", quindi
 				'nformazion' è il massimo che si possa fare) -->
@@ -20,7 +21,9 @@
 				<xsl:attribute name="attivo">s</xsl:attribute>
 			</xsl:element>
 			<xsl:if test="starts-with(APERTURA/CONDIZIONI, 'Aperta a Tutti')">
-				<aperta>s</aperta> 
+				<accesso>
+					<aperta>s</aperta>
+				</accesso> 
 			</xsl:if>
 		</xsl:element>
 	</xsl:template>
@@ -72,11 +75,22 @@
 			<!-- </xsl:element> -->
 		</xsl:element>
 	</xsl:template>
+	
 	<xsl:template match="//scheda_BIBLIO/SERVIZI/SERVIZIO">
-		<xsl:element name="informazioni-bibliografiche">
-			<xsl:attribute name="attivo">s</xsl:attribute>
-			<servizio-interno>s</servizio-interno>
-		</xsl:element>
+		<xsl:if test="contains(., 'nformazion')">
+			<informazioni-bibliografiche>
+				<xsl:attribute name="attivo">s</xsl:attribute>
+				<servizio-interno>s</servizio-interno>
+			</informazioni-bibliografiche>
+		</xsl:if>
+		<xsl:if test="contains(., 'utomatizzato')">
+			<prestito>
+				<locale>
+					<xsl:attribute name="attivo">s</xsl:attribute>
+					<automatizzato>s</automatizzato>
+				</locale>
+			</prestito>
+		</xsl:if>
 	</xsl:template>
-
+	
 </xsl:stylesheet>
