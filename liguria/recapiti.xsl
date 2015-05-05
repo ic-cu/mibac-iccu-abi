@@ -18,55 +18,67 @@
 				<xsl:value-of select="CAP" />
 			</xsl:element>
 			<xsl:apply-templates select="COMUNE" />
-			<!--
-				metteremo in altro template <xsl:element name="comune"> <xsl:value-of
-				select="COMUNE"/> </xsl:element> <xsl:element name="provincia">
-				<xsl:value-of select="PROVINCIA"/> </xsl:element>
-			-->
 		</xsl:element>
-		<!-- il comune,ora obbligatorio andrà mappato con la tabella ISTAT -->
-		<xsl:element name="contatti">
+
+
+<!-- 
+I contatti vanno creati solo se almeno uno è significativo. Questo costringe a 
+parecchi test sempre più fini, ma non c'era alternativa.
+ -->
+		<xsl:variable name="tel" select="normalize-space(TELEFONO)"/>
+		<xsl:variable name="fax" select="normalize-space(FAX)"/>
+		<xsl:variable name="email" select="normalize-space(E_MAIL)"/>
+		<xsl:variable name="pec" select="normalize-space(PEC)"/>
+		<xsl:variable name="url" select="normalize-space(HOMEPAGE)"/>
+
+		<xsl:if test="$tel or $fax or $email or $pec or $url">
+		<contatti>
 			<!-- il prefisso è obbligatorio, ma è sempre +39 -->
-			<xsl:element name="telefonici">
-				<xsl:element name="telefonico">
-					<xsl:attribute name="tipo">telefono</xsl:attribute>
+		<xsl:if test="$tel or $fax">
+			<telefonici>
+				<xsl:if test="$tel">
+				<telefonico tipo="telefono">
 					<prefisso>+39</prefisso>
-					<numero><xsl:value-of select="TELEFONO" /></numero>
-				</xsl:element>
-				<xsl:element name="telefonico">
-					<xsl:attribute name="tipo">fax</xsl:attribute>
+					<numero><xsl:value-of select="$tel" /></numero>
+ 				</telefonico>
+				</xsl:if>
+				<xsl:if test="$fax">
+				<telefonico tipo="fax">
 					<prefisso>+39</prefisso>
-					<numero><xsl:value-of select="FAX" /></numero>
-				</xsl:element>
-			</xsl:element>
+					<numero><xsl:value-of select="$fax" /></numero>
+ 				</telefonico>
+				</xsl:if>
+			</telefonici>
+		</xsl:if>
 			
-			<xsl:if test="not(normalize-space(E_MAIL)) = '' or not(normalize-space(HOMEPAGE)) = '' or not(normalize-space(PEC)) = ''">
-			
+			<xsl:if test="$email or $pec or $url">
+	
 			<altri>
-				<xsl:if test="not(normalize-space(E_MAIL)) = ''">
+				<xsl:if test="$email">
 					<altro tipo="e-mail">
 						<valore>
-							<xsl:value-of select="E_MAIL" />
+							<xsl:value-of select="$email" />
 						</valore>
 					</altro>
 				</xsl:if>
-				<xsl:if test="not(normalize-space(HOMEPAGE)) = ''">
+				<xsl:if test="$url">
 					<altro tipo="url">
 						<valore>
-							<xsl:value-of select="HOMEPAGE" />
+							<xsl:value-of select="$url" />
 						</valore>
 					</altro>
 				</xsl:if>
-				<xsl:if test="not(normalize-space(PEC)) = ''">
-					<altro tipo="url">
+				<xsl:if test="$pec">
+					<altro tipo="e-mail">
 						<valore>
-							<xsl:value-of select="PEC" />
+							<xsl:value-of select="$pec" />
 						</valore>
 					</altro>
 				</xsl:if>
 			 </altri>
 			</xsl:if>
-		</xsl:element>
+		</contatti>
+		</xsl:if>
 	</xsl:template>
 	
 	<xsl:template match="//scheda_BIBLIO/RECAPITI/HOMEPAGE">

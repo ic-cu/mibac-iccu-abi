@@ -81,25 +81,25 @@
 		</xsl:element>
 	</xsl:template>
 	<xsl:template match="scheda_BIBLIO/ANNO">
-		<xsl:element name="istituzione">
-			<xsl:element name="data-istituzione">
-				<xsl:value-of select="." />
-			</xsl:element>
-		</xsl:element>
+		<xsl:if test="normalize-space(.)">
+			<istituzione>
+				<data-istituzione><xsl:value-of select="." /></data-istituzione>
+			</istituzione>
+		</xsl:if>
 	</xsl:template>
 
 	<xsl:template name="amministrativa">
+		<xsl:variable name="cf" select="normalize-space(CF)"/>
+		<xsl:variable name="piva" select="normalize-space(PIVA)"/>
+		<xsl:if test="$cf or $piva">
 		<amministrativa>
-			<xsl:if test="not(normalize-space(CF) = '')">
-				<codice-fiscale>
-					<xsl:value-of select="CF" />
-				</codice-fiscale>
+			<xsl:if test="$cf">
+				<codice-fiscale><xsl:value-of select="$cf" /></codice-fiscale>
 			</xsl:if>
-			<xsl:if test="not(normalize-space(PIVA) = '')">
-				<partita-IVA>
-					<xsl:value-of select="PIVA" />
-				</partita-IVA>
+			<xsl:if test="$piva">
+				<partita-IVA><xsl:value-of select="$piva" /></partita-IVA>
 			</xsl:if>
 		</amministrativa>
+		</xsl:if>
 	</xsl:template>
 </xsl:stylesheet>

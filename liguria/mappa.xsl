@@ -28,7 +28,7 @@
 <xsl:when test="$d = 'DVD audio'">audiovisivi</xsl:when>
 <xsl:when test="$d = 'DVD video'">DVD-video</xsl:when>
 <xsl:when test="$d = 'DVD dati'">DVD</xsl:when>
-<xsl:when test="$d = 'Stampe e incisioni'">stampeincisioni</xsl:when>
+<xsl:when test="$d = 'Stampe e incisioni'">stampe</xsl:when>
 <xsl:when test="$d = 'Ebook'">e-book</xsl:when>
 <xsl:when test="$d = 'Registrazioni video'">documenti audiovisivi</xsl:when>
 <xsl:when test="$d = 'Cinquecentine'">Edizioni del '500</xsl:when>

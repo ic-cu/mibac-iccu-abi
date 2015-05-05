@@ -11,13 +11,15 @@
 	<!-- qualcosa nei servizi, poco più di orario, il resto è difficile da usare -->
 	<xsl:template name="servizi">
 		<xsl:element name="servizi">
+			<xsl:if test="APERTURA/ORARIO">
 			<xsl:element name="orario">
 				<!-- le due righe sono necessarie perché l'orario ufficiale deve precedere le
 					variazioni (si assume che "invernale" significhi "ufficiale" -->
-				<xsl:apply-templates select="APERTURA/ORARIO[contains(@descrizione, 'nvernale')]"/>
-				<xsl:apply-templates select="APERTURA/ORARIO[contains(@descrizione,'stivo')]"/>
+				<xsl:apply-templates select="APERTURA/ORARIO[@descrizione = 'Orario' or @descrizione = 'Orario annuale']"/>
+				<xsl:apply-templates select="APERTURA/ORARIO[not(@descrizione = 'Orario' or @descrizione = 'Orario annuale')]"/>
 				<xsl:apply-templates select="APERTURA/CHIUSURA"/>
 			</xsl:element>
+			</xsl:if>
 
 			<!--
 				Uno stesso template per i servizi viene invocato più volte sotto condizioni diverse, e in punti diversi. Lo stesso template non è però adatto
@@ -39,6 +41,7 @@
 			</xsl:if>
 			<xsl:call-template name="sezioni-speciali"/>
 		</xsl:element>
+		
 	</xsl:template>
 	<!--
 		qui il problema è ottenere per primo l'orario ufficiale, come previsto
@@ -46,18 +49,19 @@
 		diverse, vedi sopra
 	-->
 	<xsl:template match="//scheda_BIBLIO/APERTURA/ORARIO">
-		<xsl:if test="contains(@descrizione, 'nvernale')">
-			<xsl:element name="ufficiale">
+		<xsl:variable name="d" select="@descrizione"/>
+		<xsl:if test="$d = 'Orario' or $d = 'Orario annuale'">
+			<ufficiale>
 				<xsl:apply-templates select="GIORNO"/>
-			</xsl:element>
+			 </ufficiale>
 		</xsl:if>
-		<xsl:if test="contains(@descrizione, 'stivo')">
-			<xsl:element name="variazione">
+		<xsl:if test="not($d = 'Orario' or $d = 'Orario annuale')">
+			<variazione>
 				<xsl:apply-templates select="GIORNO"/>
-				<xsl:element name="note">
-					<xsl:value-of select="@descrizione"/>
-				</xsl:element>
-			</xsl:element>
+				<note>
+					<xsl:value-of select="$d"/>
+				</note>
+			</variazione>
 		</xsl:if>
 	</xsl:template>
 	<!--
@@ -70,23 +74,21 @@
 		"orario/ufficiale" oppure "orario/variazione" dell'output
 	-->
 	<xsl:template match="//scheda_BIBLIO/APERTURA/ORARIO/GIORNO">
-		<xsl:element name="orario">
+		<orario>
 			<xsl:attribute name="giorno">
 				<xsl:value-of select="translate(substring(@nome,1,3), 'LMGVSD', 'lmgvsd')"/>
 			</xsl:attribute>
 			<xsl:attribute name="dalle"><xsl:value-of select="FASCIA/@dalle"/></xsl:attribute>
 			<xsl:attribute name="alle"><xsl:value-of select="FASCIA/@alle"/></xsl:attribute>
-		</xsl:element>
+ 		</orario>
 	</xsl:template>
 
 	<xsl:template match="//scheda_BIBLIO/APERTURA/CHIUSURA">
-		<xsl:element name="chiusura">
-			<!-- <xsl:element name="note"> -->
-			<note>
-				<xsl:value-of select="normalize-space(.)"/>
-			</note>
-			<!-- </xsl:element> -->
-		</xsl:element>
+		<xsl:if test="normalize-space(.)">
+			<chiusura>
+				<note><xsl:value-of select="normalize-space(.)"/></note>
+			</chiusura>
+		</xsl:if>
 	</xsl:template>
 
 	<xsl:template match="//scheda_BIBLIO/SERVIZI/SERVIZIO">
