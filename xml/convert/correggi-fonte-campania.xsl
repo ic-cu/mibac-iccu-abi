@@ -3,10 +3,10 @@
 	version="1.0">
 
 <!--
-	Foglio di stile per correggere piccoli difetti nei file 1.6 inviati
-	dalla Regione Campania. È sostanzialmente un "copy with recursion" con
-	l'aggiunta di template per i vari elementi da correggere.
-	Inoltre esclude le biblioteche di fonte AICE.
+	Foglio di stile per inserire la fonte Regione Campania ove mancante,
+	scartando però tutte le biblioteche con fonte AICE. 
+	È sostanzialmente un "copy with recursion" con un solo template per
+  per aggiungere la fonte.
 -->
 
 	<xsl:output method="xml" indent="yes" encoding="UTF-8" />
@@ -21,11 +21,6 @@
 		</xsl:copy>
 	</xsl:template>
 
-<!-- Per escludere le biblioteche di fonte CEI, senza però rischiare di compromettere la copia
-completa di tutte le altre, serve un primo template solo per escludere dall'output qualunque
-cosa che non sia governato dal secondo, che copia una biblioteca non AICE per intero; vengongo
-escluse anche le biblioteche di ente ecclesiastico, che saranno gestite caso per caso -->
-
 	<xsl:template match="/biblioteche">
 		<xsl:element name="biblioteche">
 			<xsl:copy-of select="data-export" />
@@ -34,10 +29,7 @@ escluse anche le biblioteche di ente ecclesiastico, che saranno gestite caso per
 	</xsl:template>
 
 	<xsl:template match="//biblioteca">
-		<xsl:if test="contains(anagrafica/fonte/descrizione,'Regione Campania')">
-
-<!-- questa versione lavora solo le biblioteche lavorate da Campania -->
-		
+		<xsl:if test="not(contains(anagrafica/fonte/descrizione,'AICE'))">
 			<biblioteca>
 				<xsl:apply-templates select="*" />
 			</biblioteca>
