@@ -222,12 +222,14 @@ copiare gli altri dati dell'edificio
 		<immagini>
 	  <xsl:for-each select="immagine">
 	  <immagine>
-			<xsl:if test="starts-with(url, 'http://anagrafebiblioteche.regione.campania.it')">
-				<url><xsl:value-of select="concat('http://anagrafebiblioteche.regione.campania.it/abicampania', 
-				substring-after(url, 'http://anagrafebiblioteche.regione.campania.it'))"/>
-				</url>
-				<xsl:copy-of select="didascalia"/>
-			</xsl:if>
+			<xsl:choose>
+				<xsl:when test="starts-with(url, 'http://anagrafebiblioteche.regione.campania.it')">
+					<url><xsl:value-of select="concat('http://anagrafebiblioteche.regione.campania.it/abicampania', 
+					substring-after(url, 'http://anagrafebiblioteche.regione.campania.it'))"/></url>
+				</xsl:when>
+				<xsl:otherwise><xsl:copy-of select="url"/></xsl:otherwise>
+			</xsl:choose>
+			<xsl:copy-of select="didascalia"/>
 			</immagine>
 		</xsl:for-each>
 		</immagini>
