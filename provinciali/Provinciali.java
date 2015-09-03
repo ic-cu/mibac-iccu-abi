@@ -8,7 +8,6 @@ import java.io.PrintWriter;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Vector;
 
 import sql.DB;
 
@@ -16,7 +15,6 @@ public class Provinciali
 {
 	public Provinciali()
 	{
-		Vector<String> isilVector = new Vector<String>();
 		BufferedReader isilFile = null;
 		PrintWriter dati = null;
 		String isil = "";
@@ -150,6 +148,6 @@ public class Provinciali
 
 	public static void main(String args[])
 	{
-		Provinciali p = new Provinciali();
+		new Provinciali();
 	}
 }
