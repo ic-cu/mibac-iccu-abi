@@ -130,10 +130,10 @@ public class VarieQuery
 		return doc;
 	}
 
-/*
- * Finito il controllo delle voci d'autorità, proviamo a estrarre la lista di
- * tutte le biblioteche "non censite". Si parte dal documento XML caricato.
- */
+	/*
+	 * Finito il controllo delle voci d'autorità, proviamo a estrarre la lista di
+	 * tutte le biblioteche "non censite". Si parte dal documento XML caricato.
+	 */
 
 	public String isilNonCensite(Document doc)
 	{
@@ -184,7 +184,76 @@ public class VarieQuery
 				}
 			}
 			System.out.println("==========\nTotale biblioteche con ISIL: " + count);
-// System.out.println("Biblioteche senza stato di catalogazione:\n" + ok);
+			// System.out.println("Biblioteche senza stato di catalogazione:\n" + ok);
+		}
+		catch(JDOMException e)
+		{
+			e.printStackTrace();
+		}
+		catch(SQLException e)
+		{
+			e.printStackTrace();
+		}
+		return ok;
+	}
+
+	/*
+	 * Un controllo su eventuali biblioteche di fonte AICE in esercizio, che
+	 * quindi non andebbero importate
+	 */
+
+	public String fonteAICE(Document doc)
+	{
+		String isilPath = "//biblioteca/anagrafica/codici/isil";
+		XPath xp;
+		String queryAICE = "select";
+		queryAICE += " concat('IT-', isil_provincia, lpad(isil_numero, 4, 0 ))";
+		queryAICE += " as isil,";
+		queryAICE += " fonte_descrizione";
+		queryAICE += " from biblioteca b";
+		queryAICE += " where concat('IT-', isil_provincia, lpad(isil_numero, 4, 0 )) = ?";
+		queryAICE += " and id_stato_biblioteca_workflow != 4";
+		queryAICE += " and fonte_descrizione like '%AICE%'";
+		String ok = null;
+		int count = 0;
+		try
+		{
+			PreparedStatement aiceStmt;
+			aiceStmt = conn.prepareStatement(queryAICE, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+
+			xp = XPath.newInstance(isilPath);
+			System.out.println("Trovate " + doc.getRootElement().getChildren("biblioteca").size() + " biblioteche nei documenti XML");
+			Iterator<Element> i = xp.selectNodes(doc).iterator();
+			System.out.println("==========\nElenco biblioteche con fonte AICE:");
+			while(i.hasNext())
+			{
+				Element node = i.next();
+				String isil = node.getTextNormalize();
+				if(isil.length() > 0)
+				{
+					count++;
+					aiceStmt.setString(1, isil);
+//					System.err.println(isil);
+//					System.err.println(aiceStmt.toString());
+					ResultSet rs = aiceStmt.executeQuery();
+					
+					if(rs.next())
+					{
+						System.out.println(isil + " --> " + "è di fonte AICE");
+					}
+					else
+					{
+						ok += isil + "\n";
+					}
+				}
+				else
+				{
+					System.out.print("IT-?????? --> ");
+					System.out.println(node.getParentElement().getParentElement().getChild("nomi").getChildText("attuale"));
+				}
+			}
+			System.out.println("==========\nTotale biblioteche con fonte AICE: " + count);
+			// System.out.println("Biblioteche senza stato di catalogazione:\n" + ok);
 		}
 		catch(JDOMException e)
 		{
@@ -214,7 +283,6 @@ public class VarieQuery
 		Set ts = null;
 		Document doc = new Document(new Element("biblioteche")), doc2;
 		System.out.println("root element: " + doc.getRootElement().getName());
-		boolean trovato = false;
 		int biblioteche = 0;
 		for(int ii = 0; ii < dir.length; ii++)
 		{
@@ -240,6 +308,7 @@ public class VarieQuery
  * Si cercano le biblioteche che risultano non censite in ABI.
  */
 		vq.isilNonCensite(doc);
+		vq.fonteAICE(doc);
 
 /*
  * Si controllano le voci d'autorità
