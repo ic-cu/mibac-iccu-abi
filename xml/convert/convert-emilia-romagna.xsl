@@ -9,16 +9,21 @@
 		correggere
 	-->
 
-	<xsl:output method="xml" indent="yes" encoding="ISO-8859-1" />
+	<xsl:import href="convert.xsl" />
+	<xsl:output method="xml" indent="yes" encoding="UTF-8" />
 
 	<!-- 
 		Questo è l'identity transform
 	-->
 	<xsl:template match="@*|node()">
-		<xsl:copy>
-			<xsl:apply-templates select="@*|node()" />
-		</xsl:copy>
+		<xsl:apply-imports>		
+			<xsl:copy>
+				<xsl:apply-templates select="@*|node()" />
+			</xsl:copy>
+		</xsl:apply-imports>
 	</xsl:template>
+
+<!-- 	<xsl:include href="convert.xsl"/> -->
 
 	<!--
 		Il tipo di un catalogo generale è diventato una voce d'autorità.
