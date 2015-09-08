@@ -1,29 +1,15 @@
 <?xml version="1.0"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-	version="1.0">
+<xsl:stylesheet xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
 
 	<!--
 		Foglio di stile per correggere piccoli difetti di un file 1.6 derivato
-		da un export dell'Emilia-Romagna È sostanzialmente un "copy with
-		recursion" con l'aggiunta di template per i vari elementi da
-		correggere
+		da un export dell'Emilia-Romagna. Importa il generico convert.xsl con
+		l'aggiunta di template per qualche elemento da trattare in modo diverso
+		rispetto a quanto avviene in convert.xsl
 	-->
 
 	<xsl:import href="convert.xsl" />
 	<xsl:output method="xml" indent="yes" encoding="UTF-8" />
-
-	<!-- 
-		Questo è l'identity transform
-	-->
-	<xsl:template match="@*|node()">
-		<xsl:apply-imports>		
-			<xsl:copy>
-				<xsl:apply-templates select="@*|node()" />
-			</xsl:copy>
-		</xsl:apply-imports>
-	</xsl:template>
-
-<!-- 	<xsl:include href="convert.xsl"/> -->
 
 	<!--
 		Il tipo di un catalogo generale è diventato una voce d'autorità.
