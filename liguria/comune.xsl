@@ -141,7 +141,7 @@
 <xsl:when test=". = 'VARAZZE'"><comune>009065</comune><provincia>009</provincia></xsl:when>
 <xsl:when test=". = 'VENDONE'"><comune>009066</comune><provincia>009</provincia></xsl:when>
 <xsl:when test=". = 'VEZZI PORTIO'"><comune>009067</comune><provincia>009</provincia></xsl:when>
-<xsl:when test=". = 'VILLANOVA D&amp;apos;ALBENGA'"><comune>009068</comune><provincia>009</provincia></xsl:when>
+<xsl:when test="starts-with(., 'VILLANOVA D')"><comune>009068</comune><provincia>009</provincia></xsl:when>
 <xsl:when test=". = 'ZUCCARELLO'"><comune>009069</comune><provincia>009</provincia></xsl:when>
 <xsl:when test=". = 'ARENZANO'"><comune>010001</comune><provincia>010</provincia></xsl:when>
 <xsl:when test=". = 'AVEGNO'"><comune>010002</comune><provincia>010</provincia></xsl:when>
@@ -200,7 +200,7 @@
 <xsl:when test=". = 'SANT&amp;apos;OLCESE'"><comune>010055</comune><provincia>010</provincia></xsl:when>
 <xsl:when test=". = 'SANTO STEFANO D&amp;apos;AVETO'"><comune>010056</comune><provincia>010</provincia></xsl:when>
 <xsl:when test=". = 'SAVIGNONE'"><comune>010057</comune><provincia>010</provincia></xsl:when>
-<xsl:when test=". = 'SERRA RICCÒ'"><comune>010058</comune><provincia>010</provincia></xsl:when>
+<xsl:when test="starts-with(., 'SERRA RICC')"><comune>010058</comune><provincia>010</provincia></xsl:when>
 <xsl:when test=". = 'SESTRI LEVANTE'"><comune>010059</comune><provincia>010</provincia></xsl:when>
 <xsl:when test=". = 'SORI'"><comune>010060</comune><provincia>010</provincia></xsl:when>
 <xsl:when test=". = 'TIGLIETO'"><comune>010061</comune><provincia>010</provincia></xsl:when>
