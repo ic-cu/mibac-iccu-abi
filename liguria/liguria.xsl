@@ -16,7 +16,8 @@
 			<xsl:attribute name="xsi:noNamespaceSchemaLocation">http://anagrafe.iccu.sbn.it/opencms/opencms/informazioni/formato-di-scambio/biblioteca-1.6.xsd</xsl:attribute>
 			<!-- dataExport va poi cambiato a mano -->
 			<data-export>2013-11-04T00:00:00</data-export>
-			<xsl:apply-templates select="scheda_BIBLIO[not(normalize-space(CONSISTENZA/TOTCONS)) = '']" />
+<!-- <xsl:apply-templates select="scheda_BIBLIO[not(normalize-space(CONSISTENZA/TOTCONS)) = '']" /> -->			
+			<xsl:apply-templates select="scheda_BIBLIO[not(normalize-space(CODISIL)) = '']" />
 		</xsl:element>
 	</xsl:template>
 
@@ -29,7 +30,8 @@
 		indirizzo e contatti, poi crea anche patrimonio e servizi
 	-->
 
-	<xsl:template match="scheda_BIBLIO[not(normalize-space(CONSISTENZA/TOTCONS)) = '']">
+<!--  <xsl:template match="scheda_BIBLIO[not(normalize-space(CONSISTENZA/TOTCONS)) = '']"> -->
+	<xsl:template match="scheda_BIBLIO[not(normalize-space(CODISIL)) = '']">
 		<xsl:element name="biblioteca">
 			<xsl:element name="anagrafica">
 				<xsl:apply-templates select="RELAZIONE" />
