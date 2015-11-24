@@ -222,7 +222,7 @@ public class VarieQuery
 			aiceStmt = conn.prepareStatement(queryAICE, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
 
 			xp = XPath.newInstance(isilPath);
-			System.out.println("Trovate " + doc.getRootElement().getChildren("biblioteca").size() + " biblioteche nei documenti XML");
+//			System.out.println("Trovate " + doc.getRootElement().getChildren("biblioteca").size() + " biblioteche nei documenti XML");
 			Iterator<Element> i = xp.selectNodes(doc).iterator();
 			System.out.println("==========\nElenco biblioteche con fonte AICE:");
 			while(i.hasNext())
@@ -231,7 +231,6 @@ public class VarieQuery
 				String isil = node.getTextNormalize();
 				if(isil.length() > 0)
 				{
-					count++;
 					aiceStmt.setString(1, isil);
 //					System.err.println(isil);
 //					System.err.println(aiceStmt.toString());
@@ -239,6 +238,7 @@ public class VarieQuery
 					
 					if(rs.next())
 					{
+						count++;
 						System.out.println(isil + " --> " + "è di fonte AICE");
 					}
 					else
