@@ -118,6 +118,10 @@ un altro foglio di stile, anche se si potrebbe includere qui la regola di esclus
 		<xsl:element name="modo">Registrazione</xsl:element>
 		</xsl:when>
 
+		<xsl:when test="contains(.,'Libretto universitario')">
+		<modo>Numero di matricola</modo>
+		</xsl:when>
+
 		<xsl:otherwise>
 				<xsl:copy-of select="." />
 		</xsl:otherwise>
@@ -154,6 +158,12 @@ un altro foglio di stile, anche se si potrebbe includere qui la regola di esclus
 		<sezione>fotografia</sezione>
 		<sezione>diapositive</sezione>
 		</xsl:when>
+		<xsl:when test="contains(.,'Soggettività femminile')">
+		<sezione>donna</sezione>
+		</xsl:when>
+		<xsl:when test="contains(.,'Sezione Capri')">
+		<sezione>Capri</sezione>
+		</xsl:when>
 		<xsl:otherwise>
 				<xsl:copy-of select="." />
 		</xsl:otherwise>
@@ -167,11 +177,15 @@ un altro foglio di stile, anche se si potrebbe includere qui la regola di esclus
 		<xsl:when test="contains(.,'Sistema bibliotecario di Ateneo. Università degli Studi di Napoli Federico 2°')">
 		<xsl:element name="nome">Sistema bibliotecario di Ateneo. Università degli Studi di Napoli Federico II</xsl:element>
 		</xsl:when>
+		<xsl:when test="contains(.,'Catalogo delle biblioteche dell’INAF')">
+		<nome>Catalogo collettivo delle biblioteche dell'Istituto Nazionale di Astrofisica - INAF</nome>
+		</xsl:when>
 		<xsl:otherwise>
 				<xsl:copy-of select="." />
 		</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
+	
 
 <!-- patrimonio -->
 
@@ -189,7 +203,7 @@ un altro foglio di stile, anche se si potrebbe includere qui la regola di esclus
 		</xsl:choose>
 	</xsl:template>
 
-<!-- gli utenti del prestito locale andreanno scambiati a causa di un bug ancora
+<!-- gli utenti del prestito locale andranno scambiati a causa di un bug ancora
 non risolto nell'applicativo regionale; in una prima fase si estrae solo 
 "ultimo-anno", esportandolo però come "iscritti-prestito" -->
 
@@ -200,6 +214,33 @@ non risolto nell'applicativo regionale; in una prima fase si estrae solo
 		  </xsl:if>
 			<xsl:copy-of select="minori-quattordici-anni" />
 		</utenti>
+	</xsl:template>
+
+<!-- un paio di template relativi al prestito locale (utenti ammessi e materiale escluso) -->
+
+	<xsl:template match="//prestito/locale/utenti-ammessi">
+		<xsl:choose>
+			<xsl:when test="contains(.,'Isola')">
+				<utenti-ammessi>Residenti nella regione</utenti-ammessi>
+			</xsl:when>
+			<xsl:when test="contains(.,'Utenti associati')">
+				<utenti-ammessi>Utenti di sistema o di enti convenzionati</utenti-ammessi>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:copy-of select="." />
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
+	<xsl:template match="//prestito/locale/materiali-esclusi/materiale-escluso">
+		<xsl:choose>
+			<xsl:when test="contains(.,'Testi universitari')">
+				<utenti-ammessi>Libri scolastici</utenti-ammessi>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:copy-of select="." />
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 
 <!-- 
