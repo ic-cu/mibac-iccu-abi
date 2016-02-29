@@ -33,6 +33,8 @@ escluse anche le biblioteche di ente ecclesiastico, che saranno gestite caso per
 		</xsl:element>
 	</xsl:template>
 
+<!-- rimozione delle eventuali biblioteche con elemento fonte=AICE -->
+
 	<xsl:template match="//biblioteca">
 		<xsl:if test="not(contains(anagrafica/fonte/descrizione,'AICE'))">
 <!-- questa versione esclude anche le ecclesiastiche, oltre alle AICE -->
@@ -46,9 +48,7 @@ escluse anche le biblioteche di ente ecclesiastico, che saranno gestite caso per
 		</xsl:if>
 	</xsl:template>
 
-<!-- nell'anagrafica si inserisce il nuovo elemento fonte e si copia tutto il resto; si
-presuppone che siano già state rimosse le biblioteche in carico ad AICE, ma questo è oggetto di
-un altro foglio di stile, anche se si potrebbe includere qui la regola di esclusione -->
+<!-- nell'anagrafica si inserisce il nuovo elemento fonte e si copia tutto il resto -->
 
 	<xsl:template match="//biblioteca/anagrafica">
 		<xsl:element name="anagrafica">
