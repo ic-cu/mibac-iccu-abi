@@ -9,6 +9,13 @@
 	Inoltre esclude le biblioteche di fonte AICE.
 -->
 
+<!-- vari template per mappare voci di autorità -->
+
+	<xsl:import href="map-tipologie.xsl" />
+	<xsl:import href="map-limiti.xsl" />
+	<xsl:import href="map-sistemi-sezioni.xsl" />
+	<xsl:import href="map-cataloghi-patrimonio.xsl" />
+	<xsl:import href="map-prestito.xsl" />
 	<xsl:output method="xml" indent="yes" encoding="UTF-8" />
 
 <!-- 
@@ -83,7 +90,7 @@ copiare gli altri dati dell'edificio
 		</edificio>
 	</xsl:template>
 	
-<xsl:template match="immagini">
+	<xsl:template match="immagini">
 		<immagini>
 	  <xsl:for-each select="immagine">
 	  <immagine>
@@ -100,142 +107,6 @@ copiare gli altri dati dell'edificio
 		</immagini>
 	</xsl:template>
 
-<!-- correzioni alle tipologie amministrative -->
-
-	<xsl:template match="//tipologia-amministrativa">
-		<xsl:choose>
-
-		<xsl:when test="contains(.,'Ministero per i beni e le attivit')">
-		<xsl:element name="tipologia-amministrativa">Ministero dei beni e delle attività culturali e del turismo</xsl:element>
-		</xsl:when>
-
-		<xsl:when test=". = 'Scuole primarie'">
-		<xsl:element name="tipologia-amministrativa">Presidenza del consiglio dei ministri e ministeri</xsl:element>
-		</xsl:when>
-
-		<xsl:when test=". = 'Scuole secondarie superiori'">
-		<xsl:element name="tipologia-amministrativa">Presidenza del consiglio dei ministri e ministeri</xsl:element>
-		</xsl:when>
-
-		<xsl:otherwise>
-				<xsl:copy-of select="." />
-		</xsl:otherwise>
-		</xsl:choose>
-	</xsl:template>
-
-<!-- correzioni alle tipologie funzionali -->
-
-	<xsl:template match="//tipologia-funzionale">
-		<xsl:choose>
-
-		<xsl:when test="contains(.,'Universitaria')">
-		<xsl:element name="tipologia-funzionale">Istituto di insegnamento superiore</xsl:element>
-		</xsl:when>
-
-		<xsl:otherwise>
-				<xsl:copy-of select="." />
-		</xsl:otherwise>
-		</xsl:choose>
-	</xsl:template>
-
-<!-- correzioni ai limiti di età -->
-
-	<xsl:template match="//modalita-accesso/modo">
-		<xsl:choose>
-
-		<xsl:when test="contains(.,' > = 8')">
-		<xsl:element name="modo">Limite di eta': >= 8</xsl:element>
-		</xsl:when>
-
-		<xsl:when test="contains(.,'Registrazione dati anagrafici')">
-		<xsl:element name="modo">Registrazione</xsl:element>
-		</xsl:when>
-
-		<xsl:when test="contains(.,'Libretto universitario')">
-		<modo>Numero di matricola</modo>
-		</xsl:when>
-
-		<xsl:otherwise>
-				<xsl:copy-of select="." />
-		</xsl:otherwise>
-		</xsl:choose>
-	</xsl:template>
-
-<!-- c'è un sistema di biblioteche errato solo a causa di un apostrofo -->
-
-	<xsl:template match="//sistemi/sistema">
-		<xsl:choose>
-		<xsl:when test="contains(.,'Ateneo. Università degli Studi di Salerno')">
-		<xsl:element name="sistema">Sistema bibliotecario di Ateneo. Università degli Studi di Salerno</xsl:element>
-		</xsl:when>
-		<xsl:otherwise>
-				<xsl:copy-of select="." />
-		</xsl:otherwise>
-		</xsl:choose>
-	</xsl:template>
-
-<!-- sezioni speciali -->
-
-	<xsl:template match="//sezioni-speciali/sezione">
-		<xsl:choose>
-		<xsl:when test="contains(.,'Sezione Raccolta storica di testi legislativi')">
-		<xsl:element name="sezione">legislazione italiana</xsl:element>
-		</xsl:when>
-		<xsl:when test="contains(.,'dialettologia')">
-		<xsl:element name="sezione">dialetto</xsl:element>
-		</xsl:when>
-		<xsl:when test="contains(.,'libro parlato')">
-		<xsl:element name="sezione">audiolibri</xsl:element>
-		</xsl:when>
-		<xsl:when test="contains(.,'Fotodiapoteca')">
-		<sezione>fotografia</sezione>
-		<sezione>diapositive</sezione>
-		</xsl:when>
-		<xsl:when test="contains(.,'Soggettività femminile')">
-		<sezione>donna</sezione>
-		</xsl:when>
-		<xsl:when test="contains(.,'Sezione Capri')">
-		<sezione>Capri</sezione>
-		</xsl:when>
-		<xsl:otherwise>
-				<xsl:copy-of select="." />
-		</xsl:otherwise>
-		</xsl:choose>
-	</xsl:template>
-
-<!-- cataloghi collettivi, solo uno è da correggere -->
-
-	<xsl:template match="//catalogo-collettivo/nome">
-		<xsl:choose>
-		<xsl:when test="contains(.,'Sistema bibliotecario di Ateneo. Università degli Studi di Napoli Federico 2°')">
-		<xsl:element name="nome">Sistema bibliotecario di Ateneo. Università degli Studi di Napoli Federico II</xsl:element>
-		</xsl:when>
-		<xsl:when test="contains(.,'Catalogo delle biblioteche dell’INAF')">
-		<nome>Catalogo collettivo delle biblioteche dell'Istituto Nazionale di Astrofisica - INAF</nome>
-		</xsl:when>
-		<xsl:otherwise>
-				<xsl:copy-of select="." />
-		</xsl:otherwise>
-		</xsl:choose>
-	</xsl:template>
-	
-
-<!-- patrimonio -->
-
-	<xsl:template match="//patrimonio/materiali/materiale/@nome">
-		<xsl:choose>
-		<xsl:when test="contains(.,'documenti multimediali')">
-		<xsl:attribute name="nome">materiale multimediale</xsl:attribute>
-		</xsl:when>
-		<xsl:when test=". = 'musica'">
-		<xsl:attribute name="nome">documenti musicali a stampa</xsl:attribute>
-		</xsl:when>
-		<xsl:otherwise>
-				<xsl:copy-of select="." />
-		</xsl:otherwise>
-		</xsl:choose>
-	</xsl:template>
-
 <!-- gli utenti del prestito locale andranno scambiati a causa di un bug ancora
 non risolto nell'applicativo regionale; in una prima fase si estrae solo 
 "ultimo-anno", esportandolo però come "iscritti-prestito" -->
@@ -247,33 +118,6 @@ non risolto nell'applicativo regionale; in una prima fase si estrae solo
 		  </xsl:if>
 			<xsl:copy-of select="minori-quattordici-anni" />
 		</utenti>
-	</xsl:template>
-
-<!-- un paio di template relativi al prestito locale (utenti ammessi e materiale escluso) -->
-
-	<xsl:template match="//prestito/locale/utenti-ammessi">
-		<xsl:choose>
-			<xsl:when test="contains(.,'Isola')">
-				<utenti-ammessi>Residenti nella regione</utenti-ammessi>
-			</xsl:when>
-			<xsl:when test="contains(.,'Utenti associati')">
-				<utenti-ammessi>Utenti di sistema o di enti convenzionati</utenti-ammessi>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:copy-of select="." />
-			</xsl:otherwise>
-		</xsl:choose>
-	</xsl:template>
-
-	<xsl:template match="//prestito/locale/materiali-esclusi/materiale-escluso">
-		<xsl:choose>
-			<xsl:when test="contains(.,'Testi universitari')">
-				<utenti-ammessi>Libri scolastici</utenti-ammessi>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:copy-of select="." />
-			</xsl:otherwise>
-		</xsl:choose>
 	</xsl:template>
 
 </xsl:stylesheet>
