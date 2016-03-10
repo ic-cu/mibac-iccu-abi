@@ -8,7 +8,7 @@
 		rispetto a quanto avviene in convert.xsl
 	-->
 
-	<xsl:import href="convert.xsl" />
+	<xsl:import href="../xml/convert/convert.xsl" />
 	<xsl:import href="mappa.xsl" />
 	<xsl:output method="xml" indent="yes" encoding="UTF-8" xalan:indent-amount="2"/>
 
