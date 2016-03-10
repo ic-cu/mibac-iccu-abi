@@ -3,6 +3,7 @@ package xml;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FilenameFilter;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -222,7 +223,9 @@ public class VarieQuery
 			aiceStmt = conn.prepareStatement(queryAICE, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
 
 			xp = XPath.newInstance(isilPath);
-//			System.out.println("Trovate " + doc.getRootElement().getChildren("biblioteca").size() + " biblioteche nei documenti XML");
+// System.out.println("Trovate " +
+// doc.getRootElement().getChildren("biblioteca").size() +
+// " biblioteche nei documenti XML");
 			Iterator<Element> i = xp.selectNodes(doc).iterator();
 			System.out.println("==========\nElenco biblioteche con fonte AICE:");
 			while(i.hasNext())
@@ -232,10 +235,10 @@ public class VarieQuery
 				if(isil.length() > 0)
 				{
 					aiceStmt.setString(1, isil);
-//					System.err.println(isil);
-//					System.err.println(aiceStmt.toString());
+// System.err.println(isil);
+// System.err.println(aiceStmt.toString());
 					ResultSet rs = aiceStmt.executeQuery();
-					
+
 					if(rs.next())
 					{
 						count++;
@@ -279,7 +282,13 @@ public class VarieQuery
 		String tabella = null;
 		String campo = null;
 		VarieQuery vq = new VarieQuery(driver, url, user, pass);
-		File[] dir = new File(xml).listFiles();
+		File[] dir = new File(xml).listFiles(new FilenameFilter()
+		{
+			public boolean accept(File directory, String fileName)
+			{
+				return fileName.endsWith(".xml");
+			}
+		});
 		Set ts = null;
 		Document doc = new Document(new Element("biblioteche")), doc2;
 		System.out.println("root element: " + doc.getRootElement().getName());
