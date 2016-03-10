@@ -8,19 +8,9 @@
 		rispetto a quanto avviene in convert.xsl
 	-->
 
-	<xsl:import href="../xml/convert/convert.xsl" />
+	<xsl:import href="convert.xsl" />
 	<xsl:import href="mappa.xsl" />
 	<xsl:output method="xml" indent="yes" encoding="UTF-8" xalan:indent-amount="2"/>
-
-<!-- 
-	Questo è l'identity transform che garantisce che tutto ciò per cui non
-	è definito un template viene semplicemente copiato in output
-	<xsl:template match="@*|node()">
-		<xsl:copy>
-			<xsl:apply-templates select="@*|node()" />
-		</xsl:copy>
-	</xsl:template>
--->
 
 <!--
 		Il tipo di un catalogo generale è diventato una voce d'autorità.
