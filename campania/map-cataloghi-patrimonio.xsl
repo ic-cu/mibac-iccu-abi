@@ -32,6 +32,9 @@
 		<xsl:when test="contains(.,'documenti multimediali')">
 		<xsl:attribute name="nome">materiale multimediale</xsl:attribute>
 		</xsl:when>
+		<xsl:when test="contains(.,'libri elettronici')">
+		<xsl:attribute name="nome">documenti elettronici</xsl:attribute>
+		</xsl:when>
 		<xsl:when test=". = 'musica'">
 		<xsl:attribute name="nome">documenti musicali a stampa</xsl:attribute>
 		</xsl:when>
