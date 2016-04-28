@@ -1,5 +1,8 @@
 <?xml version="1.0"?>
-<xsl:stylesheet xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xalan="http://xml.apache.org/xslt" version="1.0">
+<xsl:stylesheet 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+xmlns:xalan="http://xml.apache.org/xslt" version="1.0">
 
 	<!--
 		Foglio di stile per correggere piccoli difetti di un file 1.6 derivato
@@ -9,6 +12,7 @@
 	-->
 
 	<xsl:import href="../xml/convert/convert.xsl" />
+	<xsl:import href="cataloghi.xsl" />
 	<xsl:import href="mappa.xsl" />
 	<xsl:output method="xml" indent="yes" encoding="UTF-8" xalan:indent-amount="2"/>
 
@@ -20,7 +24,7 @@
 		"Soggetto", per il resto del tutto identici.
 -->
 		
-	<xsl:template match="//catalogo-generale">
+	<xsl:template match="//catalogo-general">
 		<xsl:if test="contains(@tipo,'Autor')">
 			<xsl:element name="catalogo-generale">
 				<xsl:attribute name="tipo">Autore</xsl:attribute>
@@ -42,5 +46,6 @@
 			</xsl:element>
 		</xsl:if>
 	</xsl:template>
+	
 
 </xsl:stylesheet>
