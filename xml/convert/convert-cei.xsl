@@ -625,8 +625,8 @@
 				<xsl:element name="catalogo-generale">
 					<xsl:attribute name="tipo">Molteplici punti d'accesso</xsl:attribute>
 					<forme>
-						<xsl:copy-of select="forme/schede" />
-						<xsl:copy-of select="formevolume" />
+						<xsl:apply-templates select="forme/schede" />
+						<xsl:copy-of select="forme/volume" />
 						<xsl:copy-of select="forme/microforme" />
 						<digitale>
 							<supporto>online</supporto>
@@ -639,5 +639,20 @@
 				<xsl:copy-of select="." />
 			</xsl:otherwise>
 		</xsl:choose>
+	</xsl:template>
+	
+	<xsl:template match="forme/schede">
+		<schede>
+			<xsl:if test="@percentuale">
+				<xsl:attribute name="percentuale">
+					<xsl:if test="contains(@percentuale, '%')">
+						<xsl:value-of select="translate(@percentuale, '%', '')"/>
+					</xsl:if>
+					<xsl:if test="not(contains(@percentuale, '%'))">
+						<xsl:value-of select="@percentuale"/>
+					</xsl:if>
+				</xsl:attribute>
+			</xsl:if>
+		</schede>
 	</xsl:template>
 </xsl:stylesheet>
