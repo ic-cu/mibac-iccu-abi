@@ -46,10 +46,10 @@
 		<sezione>donna</sezione>
 		</xsl:when>
 		<xsl:when test="contains(.,'Internet per ragazzi')">
-    	<sezione>IGNORARE</sezione>
+    	<sezione>IGNORARE: <xsl:value-of select="."/></sezione>
     	</xsl:when>
 		<xsl:when test="contains(.,'sezione educatori')"> 
-	    <sezione>IGNORARE</sezione>
+	    <sezione>IGNORARE: <xsl:value-of select="."/></sezione>
 	  </xsl:when>
 		   
 	    <xsl:when test="contains(.,'Sezione Capri')">
