@@ -20,6 +20,7 @@
 				<utenti-ammessi>Utenti di sistema o di enti convenzionati</utenti-ammessi>
 			</xsl:when>
 			<xsl:otherwise>
+				
 				<xsl:copy-of select="." />
 			</xsl:otherwise>
 		</xsl:choose>
@@ -28,8 +29,15 @@
 	<xsl:template match="//prestito/locale/materiali-esclusi/materiale-escluso">
 		<xsl:choose>
 			<xsl:when test="contains(.,'Testi universitari')">
-				<utenti-ammessi>Libri scolastici</utenti-ammessi>
+				<materiale-escluso>Libri scolastici</materiale-escluso>
 			</xsl:when>
+						
+	        <xsl:when test="contains(.,'Libri fuori commercio')">
+		    <materiale-escluso>Opere fuori commercio</materiale-escluso>
+	    	</xsl:when>
+			
+			<xsl:when test="contains(.,'Opere dei fondi speciali')"/>
+			
 			<xsl:otherwise>
 				<xsl:copy-of select="." />
 			</xsl:otherwise>

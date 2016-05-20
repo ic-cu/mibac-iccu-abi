@@ -38,6 +38,7 @@
 		<xsl:when test=". = 'musica'">
 		<xsl:attribute name="nome">documenti musicali a stampa</xsl:attribute>
 		</xsl:when>
+				
 		<xsl:otherwise>
 				<xsl:copy-of select="." />
 		</xsl:otherwise>

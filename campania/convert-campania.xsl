@@ -16,6 +16,7 @@
 <!-- vari template per mappare voci di autorità -->
 
 	<xsl:import href="map-tipologie.xsl" />
+	<xsl:import href="map-destinazione.xsl"/>
 	<xsl:import href="map-limiti.xsl" />
 	<xsl:import href="map-sistemi-sezioni.xsl" />
 	<xsl:import href="map-cataloghi-patrimonio.xsl" />
@@ -113,5 +114,6 @@ non risolto nell'applicativo regionale; in una prima fase si estrae solo
 			<xsl:copy-of select="minori-quattordici-anni" />
 		</utenti>
 	</xsl:template>
-
+	<xsl:template match="//patrimonio/materiali/materiale[contains(@nome, 'altri documenti di biblioteca')]"/>
+			
 </xsl:stylesheet>

@@ -25,7 +25,19 @@
 		<xsl:when test="contains(.,'Libretto universitario')">
 		<modo>Numero di matricola</modo>
 		</xsl:when>
-
+		
+        <xsl:when test="contains(.,'Tessera sanitaria')">
+        <xsl:element name="modo">Tessera sanitaria nazionale</xsl:element>
+		</xsl:when>
+		
+	<!--
+<xsl:when test="contains(.,'Accesso libero')"/> non lo togliamo ma provoca un errore
+     --> 
+		
+		<xsl:when test="contains(.,'Libretto o badge universitario')">
+		<modo>Numero di matricola</modo>
+		</xsl:when>
+	
 		<xsl:otherwise>
 				<xsl:copy-of select="." />
 		</xsl:otherwise>

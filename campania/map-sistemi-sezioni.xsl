@@ -16,9 +16,12 @@
 		<xsl:when test="contains(.,'Ateneo. Università degli Studi di Salerno')">
 		<xsl:element name="sistema">Sistema bibliotecario di Ateneo. Università degli Studi di Salerno</xsl:element>
 		</xsl:when>
+				
 		<xsl:otherwise>
-				<xsl:copy-of select="." />
-		</xsl:otherwise>
+		<xsl:copy-of select="." />
+        </xsl:otherwise>
+		
+		
 		</xsl:choose>
 	</xsl:template>
 
@@ -42,11 +45,18 @@
 		<xsl:when test="contains(.,'Soggettività femminile')">
 		<sezione>donna</sezione>
 		</xsl:when>
-		<xsl:when test="contains(.,'Sezione Capri')">
+		<xsl:when test="contains(.,'Internet per ragazzi')">
+    	<sezione>IGNORARE</sezione>
+    	</xsl:when>
+		<xsl:when test="contains(.,'sezione educatori')"> 
+	    <sezione>IGNORARE</sezione>
+	  </xsl:when>
+		   
+	    <xsl:when test="contains(.,'Sezione Capri')">
 		<sezione>Capri</sezione>
 		</xsl:when>
 		<xsl:otherwise>
-				<xsl:copy-of select="." />
+	<xsl:copy-of select="." />
 		</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
