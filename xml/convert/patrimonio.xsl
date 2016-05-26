@@ -13,12 +13,12 @@ Patrimonio, basta un solo template, ma c'è da gestire gli asterischi
 -->
 
 	<xsl:template match="//biblioteca/patrimonio">
-    <xsl:element name="patrimonio">
-      <xsl:if test="materiale">
-        <xsl:element name="materiali">
-          <xsl:for-each select="materiale">
+		<xsl:element name="patrimonio">
+			<xsl:if test="materiale">
+				<xsl:element name="materiali">
+					<xsl:for-each select="materiale">
 						<xsl:element name="materiale">
-						  <xsl:attribute name="nome">
+							<xsl:attribute name="nome">
 							  <xsl:if test="not(contains(@nome, '*'))">
 									<xsl:value-of select="@nome"/>
 								</xsl:if>
@@ -29,16 +29,33 @@ Patrimonio, basta un solo template, ma c'è da gestire gli asterischi
 							<xsl:copy-of select="@posseduto"/>
 							<xsl:copy-of select="@acquisti-ultimo-anno"/>
 						</xsl:element>
-          </xsl:for-each>
-        </xsl:element>
-      </xsl:if>
-      <xsl:if test="fondo-speciale">
-        <xsl:element name="fondi-speciali">
-          <xsl:for-each select="fondo-speciale">
+					</xsl:for-each>
+				</xsl:element>
+			</xsl:if>
+			<xsl:if test="fondo-speciale">
+				<xsl:element name="fondi-speciali">
+					<xsl:for-each select="fondo-speciale">
 						<xsl:element name="fondo-speciale">
 							<xsl:copy-of select="nome"/>
 							<xsl:copy-of select="descrizione"/>
-							<xsl:copy-of select="cdd"/>
+							<xsl:if test="cdd[string-length() != 0]">
+								<xsl:element name="cdd">
+									<xsl:choose>
+										<xsl:when test="contains(cdd, ',')">
+											<xsl:value-of select="substring-before(cdd, ',')"/>
+										</xsl:when>
+										<xsl:when test="contains(cdd, ';')">
+											<xsl:value-of select="substring-before(cdd, ';')"/>
+										</xsl:when>
+										<xsl:when test="contains(cdd, '-')">
+											<xsl:value-of select="substring-before(cdd, '-')"/>
+										</xsl:when>
+										<xsl:otherwise>
+											<xsl:value-of select="cdd"/>
+										</xsl:otherwise>
+									</xsl:choose>
+								</xsl:element>
+							</xsl:if>
 							<xsl:copy-of select="depositato"/>
 							<xsl:if test="catalogoInventario">
 								<xsl:element name="catalogo-inventario">
@@ -51,15 +68,15 @@ Patrimonio, basta un solo template, ma c'è da gestire gli asterischi
 								</xsl:element>
 							</xsl:if>
 						</xsl:element>
-          </xsl:for-each>
-        </xsl:element>
-      </xsl:if>
-      <xsl:copy-of select="fondi-antichi"/>
-      <xsl:copy-of select="inventario"/>
-      <xsl:copy-of select="catalogo-topografico"/>
-      <xsl:copy-of select="acquisti-ultimi-quindici-anni"/>
-      <xsl:copy-of select="totale-posseduto"/>
-      <xsl:copy-of select="totale-posseduto-ragazzi"/>
-    </xsl:element>
-  </xsl:template>
+					</xsl:for-each>
+				</xsl:element>
+			</xsl:if>
+			<xsl:copy-of select="fondi-antichi"/>
+			<xsl:copy-of select="inventario"/>
+			<xsl:copy-of select="catalogo-topografico"/>
+			<xsl:copy-of select="acquisti-ultimi-quindici-anni"/>
+			<xsl:copy-of select="totale-posseduto"/>
+			<xsl:copy-of select="totale-posseduto-ragazzi"/>
+		</xsl:element>
+	</xsl:template>
 </xsl:stylesheet>
