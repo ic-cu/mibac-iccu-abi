@@ -68,45 +68,63 @@ vuoto, va valorizzato l'attributo "attivo"
     </xsl:element>
   </xsl:template>
 
-<!--
-Gestisce anche i limiti di età, ora ridotti ad una stringa libera, 
-controllata solo dai vocabolari. Notare che, siccome modalita-accesso
-non può essere vuoto, viene controllato che condizioni-accesso non sia
-vuoto.
--->
-	<xsl:template match="accesso">
-    <xsl:element name="accesso">
-      <xsl:copy-of select="aperta"/>
-      <xsl:copy-of select="handicap"/>
-			<xsl:if test="condizioni-accesso/*">
-				<xsl:element name="modalita-accesso">
-					<xsl:for-each select="condizioni-accesso/documenti/tipo">
-						<xsl:element name="modo">
-						  <xsl:value-of select="."/>
-						</xsl:element>
-					</xsl:for-each>
-					<xsl:for-each select="condizioni-accesso/eta[@min]">
-						<xsl:element name="modo">
-								<xsl:text>Limite di eta': &gt;= </xsl:text>
-						  <xsl:value-of select="@min"/>
-						</xsl:element>
-					</xsl:for-each>
-					<xsl:for-each select="condizioni-accesso/eta[@max]">
-						<xsl:element name="modo">
-								<xsl:text>Limite di eta': &lt;= </xsl:text>
-						  <xsl:value-of select="@max"/>
-						</xsl:element>
-					</xsl:for-each>
-					<xsl:if test="condizioni-accesso/appuntamento">
-						<xsl:element name="modo">
-						  <xsl:text>appuntamento</xsl:text>
-						</xsl:element>
-					</xsl:if>
-				</xsl:element>
-			</xsl:if>
-    </xsl:element>
-  </xsl:template>
+	<!--
+		Gestisce anche i limiti di età, ora ridotti ad una stringa libera,
+		controllata solo dai vocabolari. Notare che, siccome modalita-accesso
+		non può essere vuoto, viene controllato che condizioni-accesso non sia
+		vuoto. Inoltre i documenti sono gestiti da apposito template per facilitare
+		eventuali mappature
+	-->
 
+	<xsl:template match="accesso">
+		<xsl:element name="accesso">
+			<xsl:copy-of select="aperta"/>
+			<xsl:copy-of select="handicap"/>
+			<xsl:if test="condizioni-accesso[string-length() != 0 ]">
+				<modalita-accesso>
+					<xsl:for-each select="condizioni-accesso[string-length() != 0 ]">
+						<xsl:apply-templates select="."/>
+					</xsl:for-each>
+				</modalita-accesso>
+			</xsl:if>
+		</xsl:element>
+	</xsl:template>
+
+	<xsl:template match="condizioni-accesso[string-length() != 0 ]">
+		<xsl:for-each select="documenti/tipo">
+			<xsl:apply-templates select="."/>
+		</xsl:for-each>
+		<xsl:for-each select="eta[@min]">
+			<xsl:element name="modo">
+				<xsl:text>Limite di eta': &gt;= </xsl:text>
+				<xsl:value-of select="@min"/>
+			</xsl:element>
+		</xsl:for-each>
+		<xsl:for-each select="eta[@max]">
+			<xsl:element name="modo">
+				<xsl:text>Limite di eta': &lt;= </xsl:text>
+				<xsl:value-of select="@max"/>
+			</xsl:element>
+		</xsl:for-each>
+		<xsl:if test="appuntamento">
+			<xsl:element name="modo">
+				<xsl:text>appuntamento</xsl:text>
+			</xsl:element>
+		</xsl:if>
+	</xsl:template>
+	
+<!-- gestione dei tipi di documento, separato per eventuali mappature esterne -->
+
+	<xsl:template match="//condizioni-accesso/documenti/tipo">
+		<modo>
+			<xsl:choose>
+				<xsl:when test=". = 'Documento identità'">Documento identita'</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="."/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</modo>
+	</xsl:template>
 <!--
 Nella versione 1.5 i sistemi erano ancora ripetibili, ma non il loro
 sottoelemento sistema. Ora invece, giustamente, è proprio il contrario,
