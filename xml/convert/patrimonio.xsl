@@ -38,7 +38,18 @@ Patrimonio, basta un solo template, ma c'è da gestire gli asterischi
 						<xsl:element name="fondo-speciale">
 							<xsl:copy-of select="nome"/>
 							<xsl:copy-of select="descrizione"/>
-							<xsl:if test="cdd[string-length() != 0]">
+							
+<!--
+Qui si deve ricorrere a un trucco per scartare le eventuali CDD non puramente numeriche.
+Eventuali lettere nel valore sono trasformate tutte in 'A', e poi si controlla se il nuovo valore 
+contiene 'A'. In questo caso non viene creato l'elemento. La soluzione è necessaria in XSLT 1.0,
+mentre in 2.0 si potrebbero usare espressioni regolari 
+ -->			
+							<xsl:variable name="alpha" 
+              select="'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZàèéìòù'"/>
+							<xsl:variable name="subst" 
+              select="'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'"/>
+							<xsl:if test="cdd[(string-length() != 0) and (not(contains(translate(., $alpha, $subst), 'A')))]">							
 								<xsl:element name="cdd">
 									<xsl:choose>
 										<xsl:when test="contains(cdd, ',')">
