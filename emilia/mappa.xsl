@@ -14,33 +14,27 @@
 	<xsl:template match="//tipologia-amministrativa">
 		<xsl:choose>
 
-		<xsl:when test=". = 'Accademie, Associazioni, Fondazioni, Istituti, Società (privati)'">
-		<tipologia-amministrativa>Accademie, associazioni, fondazioni, istituti, societa' (privati)</tipologia-amministrativa>
-		</xsl:when>
+			<xsl:when test=". = 'Accademie, Associazioni, Fondazioni, Istituti, Società (privati)'">
+				<tipologia-amministrativa>Accademie, associazioni, fondazioni, istituti, societa' (privati)</tipologia-amministrativa>
+			</xsl:when>
 
-		<xsl:when test=". = 'Consorzio e/o associazioni di regioni, provincie, comuni e comunità montane'">
-		<tipologia-amministrativa>Consorzio e/o associazioni di regioni, provincie, comuni e comunita' montane</tipologia-amministrativa>
-		</xsl:when>
+			<xsl:when test=". = 'Consorzio e/o associazioni di regioni, provincie, comuni e comunità montane'">
+				<tipologia-amministrativa>Consorzio e/o associazioni di regioni, provincie, comuni e comunita' montane</tipologia-amministrativa>
+			</xsl:when>
 
-		<xsl:otherwise>
-				<xsl:copy-of select="." />
-		</xsl:otherwise>
+			<xsl:otherwise>
+				<xsl:copy-of select="."/>
+			</xsl:otherwise>
+
 		</xsl:choose>
 	</xsl:template>
 
-<!-- correzioni alle modalità di accesso -->
+	<!-- ulteriori correzioni alle modalità di accesso standard;
+		per ora è inattivo, ma resta qui per referenze future perché 
+		questo è il modo giusto di "aggiungere" trasformazioni specifiche -->
 
-	<xsl:template match="//modalita-accesso/modo">
-		<xsl:choose>
-
-		<xsl:when test=". = 'Documento identità'">
-		<modo>Documento identita'</modo>
-		</xsl:when>
-
-		<xsl:otherwise>
-				<xsl:copy-of select="." />
-		</xsl:otherwise>
-		</xsl:choose>
+	<xsl:template match="//condizioni-accesso/documenti/tipo[. = 'XXX']">
+		<modo>YYY</modo>
 	</xsl:template>
 
 </xsl:stylesheet>
