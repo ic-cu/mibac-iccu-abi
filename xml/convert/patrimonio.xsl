@@ -61,6 +61,9 @@ mentre in 2.0 si potrebbero usare espressioni regolari
 										<xsl:when test="contains(cdd, '-')">
 											<xsl:value-of select="substring-before(cdd, '-')"/>
 										</xsl:when>
+										<xsl:when test="contains(cdd, '/')">
+											<xsl:value-of select="substring-before(cdd, '/')"/>
+										</xsl:when>
 										<xsl:otherwise>
 											<xsl:value-of select="cdd"/>
 										</xsl:otherwise>
