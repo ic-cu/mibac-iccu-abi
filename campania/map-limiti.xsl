@@ -31,7 +31,7 @@
 		</xsl:when>
 		
 		<xsl:when test="contains(.,'Accesso libero')">
-	    <mode>IGNORARE: <xsl:value-of select="."/></mode>
+	    <modo>IGNORARE: <xsl:value-of select="."/></modo>
 	  </xsl:when>
 		
 		<xsl:when test="contains(.,'Libretto o badge universitario')">
