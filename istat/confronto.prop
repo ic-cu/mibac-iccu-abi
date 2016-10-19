@@ -1,0 +1,30 @@
+## nome file del tabellone esportato da europaweb, ma in formato ODS
+
+ods.input = /home/DOMICCU/agiuliano/dati/abi/tmp/istat.ods
+
+log.file = timesheet.log
+#log.pattern = %d{yyyy-MM-dd HH:mm:ss} %p %C{1}.%M - %m%n
+log.pattern = %p %m%n
+log.level = 
+
+output.diversi = diversi.csv
+output.mancanti = mancanti.csv 
+
+query.comune = \
+  SELECT \
+  	codice_istat AS `codice istat`, \
+  	denominazione AS `comune` \
+  FROM \
+  	comune \
+  WHERE \
+  	denominazione = ?
+  
+query.istat = \
+  SELECT \
+  	codice_istat AS `codice istat`, \
+  	denominazione AS `comune` \
+  FROM \
+  	comune \
+  WHERE \
+  	codice_istat = ?
+  
