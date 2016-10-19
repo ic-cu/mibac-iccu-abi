@@ -29,10 +29,11 @@
 
 			<xsl:element name="fonte">
 				<xsl:element name="descrizione">
-					Regione del Veneto - Direzione
-					Beni Culturali (aggiornamento:
-					anagrafiche all’11.12.2013,
-					patrimonio e servizi al 31.12.2012)
+					Fonte: Regione del Veneto - Direzione
+                    Beni Attività Culturali e Sport
+                   (dati aggiornati per la parte anagrafica
+                    al 15.9.2016 e per la patrimoniale e gestionale
+                    al 31.12.2015)
 				</xsl:element>
 				<xsl:element name="url">http://bibliotecheweb.regione.veneto.it/BibliotecheWeb/</xsl:element>
 			</xsl:element>
