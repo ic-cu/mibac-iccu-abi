@@ -1,8 +1,11 @@
 ## nome file del tabellone esportato da europaweb, ma in formato ODS
 
 ods.input = /home/DOMICCU/agiuliano/dati/abi/tmp/istat.ods
+ods.col.codice.comune = 4
+ods.col.nome.comune = 5
+ods.col.nome.provincia = 13
 
-log.file = timesheet.log
+log.file = istat.log
 #log.pattern = %d{yyyy-MM-dd HH:mm:ss} %p %C{1}.%M - %m%n
 log.pattern = %p %m%n
 log.level = 
@@ -13,16 +16,16 @@ output.mancanti = mancanti.csv
 query.comune = \
   SELECT \
   	codice_istat AS `codice istat`, \
-  	denominazione AS `comune` \
+  	substring_index(denominazione, '.', 1) AS `comune` \
   FROM \
   	comune \
   WHERE \
-  	denominazione = ?
+  	substring_index(denominazione, '.', 1) = ?
   
 query.istat = \
   SELECT \
   	codice_istat AS `codice istat`, \
-  	denominazione AS `comune` \
+  	substring_index(denominazione, '.', 1) AS `comune` \
   FROM \
   	comune \
   WHERE \

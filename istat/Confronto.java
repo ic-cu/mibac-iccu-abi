@@ -35,6 +35,7 @@ public class Confronto
 	private PreparedStatement qIstat;
 	private PrintWriter outDiversi;
 	private PrintWriter outMancanti;
+	private int colCodiceComune, colNomeComune, colNomeProvincia; 
 
 	private void initLogger()
 	{
@@ -87,11 +88,15 @@ public class Confronto
 			initLogger();
 			log.info("Inizializzo confronto...");
 			input = SpreadsheetDocument.loadDocument(config.getProperty("ods.input"));
+			log.info("Caricamento input terminato...");
 			db = new DB(DB.urlGauss, "abi", "");
 			qComune = db.prepare(config.getProperty("query.comune"));
 			qIstat = db.prepare(config.getProperty("query.istat"));
 			outDiversi = new PrintWriter(config.getProperty("output.diversi"));
 			outMancanti = new PrintWriter(config.getProperty("output.mancanti"));
+			colCodiceComune = Integer.parseInt(config.getProperty("ods.col.codice.comune"));
+			colNomeComune = Integer.parseInt(config.getProperty("ods.col.nome.comune"));
+			colNomeProvincia = Integer.parseInt(config.getProperty("ods.col.nome.provincia"));
 		}
 		catch(IOException e)
 		{
@@ -121,14 +126,15 @@ public class Confronto
  */
 		Table table = input.getSheetByIndex(0);
 		Iterator<Row> rows = table.getRowIterator();
-		outDiversi.println("istat	abi	comune");
-		outMancanti.println("istati	comune istat	comune abi");
+		outDiversi.println("istat	abi	comune	provincia");
+		outMancanti.println("istat	comune istat	comune abi");
 		while(rows.hasNext())
 		{
 			Row row = rows.next();
 			if(row.getCellByIndex(0).getStringValue().equals("")) break;
-			String istatIstat = row.getCellByIndex(4).getStringValue();
-			String comuneIstat = row.getCellByIndex(5).getStringValue();
+			String istatIstat = row.getCellByIndex(colCodiceComune).getStringValue();
+			String comuneIstat = row.getCellByIndex(colNomeComune).getStringValue();
+			String provinciaIstat = row.getCellByIndex(colNomeProvincia).getStringValue();
 			log.debug(istatIstat + "	" + comuneIstat);
 			try
 			{
@@ -141,7 +147,7 @@ public class Confronto
 						String istatAbi = rs.getString(1);
 						if(!istatAbi.equals(istatIstat))
 						{
-							outDiversi.println(istatIstat + "	" + rs.getString(1) + "	" + rs.getString(2));
+							outDiversi.println(istatIstat + "	" + rs.getString(1) + "	" + rs.getString(2) + "	" + provinciaIstat);
 						}
 					}
 					while(rs.next());
