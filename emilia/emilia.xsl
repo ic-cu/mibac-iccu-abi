@@ -6,12 +6,12 @@ xmlns:xalan="http://xml.apache.org/xslt" version="1.0">
 
 	<!--
 		Foglio di stile per correggere piccoli difetti di un file 1.6 derivato
-		da un export dell'Emilia-Romagna. Importa il generico convert.xsl con
+		da un export dell'Emilia-Romagna. Importa il generico convert con
 		l'aggiunta di template per qualche elemento da trattare in modo diverso
-		rispetto a quanto avviene in convert.xsl
+		rispetto a quanto avviene in convert
 	-->
 
-	<xsl:import href="../xsl/convert.xsl" />
+	<xsl:import href="../convert/main.xsl" />
 	<xsl:import href="cataloghi.xsl" />	
 	<xsl:import href="patrimonio.xsl" />
 	<xsl:import href="mappa.xsl" />

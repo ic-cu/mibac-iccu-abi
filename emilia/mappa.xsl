@@ -56,7 +56,7 @@
 
 			<xsl:when test="contains(., 'Manoscritti musicali')">musica manoscritta</xsl:when>
 
-			<xsl:when test="contains(.,'Collezioni digitalizzate')">IGNORARE:	<xsl:value-of select="."/></xsl:when>
+			<xsl:when test="contains(.,'Collezioni digitalizzate')">IGNORARE: <xsl:value-of select="."/></xsl:when>
 
 			<xsl:when test="contains(.,'Altri documenti di biblioteca')">IGNORARE: <xsl:value-of select="."/></xsl:when>
 
@@ -117,6 +117,18 @@ Emilia-Romagna non spieghi il significato di questi casi.
 
 	<xsl:template match="//catalogo-generale[not(@tipo)]"/>
 
+<!-- 
+ILL SBN viene indicato in molti modi in input, per cui va corretto almeno
+nei casi più plausibili
+ -->
 
+	<xsl:template match="//sistema-ill/nome">
+		<xsl:if test="contains(., 'SBN') or contains(., 'sbn')">
+			<nome>ILL SBN</nome>
+		</xsl:if>
+		<xsl:if test="not(contains(., 'SBN') or contains(., 'sbn'))">
+			<xsl:copy-of select="."/>
+		</xsl:if>
+	</xsl:template>
 
 </xsl:stylesheet>
