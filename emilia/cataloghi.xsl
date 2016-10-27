@@ -121,36 +121,64 @@
 	-->
 
 	<xsl:template match="//catalogo-generale">
-		<xsl:choose>
-			<xsl:when test="contains(./@tipo, 'olteplici') and not(*)">
-				<catalogo-generale>
-					<xsl:attribute name="tipo">Molteplici punti d'accesso</xsl:attribute>
-					<forme>
-						<digitale>
-							<supporto>online</supporto>
-						</digitale>
-					</forme>
-				</catalogo-generale>
-			</xsl:when>
-			<xsl:when test="contains(./@tipo, 'olteplici') and (forme/digitale/supporto = 'O')">
-				<catalogo-generale>
-					<xsl:attribute name="tipo">Molteplici punti d'accesso</xsl:attribute>
-					<forme>
-						<xsl:apply-templates/>
-						<digitale>
-							<supporto>online</supporto>
-						</digitale>
-					</forme>
+		<xsl:variable
+			name="ok"
+			select="false"/>
+		<xsl:if test="contains(./@tipo, 'olteplici') and not(*)">
+			<catalogo-generale>
+				<xsl:attribute name="tipo">Molteplici punti d'accesso</xsl:attribute>
+				<forme>
+					<digitale>
+						<supporto>online</supporto>
+					</digitale>
+				</forme>
+			</catalogo-generale>
+		</xsl:if>
+
+		<xsl:if test="contains(./@tipo, 'olteplici') and (forme/digitale/supporto = 'O')">
+			<catalogo-generale>
+				<xsl:attribute name="tipo">Molteplici punti d'accesso</xsl:attribute>
+				<forme>
 					<xsl:apply-templates/>
-				</catalogo-generale>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:copy-of select="."/>
-			</xsl:otherwise>
-		</xsl:choose>
+					<digitale>
+						<supporto>online</supporto>
+					</digitale>
+				</forme>
+				<xsl:apply-templates/>
+			</catalogo-generale>
+		</xsl:if>
+
+		<xsl:if test="contains(./@tipo,'Autor')">
+			<catalogo-generale>
+				<xsl:attribute name="tipo">Autore</xsl:attribute>
+				<xsl:apply-templates select="*"/>
+			</catalogo-generale>
+		</xsl:if>
+
+		<xsl:if test="contains(./@tipo,'Soggett')">
+			<catalogo-generale>
+				<xsl:attribute name="tipo">Soggetto</xsl:attribute>
+				<xsl:apply-templates select="*"/>
+			</catalogo-generale>
+		</xsl:if>
+
+		<xsl:if test="contains(./@tipo,'Titol')">
+			<catalogo-generale>
+				<xsl:attribute name="tipo">Titolo</xsl:attribute>
+				<xsl:apply-templates select="*"/>
+			</catalogo-generale>
+		</xsl:if>
+
+		<catalogo-generale>
+			<xsl:attribute name="tipo">
+				<xsl:value-of select="./@tipo"/>
+			</xsl:attribute>
+			<xsl:apply-templates select="*"/>
+		</catalogo-generale>
+
 	</xsl:template>
 
-<!-- alcuni di cataloghi collettivi nomi vanno corretti o tradotti -->
+	<!-- alcuni di cataloghi collettivi nomi vanno corretti o tradotti -->
 
 	<xsl:template match="//catalogo-collettivo/nome">
 		<xsl:choose>
