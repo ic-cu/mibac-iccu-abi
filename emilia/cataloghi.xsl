@@ -92,7 +92,7 @@
 												<xsl:copy-of select="substring-before(.,'*')"/>
 											</xsl:if>
 										</xsl:attribute>
-											<xsl:copy-of select="../forme"/>
+											<xsl:apply-templates select="../forme"/>
 										</materiale>
 									</xsl:for-each>
 								</materiali>
@@ -105,13 +105,15 @@
 		</cataloghi>
 	</xsl:template>
 
+	<!--
+		Qualche elemento non va esportato se vuoto, o se ha figli o attributi vuoti o
+		tali da rendere priva di senso l'estrazione del dato
+	-->
 	<xsl:template match="//catalogo-generale[not(@tipo)]"/>
-	<xsl:template match="//catalogo-generale/forme"/>
-	<xsl:template match="//catalogo-generale/materiale"/>
-	<xsl:template match="//catalogo-speciale/forme"/>
-	<xsl:template match="//catalogo-speciale/materiale"/>
-	<xsl:template match="//catalogo-speciale/copertura"/>
-	<xsl:template match="//catalogo-collettivo/forme"/>
+	<xsl:template match="//catalogo-generale[contains(@tipo, 'per')]"/>
+	<xsl:template match="//catalogo-generale/forme[not(*)]"/>
+	<xsl:template match="//catalogo-collettivo/forme[not(*)]"/>
+
 	<!--
 		I cataloghi generali con molteplici punti d'accesso sono spesso
 		arrivati vuoti. Quelli realmente tali acquistano
@@ -121,9 +123,7 @@
 	-->
 
 	<xsl:template match="//catalogo-generale">
-		<xsl:variable
-			name="ok"
-			select="false"/>
+
 		<xsl:if test="contains(./@tipo, 'olteplici') and not(*)">
 			<catalogo-generale>
 				<xsl:attribute name="tipo">Molteplici punti d'accesso</xsl:attribute>
@@ -148,6 +148,12 @@
 			</catalogo-generale>
 		</xsl:if>
 
+<!-- 
+Si ricavano tipi accettabili da quelli inviati, che però alla fine saranno
+scartati perché fanno solo rumore negli import e nei controlli vari. Per ogni
+tipo mappabile si imposta il valore opportuno e poi si applicano i template 
+ -->
+
 		<xsl:if test="contains(./@tipo,'Autor')">
 			<catalogo-generale>
 				<xsl:attribute name="tipo">Autore</xsl:attribute>
@@ -169,16 +175,9 @@
 			</catalogo-generale>
 		</xsl:if>
 
-		<catalogo-generale>
-			<xsl:attribute name="tipo">
-				<xsl:value-of select="./@tipo"/>
-			</xsl:attribute>
-			<xsl:apply-templates select="*"/>
-		</catalogo-generale>
-
 	</xsl:template>
 
-	<!-- alcuni di cataloghi collettivi nomi vanno corretti o tradotti -->
+	<!-- alcuni nomi di cataloghi collettivi vanno corretti o tradotti -->
 
 	<xsl:template match="//catalogo-collettivo/nome">
 		<xsl:choose>
@@ -192,7 +191,7 @@
 			</xsl:when>
 
 			<xsl:otherwise>
-				<xsl:copy-of select="."/>
+				<xsl:apply-templates select="."/>
 			</xsl:otherwise>
 
 		</xsl:choose>
