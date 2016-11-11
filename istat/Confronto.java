@@ -35,7 +35,8 @@ public class Confronto
 	private PreparedStatement qIstat;
 	private PrintWriter outDiversi;
 	private PrintWriter outMancanti;
-	private int colCodiceComune, colNomeComune, colNomeProvincia; 
+	private int colCodiceComune, colNomeComune, colNomeProvincia;
+	private int colCodiceFinanze; 
 
 	private void initLogger()
 	{
@@ -95,6 +96,7 @@ public class Confronto
 			outDiversi = new PrintWriter(config.getProperty("output.diversi"));
 			outMancanti = new PrintWriter(config.getProperty("output.mancanti"));
 			colCodiceComune = Integer.parseInt(config.getProperty("ods.col.codice.comune"));
+			colCodiceFinanze= Integer.parseInt(config.getProperty("ods.col.codice.finanze"));
 			colNomeComune = Integer.parseInt(config.getProperty("ods.col.nome.comune"));
 			colNomeProvincia = Integer.parseInt(config.getProperty("ods.col.nome.provincia"));
 		}
@@ -126,13 +128,14 @@ public class Confronto
  */
 		Table table = input.getSheetByIndex(0);
 		Iterator<Row> rows = table.getRowIterator();
-		outDiversi.println("istat	abi	comune	provincia");
-		outMancanti.println("istat	comune istat	comune abi");
+		outDiversi.println("istat	abi	finanze	comune	provincia	");
+		outMancanti.println("istat	finanze	comune istat	comune abi");
 		while(rows.hasNext())
 		{
 			Row row = rows.next();
 			if(row.getCellByIndex(0).getStringValue().equals("")) break;
 			String istatIstat = row.getCellByIndex(colCodiceComune).getStringValue();
+			String finanzeIstat = row.getCellByIndex(colCodiceFinanze).getStringValue();
 			String comuneIstat = row.getCellByIndex(colNomeComune).getStringValue();
 			String provinciaIstat = row.getCellByIndex(colNomeProvincia).getStringValue();
 			log.debug(istatIstat + "	" + comuneIstat);
@@ -147,7 +150,7 @@ public class Confronto
 						String istatAbi = rs.getString(1);
 						if(!istatAbi.equals(istatIstat))
 						{
-							outDiversi.println(istatIstat + "	" + rs.getString(1) + "	" + rs.getString(2) + "	" + provinciaIstat);
+							outDiversi.println(istatIstat + "	" + rs.getString(1) + "	" + finanzeIstat + "	" + rs.getString(2) + "	" + provinciaIstat);
 						}
 					}
 					while(rs.next());
@@ -161,13 +164,13 @@ public class Confronto
 						do
 						{
 							String comuneAbi = rs2.getString(2);
-							outMancanti.println(istatIstat + "	" + comuneIstat + "	" + comuneAbi);
+							outMancanti.println(istatIstat + "	" + finanzeIstat + "	" + comuneIstat + "	" + comuneAbi);
 						}
 						while(rs2.next());
 					}
 					else
 					{
-						outMancanti.println(istatIstat + "	" + comuneIstat + "	" + null);
+						outMancanti.println(istatIstat + "	" + finanzeIstat + "	" + comuneIstat + "	" + null);
 					}
 				}
 			}

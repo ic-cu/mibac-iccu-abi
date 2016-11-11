@@ -2,6 +2,7 @@
 
 ods.input = /home/DOMICCU/agiuliano/dati/abi/tmp/istat.ods
 ods.col.codice.comune = 4
+ods.col.codice.finanze = 17
 ods.col.nome.comune = 5
 ods.col.nome.provincia = 13
 
