@@ -35,8 +35,8 @@ public class Confronto
 	private PreparedStatement qIstat;
 	private PrintWriter outDiversi;
 	private PrintWriter outMancanti;
-	private int colCodiceComune, colNomeComune, colNomeProvincia;
-	private int colCodiceFinanze; 
+	private int colISTAT, colNome, colProvincia;
+	private int colFinanze, colName ; 
 
 	private void initLogger()
 	{
@@ -95,10 +95,11 @@ public class Confronto
 			qIstat = db.prepare(config.getProperty("query.istat"));
 			outDiversi = new PrintWriter(config.getProperty("output.diversi"));
 			outMancanti = new PrintWriter(config.getProperty("output.mancanti"));
-			colCodiceComune = Integer.parseInt(config.getProperty("ods.col.codice.comune"));
-			colCodiceFinanze= Integer.parseInt(config.getProperty("ods.col.codice.finanze"));
-			colNomeComune = Integer.parseInt(config.getProperty("ods.col.nome.comune"));
-			colNomeProvincia = Integer.parseInt(config.getProperty("ods.col.nome.provincia"));
+			colISTAT = Integer.parseInt(config.getProperty("ods.col.istat"));
+			colFinanze= Integer.parseInt(config.getProperty("ods.col.finanze"));
+			colNome = Integer.parseInt(config.getProperty("ods.col.nome"));
+			colName = Integer.parseInt(config.getProperty("ods.col.name"));
+			colProvincia = Integer.parseInt(config.getProperty("ods.col.pr"));
 		}
 		catch(IOException e)
 		{
@@ -134,14 +135,17 @@ public class Confronto
 		{
 			Row row = rows.next();
 			if(row.getCellByIndex(0).getStringValue().equals("")) break;
-			String istatIstat = row.getCellByIndex(colCodiceComune).getStringValue();
-			String finanzeIstat = row.getCellByIndex(colCodiceFinanze).getStringValue();
-			String comuneIstat = row.getCellByIndex(colNomeComune).getStringValue();
-			String provinciaIstat = row.getCellByIndex(colNomeProvincia).getStringValue();
-			log.debug(istatIstat + "	" + comuneIstat);
+			String istatIstat = row.getCellByIndex(colISTAT).getStringValue();
+			if(istatIstat.startsWith("Codice")) continue;
+			String finanzeIstat = row.getCellByIndex(colFinanze).getStringValue();
+			String nomeIstat = row.getCellByIndex(colNome).getStringValue();
+			String nameIstat = row.getCellByIndex(colName).getStringValue();
+			String provinciaIstat = row.getCellByIndex(colProvincia).getStringValue();
+			log.debug(istatIstat + "	" + nomeIstat);
 			try
 			{
-				qComune.setString(1, comuneIstat);
+				if(!nameIstat.equals("")) nomeIstat += "." + nameIstat;
+				qComune.setString(1, nomeIstat);
 				ResultSet rs = qComune.executeQuery();
 				if(rs.next())
 				{
@@ -164,13 +168,13 @@ public class Confronto
 						do
 						{
 							String comuneAbi = rs2.getString(2);
-							outMancanti.println(istatIstat + "	" + finanzeIstat + "	" + comuneIstat + "	" + comuneAbi);
+							outMancanti.println(istatIstat + "	" + finanzeIstat + "	" + nomeIstat + "	" + comuneAbi);
 						}
 						while(rs2.next());
 					}
 					else
 					{
-						outMancanti.println(istatIstat + "	" + finanzeIstat + "	" + comuneIstat + "	" + null);
+						outMancanti.println(istatIstat + "	" + finanzeIstat + "	" + nomeIstat + "	" + null);
 					}
 				}
 			}

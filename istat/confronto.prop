@@ -1,32 +1,38 @@
-## nome file del tabellone esportato da europaweb, ma in formato ODS
-
+# nome file del tabellone esportato da europaweb, ma in formato ODS
 ods.input = /home/DOMICCU/agiuliano/dati/abi/tmp/istat.ods
-ods.col.codice.comune = 4
-ods.col.codice.finanze = 17
-ods.col.nome.comune = 5
-ods.col.nome.provincia = 13
 
+# numero di colonna (partendo da 0) dei dati in input che interessano
+ods.col.istat = 4
+ods.col.finanze = 17
+ods.col.nome = 5
+ods.col.name = 6
+ods.col.pr = 13
+
+# parametri per il logging
 log.file = istat.log
 #log.pattern = %d{yyyy-MM-dd HH:mm:ss} %p %C{1}.%M - %m%n
 log.pattern = %p %m%n
 log.level = 
 
+# nomi dei file di output
 output.diversi = diversi.csv
 output.mancanti = mancanti.csv 
 
+# query in ABI per nome del comune 
 query.comune = \
   SELECT \
   	codice_istat AS `codice istat`, \
-  	substring_index(denominazione, '.', 1) AS `comune` \
+  	denominazione AS `comune` \
   FROM \
   	comune \
   WHERE \
-  	substring_index(denominazione, '.', 1) = ?
+  	denominazione = ?
   
+# query in ABI per codice ISTAT  
 query.istat = \
   SELECT \
   	codice_istat AS `codice istat`, \
-  	substring_index(denominazione, '.', 1) AS `comune` \
+  	denominazione AS `comune` \
   FROM \
   	comune \
   WHERE \
