@@ -1,5 +1,6 @@
 # nome file del tabellone esportato da europaweb, ma in formato ODS
-ods.input = /home/DOMICCU/agiuliano/dati/abi/tmp/istat.ods
+ods.input.comuni = /home/DOMICCU/agiuliano/dati/abi/tmp/istat/istat.ods
+ods.input.soppressi = /home/DOMICCU/agiuliano/dati/abi/tmp/istat/soppressi.ods
 
 # numero di colonna (partendo da 0) dei dati in input che interessano
 ods.col.istat = 4
@@ -17,16 +18,24 @@ log.level =
 # nomi dei file di output
 output.diversi = diversi.csv
 output.mancanti = mancanti.csv 
+output.soppressi = soppressi.csv 
+output.intrusi = intrusi.csv 
 
 # query in ABI per nome del comune 
 query.comune = \
   SELECT \
-  	codice_istat AS `codice istat`, \
-  	denominazione AS `comune` \
+  	comune.codice_istat AS `codice istat`, \
+  	comune.denominazione AS `comune`, \
+  	provincia.sigla AS `provincia` \
   FROM \
-  	comune \
+  	comune, \
+  	provincia \
   WHERE \
-  	denominazione = ?
+  	comune.id_provincia = provincia.id_provincia \
+  AND comune.denominazione = ? \
+  AND provincia.sigla = ? \
+  ORDER BY comune.denominazione, provincia.sigla
+  	
   
 # query in ABI per codice ISTAT  
 query.istat = \
@@ -37,4 +46,11 @@ query.istat = \
   	comune \
   WHERE \
   	codice_istat = ?
-  
+  	
+# query in ABI di tutti i comuni  
+query.tutti = \
+  SELECT \
+  	codice_istat AS `codice istat`, \
+  	denominazione AS `comune` \
+  FROM comune \
+  ORDER BY comune
