@@ -95,8 +95,8 @@
 	<xsl:template match="//catalogo-collettivo/nome">
 		<xsl:choose>
 
-			<xsl:when test="contains(., 'SBN')">
-				<nome>Catalogo collettivo del Servizio bibliotecario nazionale, http://opac.sbn.it</nome>
+			<xsl:when test="contains(., 'Polo Unificato Ferrarese')">
+				<nome>SBN - Polo Unificato Ferrarese</nome>
 			</xsl:when>
 
 			<xsl:when test="contains(., 'EDIT 16')">
@@ -104,7 +104,8 @@
 			</xsl:when>
 
 			<xsl:otherwise>
-				<xsl:copy-of select="."/>
+			<nome>
+				<xsl:apply-templates select="node()"/></nome>
 			</xsl:otherwise>
 
 		</xsl:choose>
