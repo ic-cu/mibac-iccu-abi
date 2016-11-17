@@ -24,7 +24,7 @@
 			</xsl:when>
 
 			<xsl:when test=". = 'Consorzio e/o associazioni di regioni, province, comuni e comunità montane'">
-				<tipologia-amministrativa>Consorzio e/o associazioni di regioni, provincie, comuni e comunita' montane</tipologia-amministrativa>
+				<tipologia-amministrativa>Consorzio e/o associazioni di regioni, provincie, comuni e comunità montane</tipologia-amministrativa>
 			</xsl:when>
 
 			<xsl:otherwise>
