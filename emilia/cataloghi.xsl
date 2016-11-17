@@ -2,15 +2,15 @@
 <xsl:stylesheet
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-	version="1.0"
->
+  xmlns:xalan="http://xml.apache.org/xslt" version="1.0">
 
 	<!-- Foglio di stile per la conversione di file 1.5 a file 1.6 -->
 
 	<xsl:output
 		method="xml"
 		indent="yes"
-		encoding="UTF-8"/>
+		encoding="UTF-8"
+		xalan:indent-amount="2"/>
 
 	<!--
 		Cataloghi, basta un solo template, ma è complicato il caso dei materiali
@@ -85,19 +85,14 @@
 									<xsl:for-each select="materiale">
 										<materiale>
 											<xsl:attribute name="nome">
-											<xsl:if test="not(contains(., '*'))">
 												<xsl:value-of select="."/>
-											</xsl:if>
-											<xsl:if test="contains(., '*')">
-												<xsl:copy-of select="substring-before(.,'*')"/>
-											</xsl:if>
-										</xsl:attribute>
+											</xsl:attribute>
 											<xsl:apply-templates select="../forme"/>
+											<xsl:apply-templates select="../copertura"/>
 										</materiale>
 									</xsl:for-each>
 								</materiali>
 							</xsl:if>
-							<xsl:apply-templates select="zona"/>
 						</catalogo-collettivo>
 					</xsl:for-each>
 				</cataloghi-collettivi>
@@ -112,6 +107,7 @@
 	<xsl:template match="//catalogo-generale[not(@tipo)]"/>
 	<xsl:template match="//catalogo-generale[contains(@tipo, 'per')]"/>
 	<xsl:template match="//catalogo-generale/forme[not(*)]"/>
+	<xsl:template match="//citazione-bibliografica[not(*)]"/>
 	<xsl:template match="//catalogo-collettivo/forme[not(*)]"/>
 
 	<!--
@@ -148,11 +144,11 @@
 			</catalogo-generale>
 		</xsl:if>
 
-<!-- 
-Si ricavano tipi accettabili da quelli inviati, che però alla fine saranno
-scartati perché fanno solo rumore negli import e nei controlli vari. Per ogni
-tipo mappabile si imposta il valore opportuno e poi si applicano i template 
- -->
+		<!--
+			Si ricavano tipi accettabili da quelli inviati, che però alla fine saranno
+			scartati perché fanno solo rumore negli import e nei controlli vari. Per ogni
+			tipo mappabile si imposta il valore opportuno e poi si applicano i template
+		-->
 
 		<xsl:if test="contains(./@tipo,'Autor')">
 			<catalogo-generale>
@@ -175,26 +171,6 @@ tipo mappabile si imposta il valore opportuno e poi si applicano i template
 			</catalogo-generale>
 		</xsl:if>
 
-	</xsl:template>
-
-	<!-- alcuni nomi di cataloghi collettivi vanno corretti o tradotti -->
-
-	<xsl:template match="//catalogo-collettivo/nome">
-		<xsl:choose>
-
-			<xsl:when test="contains(., 'SBN')">
-				<nome>Catalogo collettivo del Servizio bibliotecario nazionale, http://opac.sbn.it</nome>
-			</xsl:when>
-
-			<xsl:when test="contains(., 'EDIT 16')">
-				<nome>Censimento nazionale delle Edizioni italiane del XVI secolo</nome>
-			</xsl:when>
-
-			<xsl:otherwise>
-				<xsl:apply-templates select="."/>
-			</xsl:otherwise>
-
-		</xsl:choose>
 	</xsl:template>
 
 </xsl:stylesheet>
