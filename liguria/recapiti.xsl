@@ -69,7 +69,7 @@ parecchi test sempre più fini, ma non c'era alternativa.
 					</altro>
 				</xsl:if>
 				<xsl:if test="$pec">
-					<altro tipo="e-mail">
+					<altro tipo="PEC">
 						<valore>
 							<xsl:value-of select="$pec" />
 						</valore>
