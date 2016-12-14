@@ -116,7 +116,7 @@
 			</xsl:when>
 
 			<xsl:when test="contains(., 'IBIS web')">
-				<nome>IBISweb</nome>
+				<nome>IBISweb. Catalogo bibliografico cumulativo degli utenti ISIS</nome>
 			</xsl:when>
 			
 			<xsl:when test="contains(., 'IMAGO')">
@@ -126,7 +126,11 @@
 			<xsl:when test="contains(., 'SBN-Polo Unificato Ferrarese')">
 				<nome>SBN - Polo Unificato Ferrarese</nome>
 			</xsl:when>
-
+			
+			<xsl:when test="starts-with(., 'IGI')">
+				<nome>IGI - Indice Generale degli Incunaboli</nome>
+			</xsl:when>
+			
 			<xsl:otherwise>
 			<nome>
 				<xsl:apply-templates select="node()"/></nome>
