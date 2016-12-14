@@ -111,8 +111,8 @@
 				<nome>Archivio collettivo delle pubblicazioni periodiche</nome>
 			</xsl:when>
 			
-			<xsl:when test="contains(., 'GDIF, RMB. Catalogo collettivo dei periodici delle biblioteche mediche')">
-				<nome>GIDIF, RMB. Catalogo collettivo dei periodici delle biblioteche mediche</nome>
+			<xsl:when test="contains(., 'GDIF,RBM. Catalogo collettivo dei periodici delle biblioteche biomediche')">
+				<nome>GIDIF,RBM. Catalogo collettivo dei periodici delle biblioteche biomediche</nome>
 			</xsl:when>
 
 			<xsl:when test="contains(., 'IBIS web')">
