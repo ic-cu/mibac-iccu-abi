@@ -103,6 +103,30 @@
 				<nome>Censimento nazionale delle Edizioni italiane del XVI secolo</nome>
 			</xsl:when>
 
+			<xsl:when test="contains(., 'A-to-Z')">
+				<nome>A-to-Z. Catalogo unico delle riviste elettroniche dell'Università di Ferrara</nome>
+			</xsl:when>
+
+			<xsl:when test="contains(., 'ACNP')">
+				<nome>Archivio collettivo delle pubblicazioni periodiche</nome>
+			</xsl:when>
+			
+			<xsl:when test="contains(., 'GDIF, RMB. Catalogo collettivo dei periodici delle biblioteche mediche')">
+				<nome>GIDIF, RMB. Catalogo collettivo dei periodici delle biblioteche mediche</nome>
+			</xsl:when>
+
+			<xsl:when test="contains(., 'IBIS web')">
+				<nome>IBISweb</nome>
+			</xsl:when>
+			
+			<xsl:when test="contains(., 'IMAGO')">
+				<nome>Imago - Catalogo regionale di opere grafiche e cartografiche</nome>
+			</xsl:when>
+			
+			<xsl:when test="contains(., 'SBN-Polo Unificato Ferrarese')">
+				<nome>SBN - Polo Unificato Ferrarese</nome>
+			</xsl:when>
+
 			<xsl:otherwise>
 			<nome>
 				<xsl:apply-templates select="node()"/></nome>

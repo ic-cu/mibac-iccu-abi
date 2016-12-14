@@ -85,9 +85,12 @@
 						<xsl:when test="contains(cdd, '/')">
 							<xsl:value-of select="substring-before(cdd, '/')"/>
 						</xsl:when>
+							
+						<xsl:when test="contains(cdd, '780.45')">780</xsl:when>
+			
 						<xsl:otherwise>
 							<xsl:value-of select="cdd"/>
-						</xsl:otherwise>
+			</xsl:otherwise>
 					</xsl:choose>
 				</xsl:element>
 			</xsl:if>
