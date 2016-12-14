@@ -56,13 +56,19 @@
 
 			<xsl:when test="contains(., 'Manoscritti musicali')">musica manoscritta</xsl:when>
 
-			<xsl:when test="contains(.,'Collezioni digitalizzate')">IGNORARE: <xsl:value-of select="."/></xsl:when>
+			<xsl:when test="contains(.,'Collezioni digitalizzate')">IGNORARE:<xsl:value-of select="."/></xsl:when>
 
-			<xsl:when test="contains(.,'Altri documenti di biblioteca')">IGNORARE: <xsl:value-of select="."/></xsl:when>
+			<xsl:when test="contains(.,'Altri documenti di biblioteca')">IGNORARE:<xsl:value-of select="."/></xsl:when>
 
-			<xsl:otherwise><xsl:if test="contains(., '*')"><xsl:value-of select="substring-before(.,'*')"/></xsl:if>
-			<xsl:if test="not(contains(., '*'))"><xsl:value-of select="."/></xsl:if></xsl:otherwise>
-			</xsl:choose>
+			<xsl:otherwise>
+				<xsl:if test="contains(., '*')">
+					<xsl:value-of select="substring-before(.,'*')"/>
+				</xsl:if>
+				<xsl:if test="not(contains(., '*'))">
+					<xsl:value-of select="."/>
+				</xsl:if>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 
 	<!--
@@ -110,7 +116,7 @@
 			<xsl:when test="contains(., 'ACNP')">
 				<nome>Archivio collettivo delle pubblicazioni periodiche</nome>
 			</xsl:when>
-			
+
 			<xsl:when test="contains(., 'GDIF,RBM. Catalogo collettivo dei periodici delle biblioteche biomediche')">
 				<nome>GIDIF,RBM. Catalogo collettivo dei periodici delle biblioteche biomediche</nome>
 			</xsl:when>
@@ -118,38 +124,56 @@
 			<xsl:when test="contains(., 'IBIS web')">
 				<nome>IBISweb. Catalogo bibliografico cumulativo degli utenti ISIS</nome>
 			</xsl:when>
-			
+
 			<xsl:when test="contains(., 'IMAGO')">
 				<nome>Imago - Catalogo regionale di opere grafiche e cartografiche</nome>
 			</xsl:when>
-			
+
 			<xsl:when test="contains(., 'SBN-Polo Unificato Ferrarese')">
 				<nome>SBN - Polo Unificato Ferrarese</nome>
 			</xsl:when>
-			
+
 			<xsl:when test="starts-with(., 'IGI')">
 				<nome>IGI - Indice Generale degli Incunaboli</nome>
 			</xsl:when>
-			
+
 			<xsl:otherwise>
-			<nome>
-				<xsl:apply-templates select="node()"/></nome>
+				<nome>
+					<xsl:apply-templates select="node()"/>
+				</nome>
 			</xsl:otherwise>
 
 		</xsl:choose>
 	</xsl:template>
-	
-<!-- 
-Eventuali cataloghi inviati senza neanche il tipo vanno scartati, salvo che la 
-Emilia-Romagna non spieghi il significato di questi casi.
- -->
+
+	<xsl:template match="//prestito/materiali-esclusi-locale/materiale">
+		<xsl:choose>
+
+			<xsl:when test="contains(., 'Manoscritti legati')">
+				<materiale-escluso>Manoscritti</materiale-escluso>
+			</xsl:when>
+
+			<xsl:otherwise>
+				<materiale-escluso>
+					<xsl:value-of select="."/>
+				</materiale-escluso>
+			</xsl:otherwise>
+
+		</xsl:choose>
+	</xsl:template>
+
+
+	<!--
+		Eventuali cataloghi inviati senza neanche il tipo vanno scartati, salvo che la
+		Emilia-Romagna non spieghi il significato di questi casi.
+	-->
 
 	<xsl:template match="//catalogo-generale[not(@tipo)]"/>
 
-<!-- 
-ILL SBN viene indicato in molti modi in input, per cui va corretto almeno
-nei casi più plausibili
- -->
+	<!--
+		ILL SBN viene indicato in molti modi in input, per cui va corretto almeno
+		nei casi più plausibili
+	-->
 
 	<xsl:template match="//sistema-ill/nome">
 		<xsl:if test="contains(., 'SBN') or contains(., 'sbn')">
