@@ -114,7 +114,7 @@
 			</xsl:when>
 
 			<xsl:when test="contains(., 'ACNP')">
-				<nome>Archivio collettivo delle pubblicazioni periodiche</nome>
+				<nome>Archivio collettivo nazionale delle pubblicazioni periodiche</nome>
 			</xsl:when>
 
 			<xsl:when test="contains(., 'GDIF,RBM. Catalogo collettivo dei periodici delle biblioteche biomediche')">
@@ -129,6 +129,10 @@
 				<nome>Imago - Catalogo regionale di opere grafiche e cartografiche</nome>
 			</xsl:when>
 
+			<xsl:when test="contains(., 'Censimento regionale delle Edizioni del XVI secolo dell') and contains(., 'Emilia-Romagna')">
+				<nome>Censimento regionale delle Edizioni del XVI secolo dell'Emilia-Romagna</nome>
+			</xsl:when>
+			
 			<xsl:when test="contains(., 'SBN-Polo Unificato Ferrarese')">
 				<nome>SBN - Polo Unificato Ferrarese</nome>
 			</xsl:when>
