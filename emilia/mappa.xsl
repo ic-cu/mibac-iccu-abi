@@ -153,6 +153,10 @@
 				<materiale-escluso>Manoscritti</materiale-escluso>
 			</xsl:when>
 
+		<xsl:when test="contains(., 'Elettronici / Digitali')">
+				<materiale-escluso>Documenti elettronici</materiale-escluso>
+			</xsl:when>
+
 			<xsl:otherwise>
 				<materiale-escluso>
 					<xsl:value-of select="."/>
