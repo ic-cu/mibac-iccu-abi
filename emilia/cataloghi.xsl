@@ -87,8 +87,8 @@
 											<xsl:attribute name="nome">
 												<xsl:value-of select="."/>
 											</xsl:attribute>
-											<xsl:apply-templates select="../forme"/>
-											<xsl:apply-templates select="../copertura"/>
+											<xsl:copy-of select="../forme"/>
+											<xsl:copy-of select="../copertura"/>
 										</materiale>
 									</xsl:for-each>
 								</materiali>
