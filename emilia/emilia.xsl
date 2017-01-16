@@ -16,5 +16,6 @@ xmlns:xalan="http://xml.apache.org/xslt" version="1.0">
 	<xsl:import href="patrimonio.xsl" />
 	<xsl:import href="mappa.xsl" />
 	<xsl:output method="xml" indent="yes" encoding="UTF-8" xalan:indent-amount="2"/>
+	
 
 </xsl:stylesheet>
