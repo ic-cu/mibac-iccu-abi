@@ -2,7 +2,9 @@
 <xsl:stylesheet
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-  xmlns:xalan="http://xml.apache.org/xslt" version="1.0">
+  xmlns:xalan="http://xml.apache.org/xslt"
+  exclude-result-prefixes="xalan"	
+  version="1.0">
 
 	<!-- Foglio di stile per la conversione di file 1.5 a file 1.6 -->
 

@@ -3,6 +3,7 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns:xalan="http://xml.apache.org/xslt"
+	exclude-result-prefixes="xalan xsi"	
 	version="1.0"
 >
 
@@ -22,7 +23,7 @@
 		indent="yes"
 		encoding="UTF-8"
 		xalan:indent-amount="2"/>
-
+		
 	<xsl:template match="//anagrafica/dataAggiornamento">
 		<xsl:if test=".">
 			<data-aggiornamento>
@@ -44,5 +45,6 @@
 			<url>http://ibc.regione.emilia-romagna.it/servizi-online/biblioteche</url>
 		</fonte>
 	</xsl:template>
-
+	
+		
 </xsl:stylesheet>
