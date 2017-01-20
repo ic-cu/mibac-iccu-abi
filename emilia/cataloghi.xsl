@@ -108,7 +108,6 @@
 	-->
 	<xsl:template match="//catalogo-generale[not(@tipo)]"/>
 	<xsl:template match="//catalogo-generale[contains(@tipo, 'per')]"/>
-	<xsl:template match="//catalogo-generale/forme[not(*)]"/>
 	<xsl:template match="//citazione-bibliografica[not(*)]"/>
 	<xsl:template match="//catalogo-collettivo/forme[not(*)]"/>
 
@@ -152,6 +151,7 @@
 			tipo mappabile si imposta il valore opportuno e poi si applicano i template
 		-->
 
+	<xsl:if test="not(contains(./@tipo,'Autori / Titoli / Soggetti / Classi'))">
 		<xsl:if test="contains(./@tipo,'Autor')">
 			<catalogo-generale>
 				<xsl:attribute name="tipo">Autore</xsl:attribute>
@@ -172,6 +172,17 @@
 				<xsl:apply-templates select="*"/>
 			</catalogo-generale>
 		</xsl:if>
+	</xsl:if>
+
+	<xsl:if test="contains(./@tipo,'Autori / Titoli / Soggetti / Classi')">
+		<catalogo-generale>
+			<xsl:attribute name="tipo">Molteplici punti d'accesso</xsl:attribute>
+			<forme>
+				<digitale/>
+			</forme>
+			<xsl:apply-templates select="*"/>
+		</catalogo-generale>
+	</xsl:if>
 
 	</xsl:template>
 
