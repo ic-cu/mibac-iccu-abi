@@ -103,54 +103,17 @@
 	</xsl:template>
 
 	<!--
-		Qualche elemento non va esportato se vuoto, o se ha figli o attributi vuoti o
-		tali da rendere priva di senso l'estrazione del dato
+		Cataloghi generali. Per prima cosa vanno esclusi quelli eventualmente privi
+		di attributo tipo, che non sono ammessi
 	-->
 	<xsl:template match="//catalogo-generale[not(@tipo)]"/>
-	<xsl:template match="//catalogo-generale[contains(@tipo, 'per')]"/>
-	<xsl:template match="//citazione-bibliografica[not(*)]"/>
-	<xsl:template match="//catalogo-collettivo/forme[not(*)]"/>
 
 	<!--
-		I cataloghi generali con molteplici punti d'accesso sono spesso
-		arrivati vuoti. Quelli realmente tali acquistano
-		forma/digitale/supporto=online, e quelli che hanno già questo elemento
-		= "O" lo cambiano in "online", copiando eventuali altri contenuti.
-		Tutti gli altri sono copiati come sono.
+		I cataloghi generali con al più tre tipi vengono convertiti in tanti
+		cataloghi per quanti tipi sono elencati nell'attributo "tipo" in input.
 	-->
 
 	<xsl:template match="//catalogo-generale">
-
-		<xsl:if test="contains(./@tipo, 'olteplici') and not(*)">
-			<catalogo-generale>
-				<xsl:attribute name="tipo">Molteplici punti d'accesso</xsl:attribute>
-				<forme>
-					<digitale>
-						<supporto>online</supporto>
-					</digitale>
-				</forme>
-			</catalogo-generale>
-		</xsl:if>
-
-		<xsl:if test="contains(./@tipo, 'olteplici') and (forme/digitale/supporto = 'O')">
-			<catalogo-generale>
-				<xsl:attribute name="tipo">Molteplici punti d'accesso</xsl:attribute>
-				<forme>
-					<xsl:apply-templates/>
-					<digitale>
-						<supporto>online</supporto>
-					</digitale>
-				</forme>
-				<xsl:apply-templates/>
-			</catalogo-generale>
-		</xsl:if>
-
-		<!--
-			Si ricavano tipi accettabili da quelli inviati, che però alla fine saranno
-			scartati perché fanno solo rumore negli import e nei controlli vari. Per ogni
-			tipo mappabile si imposta il valore opportuno e poi si applicano i template
-		-->
-
 	<xsl:if test="not(contains(./@tipo,'Autori / Titoli / Soggetti / Classi'))">
 		<xsl:if test="contains(./@tipo,'Autor')">
 			<catalogo-generale>
@@ -173,6 +136,13 @@
 			</catalogo-generale>
 		</xsl:if>
 	</xsl:if>
+	
+	<!--
+	I cataloghi generali con quattro tipi sono informatizzati e devono avere, 
+	a parte un tipo particolare, anche la forma "digitale". Ovviamente, il
+	solito apply-templates deve	escludere le forme, che altrimenti sono duplicate
+	rendendo non valido il file
+	 -->
 
 	<xsl:if test="contains(./@tipo,'Autori / Titoli / Soggetti / Classi')">
 		<catalogo-generale>
@@ -180,7 +150,7 @@
 			<forme>
 				<digitale/>
 			</forme>
-			<xsl:apply-templates select="*"/>
+			<xsl:apply-templates select="*[not(local-name() = 'forme')]"/>
 		</catalogo-generale>
 	</xsl:if>
 
