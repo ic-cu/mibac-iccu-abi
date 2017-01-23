@@ -2,9 +2,10 @@
 <xsl:stylesheet
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-  xmlns:xalan="http://xml.apache.org/xslt"
-  exclude-result-prefixes="xalan"	
-  version="1.0">
+	xmlns:xalan="http://xml.apache.org/xslt"
+	exclude-result-prefixes="xalan"
+	version="1.0"
+>
 
 	<!-- Foglio di stile per la conversione di file 1.5 a file 1.6 -->
 
@@ -97,9 +98,46 @@
 							</xsl:if>
 						</catalogo-collettivo>
 					</xsl:for-each>
+					<xsl:if test="../anagrafica/codici/sbn">
+						<xsl:call-template name="catalogo-sbn"/>
+					</xsl:if>
 				</cataloghi-collettivi>
 			</xsl:if>
+
+			<!--
+				Se non arrivano cataloghi collettivi può essere comunque che la biblioteca
+				faccia parte di SBN. L'unico modo per saperlo è valutare "codice/sbn",
+				fidandosi della fonte, e inserire il catalogo SBN
+			-->
+
+			<xsl:if test="not(catalogo-collettivo)">
+					<xsl:if test="../anagrafica/codici/sbn">
+					<cataloghi-collettivi>
+						<xsl:call-template name="catalogo-sbn"/>
+					</cataloghi-collettivi>
+				</xsl:if>
+			</xsl:if>
 		</cataloghi>
+	</xsl:template>
+
+	<!--
+		Template "statico" per inserire il catalogo SBN
+	-->
+
+	<xsl:template name="catalogo-sbn">
+		<catalogo-collettivo>
+			<nome>Catalogo collettivo del Servizio bibliotecario nazionale, http://opac.sbn.it</nome>
+			<materiali>
+				<materiale nome="tutti i materiali">
+					<forme>
+						<digitale>
+							<supporto>online</supporto>
+							<url>http://opac.sbn.it</url>
+						</digitale>
+					</forme>
+				</materiale>
+			</materiali>
+		</catalogo-collettivo>
 	</xsl:template>
 
 	<!--
@@ -114,45 +152,46 @@
 	-->
 
 	<xsl:template match="//catalogo-generale">
-	<xsl:if test="not(contains(./@tipo,'Autori / Titoli / Soggetti / Classi'))">
-		<xsl:if test="contains(./@tipo,'Autor')">
-			<catalogo-generale>
-				<xsl:attribute name="tipo">Autore</xsl:attribute>
-				<xsl:apply-templates select="*"/>
-			</catalogo-generale>
+		<xsl:if test="not(contains(./@tipo,'Autori / Titoli / Soggetti / Classi'))">
+			<xsl:if test="contains(./@tipo,'Autor')">
+				<catalogo-generale>
+					<xsl:attribute name="tipo">Autore</xsl:attribute>
+					<xsl:apply-templates select="*"/>
+				</catalogo-generale>
+			</xsl:if>
+
+			<xsl:if test="contains(./@tipo,'Soggett')">
+				<catalogo-generale>
+					<xsl:attribute name="tipo">Soggetto</xsl:attribute>
+					<xsl:apply-templates select="*"/>
+				</catalogo-generale>
+			</xsl:if>
+
+			<xsl:if test="contains(./@tipo,'Titol')">
+				<catalogo-generale>
+					<xsl:attribute name="tipo">Titolo</xsl:attribute>
+					<xsl:apply-templates select="*"/>
+				</catalogo-generale>
+			</xsl:if>
 		</xsl:if>
 
-		<xsl:if test="contains(./@tipo,'Soggett')">
+		<!--
+			I cataloghi generali con quattro tipi sono informatizzati e devono avere,
+			a parte un tipo particolare, anche la forma "digitale". Ovviamente, il
+			solito apply-templates deve escludere le forme, che altrimenti sono duplicate
+			rendendo non valido il file. Resta escluso il caso, presumibilmente assai
+			raro, di una biblioteca con codice SBN e nessun catalogo di alcun tipo.
+		-->
+
+		<xsl:if test="contains(./@tipo,'Autori / Titoli / Soggetti / Classi')">
 			<catalogo-generale>
-				<xsl:attribute name="tipo">Soggetto</xsl:attribute>
-				<xsl:apply-templates select="*"/>
+				<xsl:attribute name="tipo">Molteplici punti d'accesso</xsl:attribute>
+				<forme>
+					<digitale/>
+				</forme>
+				<xsl:apply-templates select="*[not(local-name() = 'forme')]"/>
 			</catalogo-generale>
 		</xsl:if>
-
-		<xsl:if test="contains(./@tipo,'Titol')">
-			<catalogo-generale>
-				<xsl:attribute name="tipo">Titolo</xsl:attribute>
-				<xsl:apply-templates select="*"/>
-			</catalogo-generale>
-		</xsl:if>
-	</xsl:if>
-	
-	<!--
-	I cataloghi generali con quattro tipi sono informatizzati e devono avere, 
-	a parte un tipo particolare, anche la forma "digitale". Ovviamente, il
-	solito apply-templates deve	escludere le forme, che altrimenti sono duplicate
-	rendendo non valido il file
-	 -->
-
-	<xsl:if test="contains(./@tipo,'Autori / Titoli / Soggetti / Classi')">
-		<catalogo-generale>
-			<xsl:attribute name="tipo">Molteplici punti d'accesso</xsl:attribute>
-			<forme>
-				<digitale/>
-			</forme>
-			<xsl:apply-templates select="*[not(local-name() = 'forme')]"/>
-		</catalogo-generale>
-	</xsl:if>
 
 	</xsl:template>
 
