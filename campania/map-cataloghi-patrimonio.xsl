@@ -19,6 +19,9 @@
 		<xsl:when test="contains(.,'Catalogo delle biblioteche dell’INAF')">
 		<nome>Catalogo collettivo delle biblioteche dell'Istituto Nazionale di Astrofisica - INAF</nome>
 		</xsl:when>
+		<xsl:when test="contains(., 'Sistema bibliotecario d') and contains(., 'Ateneo. Università degli Studi di Salerno')">
+		<xsl:element name="nome">Catalogo collettivo dell'Università degli studi di Salerno</xsl:element>
+		</xsl:when>	
 		<xsl:otherwise>
 				<xsl:copy-of select="." />
 		</xsl:otherwise>

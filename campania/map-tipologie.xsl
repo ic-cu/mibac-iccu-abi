@@ -21,13 +21,16 @@
 		<xsl:when test=". = 'Scuole primarie'">
 		<xsl:element name="tipologia-amministrativa">Presidenza del consiglio dei ministri e ministeri</xsl:element>
 		</xsl:when>
-
+		
 		<xsl:when test=". = 'Scuole secondarie superiori'">
 		<xsl:element name="tipologia-amministrativa">Presidenza del consiglio dei ministri e ministeri</xsl:element>
 		</xsl:when>
-
+		
+	   <xsl:when test=". = 'Direzione generale per i beni archeologici'">
+		<xsl:element name="tipologia-amministrativa">Direzione generale archeologia, belle arti e paesaggio</xsl:element>
+		</xsl:when>
 		<xsl:otherwise>
-				<xsl:copy-of select="." />
+<xsl:copy-of select="." />
 		</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
