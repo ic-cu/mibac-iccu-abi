@@ -258,6 +258,7 @@
 			</xsl:if>
 			<!-- Collettivi: si procede quasi come per gli speciali
 			C'è anche qualche voce da mappare -->
+	<!-- non sappiamo se servirà <xsl:when test="nome = 'Catalogo collettivo regionale delle edizioni del XVI secolo'">Censimento regionale delle Edizioni del XVI secolo dell'Emilia-Romagna</xsl:when> -->
 			<xsl:if test="catalogo-collettivo">
 				<xsl:element name="cataloghi-collettivi">
 					<xsl:for-each select="catalogo-collettivo">
@@ -268,10 +269,18 @@
 										<xsl:when test="nome = 'CEIbib'">Polo Biblioteche Ecclesiastiche</xsl:when>
 										<xsl:when test="nome = 'Catalogo collettivo dei periodici di Reggio Calabria'">Catalogo collettivo dei periodici delle biblioteche di Reggio Calabria</xsl:when>
 										<xsl:when test="nome = 'Censimento Regionale Edizioni XVI secolo'">Catalogo collettivo regionale delle edizioni del XVI secolo</xsl:when>
+										<xsl:when test="nome = concat ('Censimento regionale delle Edizioni XVI secolo dell',&quot;'&quot;, 'Emilia-Romagna')">Catalogo collettivo regionale delle edizioni del XVI secolo</xsl:when>
 										<xsl:when test="nome = 'Edit16'">Censimento nazionale delle edizioni italiane del XVI secolo</xsl:when>
 										<xsl:when test="nome = 'Poo Biblioteche Ecclesistiche'">Polo Biblioteche Ecclesiastiche</xsl:when>
 										<xsl:when test="nome = 'Sistema bibliotecario parmense, http://opacsol.unipr.it/SebinaOpac/Opac'">Catalogo Sistema bibliotecario parmense, http://opac.unipr.it</xsl:when>
 										<xsl:when test="nome = concat('Catalogo edizioni antiche di Terra d', &quot;''&quot;, 'Otranto')">Catalogo edizioni antiche di Terra d'Otranto</xsl:when>
+										<xsl:when test="nome = 'Catalogo collettivo del Sistema Bibliotecario Pratese'">Catalogo collettivo provinciale pratese</xsl:when>
+										<xsl:when test="nome = 'Catalogo italiano dei peridici ACNP'">Archivio collettivo nazionale delle pubblicazioni periodiche - ACNP</xsl:when>
+										<xsl:when test="nome = 'Catalogo nazionale dei periodici ACNP'">Archivio collettivo nazionale delle pubblicazioni periodiche - ACNP</xsl:when>
+										<xsl:when test="nome = 'Archivio collettivo nazionale delle pubblicazioni periodiche'">Archivio collettivo nazionale delle pubblicazioni periodiche - ACNP</xsl:when>
+										<xsl:when test="nome = 'Censimento nazionale delle edizioni italiane del XVI secolo (EDIT16)'">Censimento nazionale delle Edizioni italiane del XVI secolo</xsl:when>
+										<xsl:when test="nome = 'Incunabula Short Title Catalogue'">ISTC - Incunabola Short Title Catalogue</xsl:when>
+										<xsl:when test="nome = concat('Sistema documentario integrato dell', &quot;'&quot;, 'area firoentina')">Sistema documentario integrato dell'area fiorentina</xsl:when>
 										<xsl:when test="nome = ''"></xsl:when>
 										<xsl:otherwise>
 											<xsl:value-of select="nome" />
