@@ -15,8 +15,6 @@ import java.util.GregorianCalendar;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.Validator;
 
 import org.jdom.Document;
 import org.jdom.Element;
@@ -24,8 +22,16 @@ import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 
 import sql.DB;
-import xml.xhtml.*;
-import xml.xsd.v16.Biblioteche;
+import xml.xhtml.A;
+import xml.xhtml.Body;
+import xml.xhtml.Br;
+import xml.xhtml.Div;
+import xml.xhtml.Html;
+import xml.xhtml.P;
+import xml.xhtml.Table;
+import xml.xhtml.Td;
+import xml.xhtml.Th;
+import xml.xhtml.Tr;
 
 public class PubblicaTabelle
 {
@@ -156,7 +162,6 @@ public class PubblicaTabelle
 		{
 			JAXBContext jc = null;
 			Marshaller m = null;
-			Unmarshaller u = null;
 			try
 			{
 				jc = JAXBContext.newInstance("xml.xhtml");
@@ -165,7 +170,6 @@ public class PubblicaTabelle
 				 * secondo il formato da cui sono state create le classi stesse
 				 */
 				m = jc.createMarshaller();
-				u = jc.createUnmarshaller();
 				m.setProperty("jaxb.formatted.output", true);
 			}
 			catch(JAXBException e)
@@ -300,6 +304,8 @@ public class PubblicaTabelle
 		PubblicaTabelle pt = new PubblicaTabelle("PubblicaTabelle.conf");
 		// pt.creaXML();
 		pt.creaHTML();
+		pt.creaCSV();
+		pt.creaXML();
 	}
 
 }
