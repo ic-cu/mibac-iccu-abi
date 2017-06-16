@@ -29,6 +29,9 @@
 	   <xsl:when test=". = 'Direzione generale per i beni archeologici'">
 		<xsl:element name="tipologia-amministrativa">Direzione generale archeologia, belle arti e paesaggio</xsl:element>
 		</xsl:when>
+		   <xsl:when test=". = 'Direzione generale per gli archivi'">
+		<xsl:element name="tipologia-amministrativa">Direzione Generale Archivi</xsl:element>
+		</xsl:when>
 		<xsl:otherwise>
 <xsl:copy-of select="." />
 		</xsl:otherwise>

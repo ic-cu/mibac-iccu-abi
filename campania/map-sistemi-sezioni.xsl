@@ -21,7 +21,7 @@
 		</xsl:when>	
        	<xsl:when test="contains(.,'Amina - Sistema bibliotecario cittadino di Pontecagnano Faiano')">
 		<xsl:element name="sistema">IGNORARE: Amina - Sistema bibliotecario cittadino di Pontecagnano Faiano</xsl:element>
-		</xsl:when>						
+		</xsl:when>	
 		<xsl:otherwise>
 		<xsl:copy-of select="." />
         </xsl:otherwise>
@@ -36,9 +36,11 @@
 		<xsl:when test="contains(.,'Sezione Raccolta storica di testi legislativi')">
 		<xsl:element name="sezione">legislazione italiana</xsl:element>
 		</xsl:when>
-		
 		<xsl:when test="contains(.,'dialettologia')">
 		<xsl:element name="sezione">dialetto</xsl:element>
+		</xsl:when>
+		<xsl:when test="contains(.,'sezione multiculturalità')">
+		<xsl:element name="sezione">multiculturale</xsl:element>
 		</xsl:when>
 		<xsl:when test="contains(.,'libro parlato')">
 		<xsl:element name="sezione">audiolibri</xsl:element>
@@ -60,6 +62,9 @@
 		<sezione>donna</sezione>
 		</xsl:when>
 		<xsl:when test="contains(.,'Internet per ragazzi')">
+    	<sezione>IGNORARE: <xsl:value-of select="."/></sezione>
+    	</xsl:when>
+    	<xsl:when test="contains(.,'sezione generale')">
     	<sezione>IGNORARE: <xsl:value-of select="."/></sezione>
     	</xsl:when>
     	<xsl:when test="contains(.,'Sezione multiculturale')">
