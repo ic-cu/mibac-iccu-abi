@@ -22,6 +22,9 @@
 		<xsl:when test="contains(., 'Sistema bibliotecario d') and contains(., 'Ateneo. Università degli Studi di Salerno')">
 		<xsl:element name="nome">Catalogo collettivo dell'Università degli studi di Salerno</xsl:element>
 		</xsl:when>	
+		<xsl:when test="contains(.,'Archivio collettivo nazionale delle pubblicazioni periodiche')">
+		<nome>Archivio collettivo nazionale delle pubblicazioni periodiche - ACNP</nome>
+		</xsl:when>
 		<xsl:otherwise>
 				<xsl:copy-of select="." />
 		</xsl:otherwise>
