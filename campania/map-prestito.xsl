@@ -32,7 +32,7 @@
 				<materiale-escluso>Libri scolastici</materiale-escluso>
 			</xsl:when>
 			<xsl:when test="contains(.,'Materiali didattici')">
-				<materiale-escluso>Ignorare: </materiale-escluso>
+				<materiale-escluso>Ignorare: Materiali didattici </materiale-escluso>
 			</xsl:when>			
 	        <xsl:when test="contains(.,'Libri fuori commercio')">
 		    <materiale-escluso>Opere fuori commercio</materiale-escluso>
