@@ -13,6 +13,7 @@
 
 	<xsl:import href="comune.xsl"/>
 	<xsl:import href="anagrafica.xsl"/>
+	<xsl:import href="servizi.xsl"/>
 
 	<xsl:output
 		method="xml"
@@ -31,6 +32,7 @@
 	<xsl:template match="CARD">
 		<biblioteca>
 			<xsl:call-template name="anagrafica"/>
+			<xsl:call-template name="servizi"/>
 		</biblioteca>
 	</xsl:template>
 
