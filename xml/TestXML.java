@@ -1,20 +1,25 @@
 package xml;
 
-import sql.DB;
+import java.io.IOException;
+
+import util.log.Log;
 import xml.xsd.v16.Biblioteche;
 
 /**  Description of the Class */
 
 public class TestXML
 {	
-	public static void main(String[] args)
+	public static void main(String[] args) throws IOException
 	{
-		ControlliXML t = new ControlliXML();
+		Log.init("xml/log.prop");
+//		System.err.println(args[0]);
+		ControlliXML t = new ControlliXML("xml/controlli.prop");
 		Biblioteche b = t.carica(args[0]);
-		//t.lista(b);
-		System.out.println(t.controllaCodiciISIL(b));
-		//System.out.println(t.cercaCodiceCEI(b, new DB(DB.urlEsercizio)));
-		System.out.println(t.cercaInProvvisorio(b, new DB(DB.urlTest, "abi",null)));
+//		t.lista(b);
+		t.isil(b);
+		t.fonteAICE(b);
+		t.statoCat(b);
+		t.valori(args[0]);
 	}
 }
 

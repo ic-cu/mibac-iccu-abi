@@ -1,0 +1,44 @@
+# configurazione della connessione al DB
+# sostituire parametri appropriati
+
+db.driver = com.mysql.jdbc.Driver
+db.url = jdbc:mysql:///your.data.base
+db.username = dbuser
+db.password = dbpass
+
+# file di mappatura XML-DB per il controllo dei valori d'autorità
+
+xpath.map = xml/controlli.xpath
+
+# raccolta di query necessarie ai controlli incrociati XML-DB
+
+# cerca per ISIL e presenza di fonte AICE
+
+query.aice = \
+	SELECT \
+		concat('IT-', isil_provincia, lpad(isil_numero, 4, 0 )) as isil, \
+		fonte_descrizione \
+	FROM \
+		biblioteca b \
+	WHERE concat('IT-', isil_provincia, lpad(isil_numero, 4, 0 )) = ? \
+	AND id_stato_biblioteca_workflow != 4 \
+	AND fonte_descrizione like '%AICE%'
+
+# controlla se una biblioteca ha uno stato di catalogazione
+
+query.statocat = \
+	SELECT \
+		concat('IT-', isil_provincia, lpad(isil_numero, 4, 0 )) as isil, \
+		sct.descrizione as stato \
+	FROM \
+		biblioteca b, \
+		stato_catalogazione sc, \
+		stato_catalogazione_tipo sct \
+	WHERE concat('IT-', isil_provincia, lpad(isil_numero, 4, 0 )) = ? \
+	AND id_stato_biblioteca_workflow != 4 \
+	AND sc.id_biblioteca = b.id_biblioteca \
+	AND sc.id_stato_catalogazione = sct.id_stato_catalogazione_tipo
+
+# cerca un valore stringa in una tabella... 
+
+query.valori = SELECT %s FROM %s WHERE %s = ?
