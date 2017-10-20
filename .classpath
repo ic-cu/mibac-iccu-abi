@@ -12,6 +12,6 @@
 	<classpathentry kind="lib" path="lib/xercesImpl.jar"/>
 	<classpathentry kind="lib" path="lib/dom4j-1.6.1.jar"/>
 	<classpathentry kind="lib" path="lib/serializer.jar"/>
-	<classpathentry kind="lib" path="/home/DOMICCU/agiuliano/lib/java/util.jar"/>
+	<classpathentry kind="lib" path="lib/util.jar"/>
 	<classpathentry kind="output" path=""/>
 </classpath>
