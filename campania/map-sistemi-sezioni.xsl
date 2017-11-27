@@ -64,11 +64,17 @@
 		<xsl:when test="contains(.,'Internet per ragazzi')">
     	<sezione>IGNORARE: <xsl:value-of select="."/></sezione>
     	</xsl:when>
+    	<xsl:when test="contains(.,'sezione adulti')">
+    	<sezione>IGNORARE: <xsl:value-of select="."/></sezione>
+    	</xsl:when>
     	<xsl:when test="contains(.,'sezione generale')">
     	<sezione>IGNORARE: <xsl:value-of select="."/></sezione>
     	</xsl:when>
     	<xsl:when test="contains(.,'Sezione multiculturale')">
     	<sezione>multiculturale</sezione>
+    	</xsl:when>
+    	<xsl:when test="contains(.,'Sezione ipovedenti')">
+    	<sezione>ipovedenti</sezione>
     	</xsl:when>
     	<xsl:when test="contains(.,'sezione multimediale')">
     	<sezione>multimediale</sezione>
