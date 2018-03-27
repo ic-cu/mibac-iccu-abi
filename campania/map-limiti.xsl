@@ -21,6 +21,10 @@
 		<xsl:when test="contains(.,'Registrazione dati anagrafici')">
 		<xsl:element name="modo">Registrazione</xsl:element>
 		</xsl:when>
+		
+		<xsl:when test="contains(.,'Prenotazione')">
+		<xsl:element name="modo">Appuntamento</xsl:element>
+		</xsl:when>
 
 		<xsl:when test="contains(.,'Libretto universitario')">
 		<modo>Numero di matricola</modo>
@@ -31,8 +35,8 @@
 		</xsl:when>
 		
 		<xsl:when test="contains(.,'Accesso libero')">
-	    <modo>IGNORARE: <xsl:value-of select="."/></modo>
-	  </xsl:when>
+	     <xsl:element name="modo">IGNORARE:<xsl:value-of select="."/></xsl:element>
+		</xsl:when>
 		
 		<xsl:when test="contains(.,'Libretto o badge universitario')">
 		<modo>Numero di matricola</modo>

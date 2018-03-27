@@ -36,6 +36,9 @@
 		<xsl:when test="contains(.,'Sezione Raccolta storica di testi legislativi')">
 		<xsl:element name="sezione">legislazione italiana</xsl:element>
 		</xsl:when>
+		<xsl:when test="contains(.,'Sezione Irpinia')">
+		<xsl:element name="sezione">Irpinia</xsl:element>
+		</xsl:when>
 		<xsl:when test="contains(.,'dialettologia')">
 		<xsl:element name="sezione">dialetto</xsl:element>
 		</xsl:when>
@@ -54,17 +57,75 @@
 		<xsl:when test="contains(.,'Sezione classici della filosofia')">
 		<xsl:element name="sezione">filosofia</xsl:element>
 		</xsl:when>
+		<xsl:when test="contains(.,'Sezione Africa e Paesi Arabi')">
+		<xsl:element name="sezione">AFRICA e PAESI ARABI</xsl:element>
+		</xsl:when>
 		<xsl:when test="contains(.,'Fotodiapoteca')">
 		<sezione>fotografia</sezione>
 		<sezione>diapositive</sezione>
 		</xsl:when>
+		<xsl:when test="contains(.,'Economia e politica')">
+		<sezione>economia</sezione>
+		<sezione>politica</sezione>
+		</xsl:when>
+		<xsl:when test="contains(.,'sezione napoletana')">
+		<sezione>napoletana</sezione>
+		</xsl:when>
+		<xsl:when test="contains(.,'sezione storica')">
+		<sezione>storica</sezione>
+		</xsl:when>
 		<xsl:when test="contains(.,'Soggettività femminile')">
 		<sezione>donna</sezione>
+		</xsl:when>
+		<xsl:when test="contains(.,'Sezione Estremo, Vicino e Medio Oriente')">
+		<sezione>Estremo, Vicino e Medio Oriente</sezione>
+		</xsl:when>
+		<xsl:when test="contains(.,'Sezione Giorgio La Pira')">
+		<sezione>GIORGIO LA PIRA</sezione>
+		</xsl:when>
+		<xsl:when test="contains(.,'Sezione Mondo Classico')">
+		<sezione>Mondo Classico</sezione>
+		</xsl:when>
+		<xsl:when test="contains(.,'SezionePsiche')">
+		<sezione>psiche</sezione>
+		</xsl:when>
+		<xsl:when test="contains(.,'Sezione Scienze umane e sociali')">
+		<sezione>Scienze umane e sociali</sezione>
+		</xsl:when>
+		<xsl:when test="contains(.,'Sezione Studi americani')">
+		<sezione>Studi americani</sezione>
+		</xsl:when>
+		<xsl:when test="contains(.,'Letteratura dell') and contains(., 'infanzia')">
+		<sezione>letteratura per l'infanzia</sezione>
 		</xsl:when>
 		<xsl:when test="contains(.,'Internet per ragazzi')">
     	<sezione>IGNORARE: <xsl:value-of select="."/></sezione>
     	</xsl:when>
     	<xsl:when test="contains(.,'sezione adulti')">
+    	<sezione>IGNORARE: <xsl:value-of select="."/></sezione>
+    	</xsl:when>
+    	<xsl:when test="contains(.,'Sezione matematico-applicativa')">
+    	<sezione>IGNORARE: <xsl:value-of select="."/></sezione>
+    	</xsl:when>
+    	<xsl:when test="contains(.,'Letteratura giovanile')">
+    	<sezione>IGNORARE: <xsl:value-of select="."/></sezione>
+    	</xsl:when>
+    	<xsl:when test="contains(.,'Sezione Informatica, Biblioteca Digitale, Statistica e Diffusione')">
+    	<sezione>IGNORARE: <xsl:value-of select="."/></sezione>
+    	</xsl:when>
+    	<xsl:when test="contains(.,'Sezione Mondo')">
+    	<sezione>IGNORARE: <xsl:value-of select="."/></sezione>
+    	</xsl:when>
+    	<xsl:when test="contains(.,'Sezione Progetto Comunicazione')">
+    	<sezione>IGNORARE: <xsl:value-of select="."/></sezione>
+    	</xsl:when>
+    	<xsl:when test="contains(.,'sezione moderna')">
+    	<sezione>IGNORARE: <xsl:value-of select="."/></sezione>
+    	</xsl:when>
+    	<xsl:when test="contains(.,'Sezione Tecnologico-progettuale')">
+    	<sezione>IGNORARE: <xsl:value-of select="."/></sezione>
+    	</xsl:when>
+    	<xsl:when test="contains(.,'Sezione Geronimo Stilton')">
     	<sezione>IGNORARE: <xsl:value-of select="."/></sezione>
     	</xsl:when>
     	<xsl:when test="contains(.,'sezione generale')">
@@ -87,7 +148,7 @@
     	</xsl:when>
 		<xsl:when test="contains(.,'sezione educatori')"> 
 	    <sezione>IGNORARE: <xsl:value-of select="."/></sezione>
-	  </xsl:when>
+	    </xsl:when>
 	    <xsl:when test="contains(.,'Sezione Capri')">
 		<sezione>Capri</sezione>
 		</xsl:when>

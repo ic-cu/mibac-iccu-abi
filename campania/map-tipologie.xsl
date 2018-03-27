@@ -32,6 +32,11 @@
 		   <xsl:when test=". = 'Direzione generale per gli archivi'">
 		<xsl:element name="tipologia-amministrativa">Direzione Generale Archivi</xsl:element>
 		</xsl:when>
+		
+		<xsl:when test=". = 'Ordini professionali'">
+		<xsl:element name="tipologia-amministrativa">Accademie, associazioni, fondazioni, istituti, società (privati)</xsl:element>
+		</xsl:when>
+		
 		<xsl:otherwise>
 <xsl:copy-of select="." />
 		</xsl:otherwise>
@@ -47,7 +52,7 @@
 		<xsl:element name="tipologia-funzionale">Istituto di insegnamento superiore</xsl:element>
 		</xsl:when>
 
-		<xsl:otherwise>
+				<xsl:otherwise>
 				<xsl:copy-of select="." />
 		</xsl:otherwise>
 		</xsl:choose>
