@@ -38,6 +38,10 @@
 	     <xsl:element name="modo">IGNORARE:<xsl:value-of select="."/></xsl:element>
 		</xsl:when>
 		
+		<xsl:when test="contains(.,'Permesso di soggiorno')">
+	     <xsl:element name="modo">IGNORARE:<xsl:value-of select="."/></xsl:element>
+		</xsl:when>
+				
 		<xsl:when test="contains(.,'Libretto o badge universitario')">
 		<modo>Numero di matricola</modo>
 		</xsl:when>
