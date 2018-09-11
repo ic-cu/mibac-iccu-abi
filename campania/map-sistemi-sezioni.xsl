@@ -137,6 +137,15 @@
     	<xsl:when test="contains(.,'sezione generale')">
     	<sezione>IGNORARE: <xsl:value-of select="."/></sezione>
     	</xsl:when>
+    	<xsl:when test="contains(.,'Sezione Liceo classico e musicale')">
+    	<sezione>IGNORARE: <xsl:value-of select="."/></sezione>
+    	</xsl:when>
+    	<xsl:when test="contains(.,'Sezione Liceo scientifico e linguistico')">
+    	<sezione>IGNORARE: <xsl:value-of select="."/></sezione>
+    	</xsl:when>
+    	<xsl:when test="contains(.,'filosofia, storia, sociologia')">
+    	<sezione>IGNORARE: <xsl:value-of select="."/></sezione>
+    	</xsl:when>
     	<xsl:when test="contains(.,'Sezione multiculturale')">
     	<sezione>multiculturale</sezione>
     	</xsl:when>
@@ -152,12 +161,20 @@
     	   	<xsl:when test="contains(.,'Sezione industria e commercio della Concia')">
     	<sezione>industria e commercio della Concia</sezione>
     	</xsl:when>
-		<xsl:when test="contains(.,'sezione educatori')"> 
-	    <sezione>IGNORARE: <xsl:value-of select="."/></sezione>
-	    </xsl:when>
+		<xsl:when test="contains(.,'sezione Premio Salvatore Valitutti')">
+    	<sezione>Premio Salvatore Valitutti</sezione>
+    	</xsl:when>
+    	<xsl:when test="contains(.,'sezione Psiche')">
+    	<sezione>Psiche</sezione>
+    	</xsl:when>
 	    <xsl:when test="contains(.,'Sezione Capri')">
 		<sezione>Capri</sezione>
 		</xsl:when>
+		<xsl:when test="contains(.,'Sezione ipovedenti')">
+    	<sezione>ipovedenti</sezione>
+    	</xsl:when>
+		
+		
 		<xsl:otherwise>
 	<xsl:copy-of select="." />
 		</xsl:otherwise>

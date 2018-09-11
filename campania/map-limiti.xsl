@@ -45,6 +45,10 @@
 		<xsl:when test="contains(.,'Libretto o badge universitario')">
 		<modo>Numero di matricola</modo>
 		</xsl:when>
+		
+		<xsl:when test="contains(.,'Bibliocard')">
+		<xsl:element name="modo">Tessera</xsl:element>
+		</xsl:when>
 	
 		<xsl:otherwise>
 				<xsl:copy-of select="." />

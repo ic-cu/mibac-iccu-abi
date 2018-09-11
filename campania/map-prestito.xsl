@@ -19,9 +19,15 @@
 			<xsl:when test="contains(.,'Utenti associati')">
 				<utenti-ammessi>Utenti di sistema o di enti convenzionati</utenti-ammessi>
 			</xsl:when>
+			<xsl:when test="contains(.,'Domiciliati stabilmente nella regione')">
+				<utenti-ammessi>Residenti nella regione</utenti-ammessi>
+			</xsl:when>
+			<xsl:when test="contains(.,'Utenti Consorzio Share')">
+				<utenti-ammessi>Utenti di sistema o di enti convenzionati</utenti-ammessi>
+			</xsl:when>
+			
 			<xsl:otherwise>
-				
-				<xsl:copy-of select="." />
+			<xsl:copy-of select="." />
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
@@ -31,16 +37,24 @@
 			<xsl:when test="contains(.,'Testi universitari')">
 				<materiale-escluso>Libri scolastici</materiale-escluso>
 			</xsl:when>
+			<xsl:when test="contains(.,'Dattiloscritti')">
+				<materiale-escluso>Ignorare: Dattiloscritti</materiale-escluso>
+			</xsl:when>
 			<xsl:when test="contains(.,'Materiali didattici')">
 				<materiale-escluso>Ignorare: Materiali didattici </materiale-escluso>
 			</xsl:when>		
 			<xsl:when test="contains(.,'Materiali speciali')">
 				<materiale-escluso>Ignorare: Materiali speciali </materiale-escluso>
 			</xsl:when>	
+				<xsl:when test="contains(.,'Pubblicazioni del Centro Giorgio La Pira')">
+				<materiale-escluso>Ignorare: Pubblicazioni del Centro Giorgio La Pira</materiale-escluso>
+			</xsl:when>	
 	        <xsl:when test="contains(.,'Libri fuori commercio')">
 		    <materiale-escluso>Opere fuori commercio</materiale-escluso>
 	    	</xsl:when>
-			
+			<xsl:when test="contains(.,'Opere Cartografiche')">
+		    <materiale-escluso>Documenti cartografici</materiale-escluso>
+	    	</xsl:when>
 			<xsl:when test="contains(.,'Opere dei fondi speciali')"/>
 			
 			<xsl:otherwise>
