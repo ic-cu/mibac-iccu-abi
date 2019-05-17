@@ -28,15 +28,11 @@
 		<xsl:when test="contains(.,'Catalogo italiano dei periodici ACNP')">
 		<nome>Archivio collettivo nazionale delle pubblicazioni periodiche - ACNP</nome>
 		</xsl:when>
-		<xsl:when test="contains(.,'Share catalogue')">
-    	<nome>IGNORARE: <xsl:value-of select="."/></nome>
-    	</xsl:when>
 		<xsl:otherwise>
 				<xsl:copy-of select="." />
 		</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
-
 <!-- patrimonio -->
 
 	<xsl:template match="//patrimonio/materiali/materiale/@nome">

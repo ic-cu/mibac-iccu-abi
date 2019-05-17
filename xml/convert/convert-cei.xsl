@@ -5,8 +5,7 @@
 	<xsl:output method="xml" indent="yes" encoding="UTF-8" />
 	<!--
 		Template per l'elemento root che si limita a richiamare quello per ogni
-		singola
-		biblioteca. Inoltre valorizza l'elemento data-export se assente in input
+		singola biblioteca. Inoltre valorizza l'elemento data-export se assente in input
 		un dataExport
 	-->
 	<xsl:template match="/biblioteche">
