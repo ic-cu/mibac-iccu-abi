@@ -6,7 +6,7 @@
 	<xsl:output method="xml" indent="yes" />
 
 	<!-- patrimonio, solo se esiste (ma purtroppo a volte è vuoto) -->
-	
+
 	<xsl:template name="patrimonio">
 		<xsl:element name="patrimonio">
 			<xsl:apply-templates select='CONSISTENZA' />
@@ -33,8 +33,8 @@
 			</xsl:for-each>
 		</xsl:element>
 	</xsl:template>
-	
-		
+
+
 	<!-- spesso descrizioni vuote, testare anche qui con string-length? -->
 	<xsl:template match="//scheda_BIBLIO/FONDISPEC">
 		<xsl:element name="fondo-speciale">
@@ -46,5 +46,5 @@
 			</xsl:element>
 		</xsl:element>
 	</xsl:template>
-	
+
 </xsl:stylesheet>

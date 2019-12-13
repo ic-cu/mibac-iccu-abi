@@ -11,8 +11,8 @@
 	</xsl:template>
 
 	<xsl:template match="//biblioteca">
-			<xsl:value-of select="anagrafica/codici/isil" />
-			<xsl:text>
+		<xsl:value-of select="anagrafica/codici/isil" />
+		<xsl:text>
 </xsl:text>
 	</xsl:template>
 </xsl:stylesheet>

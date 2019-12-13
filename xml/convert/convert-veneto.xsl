@@ -2,18 +2,14 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	version="1.0">
 
-	<!--
-		Foglio di stile per correggere piccoli difetti di un file 1.6 inviato
-		dalla Regione Veneto. È sostanzialmente un "copy with recursion" con
-		l'aggiunta di template per i vari elementi da correggere
-	-->
+	<!-- Foglio di stile per correggere piccoli difetti di un file 1.6 inviato 
+		dalla Regione Veneto. È sostanzialmente un "copy with recursion" con l'aggiunta 
+		di template per i vari elementi da correggere -->
 
 	<xsl:output method="xml" indent="yes" encoding="UTF-8" />
 
-	<!--
-		Questo è l'identity transform che garantisce che tutto ciò per cui non
-		è definito un template viene semplicemente copiato in output
-	-->
+	<!-- Questo è l'identity transform che garantisce che tutto ciò per cui 
+		non è definito un template viene semplicemente copiato in output -->
 	<xsl:template match="@*|node()">
 		<xsl:copy>
 			<xsl:apply-templates select="@*|node()" />
@@ -30,23 +26,24 @@
 			<xsl:element name="fonte">
 				<xsl:element name="descrizione">
 					Regione del Veneto - Direzione
-                    Beni Attività Culturali e Sport
-                   (dati aggiornati per l'anagrafica
-                   al 15.9.2016 e per patrimoniale e gestionale
-                   al 31.12.2015)
+					Beni Attività Culturali e Sport
+					(dati
+					aggiornati per l'anagrafica
+					al 15.9.2016 e per patrimoniale e
+					gestionale
+					al 31.12.2015)
 				</xsl:element>
-				<xsl:element name="url">http://bibliotecheweb.regione.veneto.it/BibliotecheWeb/</xsl:element>
+				<xsl:element name="url">
+					http://bibliotecheweb.regione.veneto.it/BibliotecheWeb/
+				</xsl:element>
 			</xsl:element>
 			<xsl:copy-of select="nomi" />
 			<xsl:copy-of select="codici" />
 			<xsl:copy-of select="indirizzo" />
 
-			<!--
-				I contatti si trattano a parte. C'è una notevole differenza fra
-				"//contatti" e "contatti": il primo caso va a pescare tutti i
-				"contatti" ovunque, il secondo solo nell'elemento corrente. Il resto
-				degli elementi anagrafici si copia.
-			-->
+			<!-- I contatti si trattano a parte. C'è una notevole differenza fra "//contatti" 
+				e "contatti": il primo caso va a pescare tutti i "contatti" ovunque, il secondo 
+				solo nell'elemento corrente. Il resto degli elementi anagrafici si copia. -->
 
 			<xsl:apply-templates select="contatti" />
 			<xsl:copy-of select="edificio" />
@@ -54,12 +51,9 @@
 		</xsl:element>
 	</xsl:template>
 
-	<!--
-		Soppressione dei contatti tipo URL con valore=NO. Prima serve un
-		template che copi i "telefonici" e invochi un altro template per gli
-		"altri". Anche qui bisogna fare attenzione a invocare i template senza
-		i "//" iniziali.
-	-->
+	<!-- Soppressione dei contatti tipo URL con valore=NO. Prima serve un template 
+		che copi i "telefonici" e invochi un altro template per gli "altri". Anche 
+		qui bisogna fare attenzione a invocare i template senza i "//" iniziali. -->
 
 	<xsl:template match="//contatti">
 		<xsl:element name="contatti">
@@ -80,19 +74,20 @@
 		</xsl:if>
 	</xsl:template>
 
-	<!--
-		c'è un sistema errato solo a causa di un doppio blank; importante
-		l'otherwise alla fine, altrimenti tutti i valori corretti sono
-		ignorati
-	-->
+	<!-- c'è un sistema errato solo a causa di un doppio blank; importante l'otherwise 
+		alla fine, altrimenti tutti i valori corretti sono ignorati -->
 
 	<xsl:template match="//sistemi/sistema">
 		<xsl:choose>
 			<xsl:when test="contains(.,'POLO  BIBLIOTECARIO DI CASTELFRANCO VENETO')">
-				<xsl:element name="sistema">POLO BIBLIOTECARIO DI CASTELFRANCO VENETO</xsl:element>
+				<xsl:element name="sistema">
+					POLO BIBLIOTECARIO DI CASTELFRANCO VENETO
+				</xsl:element>
 			</xsl:when>
 			<xsl:when test="contains(.,'ZZZPD3')">
-				<xsl:element name="sistema">CENTRO SERVIZI BIBLIOTECHE PROVINCIALE DI PADOVA, PD3</xsl:element>
+				<xsl:element name="sistema">
+					CENTRO SERVIZI BIBLIOTECHE PROVINCIALE DI PADOVA, PD3
+				</xsl:element>
 			</xsl:when>
 			<xsl:otherwise>
 				<xsl:copy-of select="." />
@@ -100,16 +95,14 @@
 		</xsl:choose>
 	</xsl:template>
 
-	<!--
-		il Veneto ha mandato in "ultimo-anno" quanto andava invece scritto in
-		"iscritti-prestito", per cui si copia il primo nel secondo; il primo
-		viene poi azzerato, perché non è stato mandato alcun dato che abbia
-		quel significato (ingressi registrati in un anno)
-	-->
+	<!-- il Veneto ha mandato in "ultimo-anno" quanto andava invece scritto 
+		in "iscritti-prestito", per cui si copia il primo nel secondo; il primo viene 
+		poi azzerato, perché non è stato mandato alcun dato che abbia quel significato 
+		(ingressi registrati in un anno) -->
 
 	<xsl:template match="//utenti">
 		<xsl:element name="utenti">
-			<!-- 	<xsl:element name="ultimo-anno">0</xsl:element> -->
+			<!-- <xsl:element name="ultimo-anno">0</xsl:element> -->
 			<ultimo-anno>0</ultimo-anno>
 			<xsl:element name="iscritti-prestito">
 				<xsl:value-of select="ultimo-anno" />
@@ -118,13 +111,11 @@
 		</xsl:element>
 	</xsl:template>
 
-	<!--  alcuni template inutilizzati, si lasciano come modello -->
+	<!-- alcuni template inutilizzati, si lasciano come modello -->
 
-	<!--
-		Certi materiali vanno mappati opportunamente. Notare che è necessario
-		un xsl:choose, altrimenti solo i casi positivi passano, i negativi no,
-		anche se sono proprio gli unici sicuramente corretti
-	-->
+	<!-- Certi materiali vanno mappati opportunamente. Notare che è necessario 
+		un xsl:choose, altrimenti solo i casi positivi passano, i negativi no, anche 
+		se sono proprio gli unici sicuramente corretti -->
 	<xsl:template match="//ZZmateriali/materiale">
 		<xsl:choose>
 			<xsl:when test="contains(@nome,'CARTOGRAFIA A STAMPA')">
@@ -205,10 +196,8 @@
 				</xsl:element>
 			</xsl:when>
 
-			<!--
-				in questo caso si presuppone che la biblioteca disponga sia di
-				incisioni che di stampe, e quindi si creano due elementi
-			-->
+			<!-- in questo caso si presuppone che la biblioteca disponga sia di incisioni 
+				che di stampe, e quindi si creano due elementi -->
 
 			<xsl:when test="contains(@nome,'INCISIONI E STAMPE')">
 				<xsl:element name="materiale">
@@ -236,10 +225,8 @@
 				</xsl:element>
 			</xsl:when>
 
-			<!--
-				se nessuno dei test è positivo, il materiale va copiato senza
-				alterazioni, altrimenti non andrebbe in output
-			-->
+			<!-- se nessuno dei test è positivo, il materiale va copiato senza alterazioni, 
+				altrimenti non andrebbe in output -->
 
 			<xsl:otherwise>
 				<xsl:copy-of select="." />
@@ -247,10 +234,8 @@
 		</xsl:choose>
 	</xsl:template>
 
-	<!--
-		per dire che una biblioteca è aperta o riservata va usato l'elemento
-		apposito, non una modalità di accesso
-	-->
+	<!-- per dire che una biblioteca è aperta o riservata va usato l'elemento 
+		apposito, non una modalità di accesso -->
 
 	<xsl:template match="//ZZaccesso">
 		<xsl:element name="accesso">

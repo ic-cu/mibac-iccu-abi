@@ -2,14 +2,13 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	version="1.0">
 
-<!--
-	Foglio di stile per correggere o mappare alcune voci di autorità relative a
-	prestito locale e materiali esclusi
--->
+	<!-- Foglio di stile per correggere o mappare alcune voci di autorità relative 
+		a prestito locale e materiali esclusi -->
 
 	<xsl:output method="xml" indent="yes" encoding="UTF-8" />
 
-<!-- un paio di template relativi al prestito locale (utenti ammessi e materiale escluso) -->
+	<!-- un paio di template relativi al prestito locale (utenti ammessi e materiale 
+		escluso) -->
 
 	<xsl:template match="//prestito/locale/utenti-ammessi">
 		<xsl:choose>
@@ -25,9 +24,9 @@
 			<xsl:when test="contains(.,'Utenti Consorzio Share')">
 				<utenti-ammessi>Utenti di sistema o di enti convenzionati</utenti-ammessi>
 			</xsl:when>
-			
+
 			<xsl:otherwise>
-			<xsl:copy-of select="." />
+				<xsl:copy-of select="." />
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
@@ -42,21 +41,22 @@
 			</xsl:when>
 			<xsl:when test="contains(.,'Materiali didattici')">
 				<materiale-escluso>Ignorare: Materiali didattici </materiale-escluso>
-			</xsl:when>		
+			</xsl:when>
 			<xsl:when test="contains(.,'Materiali speciali')">
 				<materiale-escluso>Ignorare: Materiali speciali </materiale-escluso>
-			</xsl:when>	
-				<xsl:when test="contains(.,'Pubblicazioni del Centro Giorgio La Pira')">
-				<materiale-escluso>Ignorare: Pubblicazioni del Centro Giorgio La Pira</materiale-escluso>
-			</xsl:when>	
-	        <xsl:when test="contains(.,'Libri fuori commercio')">
-		    <materiale-escluso>Opere fuori commercio</materiale-escluso>
-	    	</xsl:when>
+			</xsl:when>
+			<xsl:when test="contains(.,'Pubblicazioni del Centro Giorgio La Pira')">
+				<materiale-escluso>Ignorare: Pubblicazioni del Centro Giorgio La
+					Pira</materiale-escluso>
+			</xsl:when>
+			<xsl:when test="contains(.,'Libri fuori commercio')">
+				<materiale-escluso>Opere fuori commercio</materiale-escluso>
+			</xsl:when>
 			<xsl:when test="contains(.,'Opere Cartografiche')">
-		    <materiale-escluso>Documenti cartografici</materiale-escluso>
-	    	</xsl:when>
-			<xsl:when test="contains(.,'Opere dei fondi speciali')"/>
-			
+				<materiale-escluso>Documenti cartografici</materiale-escluso>
+			</xsl:when>
+			<xsl:when test="contains(.,'Opere dei fondi speciali')" />
+
 			<xsl:otherwise>
 				<xsl:copy-of select="." />
 			</xsl:otherwise>

@@ -1,36 +1,35 @@
 <?xml version="1.0" ?>
-<xsl:stylesheet version="1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:stylesheet version="1.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
 	<xsl:import href="recapiti.xsl" />
 	<xsl:import href="patrimonio.xsl" />
 	<xsl:import href="servizi.xsl" />
 	<xsl:output method="xml" indent="yes" />
-	<!--
-		c'è una perfetta corrispondenza fra "listof_scheda_BIBLIO" sorgente
-		e biblioteche nell'output, quindi si può partire da questo template
-		che crea "biblioteche" e poi applicare il template per le singole
-		"scheda_BIBLIO" del sorgente
-	-->
+	<!-- c'è una perfetta corrispondenza fra "listof_scheda_BIBLIO" sorgente 
+		e biblioteche nell'output, quindi si può partire da questo template che crea 
+		"biblioteche" e poi applicare il template per le singole "scheda_BIBLIO" 
+		del sorgente -->
 	<xsl:template match="/listof_scheda_BIBLIO">
 		<xsl:element name="biblioteche">
 			<xsl:attribute name="xsi:noNamespaceSchemaLocation">http://anagrafe.iccu.sbn.it/opencms/opencms/informazioni/formato-di-scambio/biblioteca-1.6.xsd</xsl:attribute>
 			<!-- dataExport va poi cambiato a mano -->
 			<data-export>2013-11-04T00:00:00</data-export>
-<!-- <xsl:apply-templates select="scheda_BIBLIO[not(normalize-space(CONSISTENZA/TOTCONS)) = '']" /> -->			
-			<xsl:apply-templates select="scheda_BIBLIO[not(normalize-space(CODISIL)) = '']" />
+			<!-- <xsl:apply-templates select="scheda_BIBLIO[not(normalize-space(CONSISTENZA/TOTCONS)) 
+				= '']" /> -->
+			<xsl:apply-templates
+				select="scheda_BIBLIO[not(normalize-space(CODISIL)) = '']" />
 		</xsl:element>
 	</xsl:template>
 
-	<!--
-		questo template lavora su tutti gli elementi "scheda_BIBLIO"; non
-		serve indicarne in modo esatto il path, perché non risulta ci siano
-		altri elementi con questo nome con percorsi diversi; l'elemento input
-		corrisponde esattamente a "biblioteca" in output;
-		il template per adesso è in grado di creare "anagrafica" con nome,
-		indirizzo e contatti, poi crea anche patrimonio e servizi
-	-->
+	<!-- questo template lavora su tutti gli elementi "scheda_BIBLIO"; non serve 
+		indicarne in modo esatto il path, perché non risulta ci siano altri elementi 
+		con questo nome con percorsi diversi; l'elemento input corrisponde esattamente 
+		a "biblioteca" in output; il template per adesso è in grado di creare "anagrafica" 
+		con nome, indirizzo e contatti, poi crea anche patrimonio e servizi -->
 
-<!--  <xsl:template match="scheda_BIBLIO[not(normalize-space(CONSISTENZA/TOTCONS)) = '']"> -->
+	<!-- <xsl:template match="scheda_BIBLIO[not(normalize-space(CONSISTENZA/TOTCONS)) 
+		= '']"> -->
 	<xsl:template match="scheda_BIBLIO[not(normalize-space(CODISIL)) = '']">
 		<xsl:element name="biblioteca">
 			<xsl:element name="anagrafica">
@@ -62,13 +61,8 @@
 			<xsl:call-template name="servizi" />
 			<xsl:call-template name="amministrativa" />
 		</xsl:element>
-		<!--</xsl:template>
-
-			<xsl:template match="//scheda_BIBLIO/RECAPITI/COMUNE">
-			<xsl:element name="comune">
-			<xsl:value-of select="."/>
-			</xsl:element>
-		-->
+		<!--</xsl:template> <xsl:template match="//scheda_BIBLIO/RECAPITI/COMUNE"> 
+			<xsl:element name="comune"> <xsl:value-of select="."/> </xsl:element> -->
 	</xsl:template>
 
 	<xsl:template match="//scheda_BIBLIO/RELAZIONE">
@@ -85,23 +79,29 @@
 	<xsl:template match="scheda_BIBLIO/ANNO">
 		<xsl:if test="normalize-space(.)">
 			<istituzione>
-				<data-istituzione><xsl:value-of select="." /></data-istituzione>
+				<data-istituzione>
+					<xsl:value-of select="." />
+				</data-istituzione>
 			</istituzione>
 		</xsl:if>
 	</xsl:template>
 
 	<xsl:template name="amministrativa">
-		<xsl:variable name="cf" select="normalize-space(CF)"/>
-		<xsl:variable name="piva" select="normalize-space(PIVA)"/>
+		<xsl:variable name="cf" select="normalize-space(CF)" />
+		<xsl:variable name="piva" select="normalize-space(PIVA)" />
 		<xsl:if test="$cf or $piva">
-		<amministrativa>
-			<xsl:if test="$cf">
-				<codice-fiscale><xsl:value-of select="$cf" /></codice-fiscale>
-			</xsl:if>
-			<xsl:if test="$piva">
-				<partita-IVA><xsl:value-of select="$piva" /></partita-IVA>
-			</xsl:if>
-		</amministrativa>
+			<amministrativa>
+				<xsl:if test="$cf">
+					<codice-fiscale>
+						<xsl:value-of select="$cf" />
+					</codice-fiscale>
+				</xsl:if>
+				<xsl:if test="$piva">
+					<partita-IVA>
+						<xsl:value-of select="$piva" />
+					</partita-IVA>
+				</xsl:if>
+			</amministrativa>
 		</xsl:if>
 	</xsl:template>
 </xsl:stylesheet>

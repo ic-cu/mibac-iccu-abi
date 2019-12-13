@@ -1,17 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry excluding="lib/|tmp/|temp/" kind="src" path=""/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="lib/jaxen-1.1.1.jar"/>
-	<classpathentry kind="lib" path="lib/jdom.jar"/>
-	<classpathentry kind="lib" path="lib/log4j-1.2.17.jar"/>
-	<classpathentry kind="lib" path="lib/mysql-connector-java-5.0.7-bin.jar"/>
-	<classpathentry kind="lib" path="lib/odfdom-0.8.7.jar"/>
-	<classpathentry kind="lib" path="lib/simple-odf-0.6.6.jar"/>
-	<classpathentry kind="lib" path="lib/SimpleODS-0.5.3.jar"/>
-	<classpathentry kind="lib" path="lib/xercesImpl.jar"/>
-	<classpathentry kind="lib" path="lib/dom4j-1.6.1.jar"/>
-	<classpathentry kind="lib" path="lib/serializer.jar"/>
-	<classpathentry kind="lib" path="lib/util.jar"/>
-	<classpathentry kind="output" path=""/>
+	<classpathentry excluding="lib/|tmp/|temp/" kind="src"
+		path="" />
+	<classpathentry kind="con"
+		path="org.eclipse.jdt.launching.JRE_CONTAINER" />
+	<classpathentry kind="lib" path="lib/jaxen-1.1.1.jar" />
+	<classpathentry kind="lib" path="lib/jdom.jar" />
+	<classpathentry kind="lib" path="lib/log4j-1.2.17.jar" />
+	<classpathentry kind="lib"
+		path="lib/mysql-connector-java-5.0.7-bin.jar" />
+	<classpathentry kind="lib" path="lib/odfdom-0.8.7.jar" />
+	<classpathentry kind="lib" path="lib/simple-odf-0.6.6.jar" />
+	<classpathentry kind="lib" path="lib/SimpleODS-0.5.3.jar" />
+	<classpathentry kind="lib" path="lib/xercesImpl.jar" />
+	<classpathentry kind="lib" path="lib/dom4j-1.6.1.jar" />
+	<classpathentry kind="lib" path="lib/serializer.jar" />
+	<classpathentry kind="lib" path="lib/util.jar" />
+	<classpathentry kind="output" path="" />
 </classpath>

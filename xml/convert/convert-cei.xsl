@@ -1,13 +1,11 @@
 <?xml version="1.0"?>
-<xsl:stylesheet xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-	version="1.0">
+<xsl:stylesheet xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
 	<!-- Foglio di stile per la conversione di file 1.5 a file 1.6 -->
 	<xsl:output method="xml" indent="yes" encoding="UTF-8" />
-	<!--
-		Template per l'elemento root che si limita a richiamare quello per ogni
-		singola biblioteca. Inoltre valorizza l'elemento data-export se assente in input
-		un dataExport
-	-->
+	<!-- Template per l'elemento root che si limita a richiamare quello per 
+		ogni singola biblioteca. Inoltre valorizza l'elemento data-export se assente 
+		in input un dataExport -->
 	<xsl:template match="/biblioteche">
 		<xsl:element name="biblioteche">
 			<xsl:attribute name="xsi:noNamespaceSchemaLocation">http://anagrafe.iccu.sbn.it/opencms/opencms/informazioni/formato-di-scambio/biblioteca-1.6.xsd</xsl:attribute>
@@ -22,11 +20,9 @@
 			<xsl:apply-templates select="//biblioteca" />
 		</xsl:element>
 	</xsl:template>
-	<!--
-		Richiama i template per i raggruppamenti principali, mentre per le
-		specializzazioni introduce un apposito contenitore e copia in esso ogni
-		specializzazione trovata
-	-->
+	<!-- Richiama i template per i raggruppamenti principali, mentre per le 
+		specializzazioni introduce un apposito contenitore e copia in esso ogni specializzazione 
+		trovata -->
 	<xsl:template match="//biblioteca">
 		<xsl:element name="biblioteca">
 			<xsl:apply-templates select="anagrafica" />
@@ -43,11 +39,9 @@
 			<xsl:apply-templates select="amministrativa" />
 		</xsl:element>
 	</xsl:template>
-	<!--
-		Anagrafica: oltre a invocare diversi template, corregge i nomi di alcune
-		date, eventualmente valorizzando la data-aggiornamento se assente, e
-		copiando gli indirizzi che non richiedono trattamenti
-	-->
+	<!-- Anagrafica: oltre a invocare diversi template, corregge i nomi di alcune 
+		date, eventualmente valorizzando la data-aggiornamento se assente, e copiando 
+		gli indirizzi che non richiedono trattamenti -->
 	<xsl:template match="//anagrafica">
 		<xsl:element name="anagrafica">
 			<xsl:if test="dataCensimento">
@@ -124,11 +118,9 @@
 					<xsl:value-of select="appositamenteCostruito" />
 				</xsl:element>
 			</xsl:if>
-			<!--
-				Sempre in edificio, viene gestita la data di costruzione, copiando anche
-				l'attributo "tipo" per distinguere anni e secoli. Dev'esserci un modo
-				più semplice di farlo
-			-->
+			<!-- Sempre in edificio, viene gestita la data di costruzione, copiando 
+				anche l'attributo "tipo" per distinguere anni e secoli. Dev'esserci un modo 
+				più semplice di farlo -->
 			<xsl:if test="dataCostruzione">
 				<xsl:element name="data-costruzione">
 					<xsl:if test="dataCostruzione/@tipo">
@@ -141,11 +133,8 @@
 			</xsl:if>
 		</xsl:element>
 	</xsl:template>
-	<!--
-		Converte nomi in Istituzone, cominciando proprio con questo elemento.
-		Gestisce anche gli attributi "tipo" delle date, per distinguere anni e
-		secoli
-	-->
+	<!-- Converte nomi in Istituzone, cominciando proprio con questo elemento. 
+		Gestisce anche gli attributi "tipo" delle date, per distinguere anni e secoli -->
 	<xsl:template match="//Istituzione">
 		<xsl:element name="istituzione">
 			<xsl:if test="dataIstituzione">
@@ -170,10 +159,8 @@
 			</xsl:if>
 		</xsl:element>
 	</xsl:template>
-	<!--
-		Corregge il nome del codice ISIL e anche il suo valorei, ma solo se
-		manca l'IT- e non è lungo 6
-	-->
+	<!-- Corregge il nome del codice ISIL e anche il suo valorei, ma solo se 
+		manca l'IT- e non è lungo 6 -->
 	<xsl:template match="//codici">
 		<xsl:element name="codici">
 			<xsl:if test="not(string-length(iccu) = 9)">
@@ -196,22 +183,16 @@
 			<xsl:copy-of select="cmbs" />
 		</xsl:element>
 	</xsl:template>
-	<!--
-		Cataloghi, basta un solo template, ma è complicato il caso dei materiali
-		nei cataloghi speciali e collettivi, in cui le forme devono ora essere
-		un sottoelemento di ciascun materiale, che prima non era ripetibile
-	-->
+	<!-- Cataloghi, basta un solo template, ma è complicato il caso dei materiali 
+		nei cataloghi speciali e collettivi, in cui le forme devono ora essere un 
+		sottoelemento di ciascun materiale, che prima non era ripetibile -->
 	<xsl:template match="//cataloghi">
 		<xsl:element name="cataloghi">
 			<xsl:if test="catalogo-generale">
 				<xsl:element name="cataloghi-generali">
 					<xsl:apply-templates select="catalogo-generale" />
-					<!--
-						<xsl:for-each select="catalogo-generale">
-						<xsl:copy-of select="."/>
-						</xsl:for-each>
-
-					-->
+					<!-- <xsl:for-each select="catalogo-generale"> <xsl:copy-of select="."/> 
+						</xsl:for-each> -->
 				</xsl:element>
 			</xsl:if>
 			<xsl:if test="catalogo-speciale">
@@ -219,21 +200,15 @@
 					<xsl:for-each select="catalogo-speciale">
 						<xsl:element name="catalogo-speciale">
 							<xsl:copy-of select="nome" />
-							<!--
-								Se c'è il materiale, sebbene sia uno solo, si deve creare un contenitore
-								di materiali, creare in esso un materiale e copiare in quest'ultimo
-								sia
-								le forme che gli la tipologia
-							-->
+							<!-- Se c'è il materiale, sebbene sia uno solo, si deve creare un 
+								contenitore di materiali, creare in esso un materiale e copiare in quest'ultimo 
+								sia le forme che gli la tipologia -->
 							<xsl:if test="materiale">
 								<xsl:element name="materiali">
 									<xsl:for-each select="materiale">
-										<!--
-											Si crea il nuovo tipo di materiale. Il nome è copiato dal contenuto
-											del
-											vecchio tipo di materiale, e in più si eliminano eventuali asterischi
-											finali, che nella nuova gestione non hanno più senso
-										-->
+										<!-- Si crea il nuovo tipo di materiale. Il nome è copiato dal 
+											contenuto del vecchio tipo di materiale, e in più si eliminano eventuali 
+											asterischi finali, che nella nuova gestione non hanno più senso -->
 										<xsl:element name="materiale">
 											<xsl:attribute name="nome">
 											<xsl:if test="not(contains(., '*'))">
@@ -243,9 +218,8 @@
 												<xsl:copy-of select="substring-before(.,'*')" />
 											</xsl:if>
 										</xsl:attribute>
-											<!--
-												Dal livello superiore si portano le forme dentro il singolo materiale
-											-->
+											<!-- Dal livello superiore si portano le forme dentro il singolo 
+												materiale -->
 											<xsl:copy-of select="../forme" />
 										</xsl:element>
 									</xsl:for-each>
@@ -255,9 +229,11 @@
 					</xsl:for-each>
 				</xsl:element>
 			</xsl:if>
-			<!-- Collettivi: si procede quasi come per gli speciali
-			C'è anche qualche voce da mappare -->
-	<!-- non sappiamo se servirà <xsl:when test="nome = 'Catalogo collettivo regionale delle edizioni del XVI secolo'">Censimento regionale delle Edizioni del XVI secolo dell'Emilia-Romagna</xsl:when> -->
+			<!-- Collettivi: si procede quasi come per gli speciali C'è anche qualche 
+				voce da mappare -->
+			<!-- non sappiamo se servirà <xsl:when test="nome = 'Catalogo collettivo 
+				regionale delle edizioni del XVI secolo'">Censimento regionale delle Edizioni 
+				del XVI secolo dell'Emilia-Romagna</xsl:when> -->
 			<xsl:if test="catalogo-collettivo">
 				<xsl:element name="cataloghi-collettivi">
 					<xsl:for-each select="catalogo-collettivo">
@@ -265,21 +241,63 @@
 							<xsl:if test="nome">
 								<xsl:element name="nome">
 									<xsl:choose>
-										<xsl:when test="nome = 'CEIbib'">Polo Biblioteche Ecclesiastiche</xsl:when>
-										<xsl:when test="nome = 'Catalogo collettivo dei periodici di Reggio Calabria'">Catalogo collettivo dei periodici delle biblioteche di Reggio Calabria</xsl:when>
-										<xsl:when test="nome = 'Censimento Regionale Edizioni XVI secolo'">Catalogo collettivo regionale delle edizioni del XVI secolo</xsl:when>
-										<xsl:when test="nome = concat ('Censimento regionale delle Edizioni XVI secolo dell',&quot;'&quot;, 'Emilia-Romagna')">Catalogo collettivo regionale delle edizioni del XVI secolo</xsl:when>
-										<xsl:when test="nome = 'Edit16'">Censimento nazionale delle edizioni italiane del XVI secolo</xsl:when>
-										<xsl:when test="nome = 'Poo Biblioteche Ecclesistiche'">Polo Biblioteche Ecclesiastiche</xsl:when>
-										<xsl:when test="nome = 'Sistema bibliotecario parmense, http://opacsol.unipr.it/SebinaOpac/Opac'">Catalogo Sistema bibliotecario parmense, http://opac.unipr.it</xsl:when>
-										<xsl:when test="nome = concat('Catalogo edizioni antiche di Terra d', &quot;''&quot;, 'Otranto')">Catalogo edizioni antiche di Terra d'Otranto</xsl:when>
-										<xsl:when test="nome = 'Catalogo collettivo del Sistema Bibliotecario Pratese'">Catalogo collettivo provinciale pratese</xsl:when>
-										<xsl:when test="nome = 'Catalogo italiano dei peridici ACNP'">Archivio collettivo nazionale delle pubblicazioni periodiche - ACNP</xsl:when>
-										<xsl:when test="nome = 'Catalogo nazionale dei periodici ACNP'">Archivio collettivo nazionale delle pubblicazioni periodiche - ACNP</xsl:when>
-										<xsl:when test="nome = 'Archivio collettivo nazionale delle pubblicazioni periodiche'">Archivio collettivo nazionale delle pubblicazioni periodiche - ACNP</xsl:when>
-										<xsl:when test="nome = 'Censimento nazionale delle edizioni italiane del XVI secolo (EDIT16)'">Censimento nazionale delle Edizioni italiane del XVI secolo</xsl:when>
-										<xsl:when test="nome = 'Incunabula Short Title Catalogue'">ISTC - Incunabola Short Title Catalogue</xsl:when>
-										<xsl:when test="nome = concat('Sistema documentario integrato dell', &quot;'&quot;, 'area firoentina')">Sistema documentario integrato dell'area fiorentina</xsl:when>
+										<xsl:when test="nome = 'CEIbib'">
+											Polo Biblioteche Ecclesiastiche
+										</xsl:when>
+										<xsl:when
+											test="nome = 'Catalogo collettivo dei periodici di Reggio Calabria'">
+											Catalogo collettivo dei periodici delle biblioteche di Reggio
+											Calabria
+										</xsl:when>
+										<xsl:when test="nome = 'Censimento Regionale Edizioni XVI secolo'">
+											Catalogo collettivo regionale delle edizioni del XVI secolo
+										</xsl:when>
+										<xsl:when
+											test="nome = concat ('Censimento regionale delle Edizioni XVI secolo dell',&quot;'&quot;, 'Emilia-Romagna')">
+											Catalogo collettivo regionale delle edizioni del XVI secolo
+										</xsl:when>
+										<xsl:when test="nome = 'Edit16'">
+											Censimento nazionale delle edizioni italiane del XVI secolo
+										</xsl:when>
+										<xsl:when test="nome = 'Poo Biblioteche Ecclesistiche'">
+											Polo Biblioteche Ecclesiastiche
+										</xsl:when>
+										<xsl:when
+											test="nome = 'Sistema bibliotecario parmense, http://opacsol.unipr.it/SebinaOpac/Opac'">
+											Catalogo Sistema bibliotecario parmense, http://opac.unipr.it
+										</xsl:when>
+										<xsl:when
+											test="nome = concat('Catalogo edizioni antiche di Terra d', &quot;''&quot;, 'Otranto')">
+											Catalogo edizioni antiche di Terra d'Otranto
+										</xsl:when>
+										<xsl:when
+											test="nome = 'Catalogo collettivo del Sistema Bibliotecario Pratese'">
+											Catalogo collettivo provinciale pratese
+										</xsl:when>
+										<xsl:when test="nome = 'Catalogo italiano dei peridici ACNP'">
+											Archivio collettivo nazionale delle pubblicazioni periodiche
+											- ACNP
+										</xsl:when>
+										<xsl:when test="nome = 'Catalogo nazionale dei periodici ACNP'">
+											Archivio collettivo nazionale delle pubblicazioni periodiche
+											- ACNP
+										</xsl:when>
+										<xsl:when
+											test="nome = 'Archivio collettivo nazionale delle pubblicazioni periodiche'">
+											Archivio collettivo nazionale delle pubblicazioni periodiche
+											- ACNP
+										</xsl:when>
+										<xsl:when
+											test="nome = 'Censimento nazionale delle edizioni italiane del XVI secolo (EDIT16)'">
+											Censimento nazionale delle Edizioni italiane del XVI secolo
+										</xsl:when>
+										<xsl:when test="nome = 'Incunabula Short Title Catalogue'">
+											ISTC - Incunabola Short Title Catalogue
+										</xsl:when>
+										<xsl:when
+											test="nome = concat('Sistema documentario integrato dell', &quot;'&quot;, 'area firoentina')">
+											Sistema documentario integrato dell'area fiorentina
+										</xsl:when>
 										<xsl:when test="nome = ''"></xsl:when>
 										<xsl:otherwise>
 											<xsl:value-of select="nome" />
@@ -310,9 +328,7 @@
 			</xsl:if>
 		</xsl:element>
 	</xsl:template>
-	<!--
-		Patrimonio, basta un solo template, ma c'è da gestire gli asterischi
-	-->
+	<!-- Patrimonio, basta un solo template, ma c'è da gestire gli asterischi -->
 	<xsl:template match="//patrimonio">
 		<xsl:element name="patrimonio">
 			<xsl:if test="materiale">
@@ -363,9 +379,7 @@
 			<xsl:copy-of select="totale-posseduto-ragazzi" />
 		</xsl:element>
 	</xsl:template>
-	<!--
-		Servizi, qui servono diversi template e va gestito l'attributo "attivo"
-	-->
+	<!-- Servizi, qui servono diversi template e va gestito l'attributo "attivo" -->
 	<xsl:template match="//servizi">
 		<xsl:element name="servizi">
 			<xsl:apply-templates select="orario" />
@@ -404,13 +418,10 @@
 					<xsl:copy-of select="informazioni-bibliografiche/*" />
 				</xsl:element>
 			</xsl:if>
-			<!--
-				Gestione dell'accesso a internet. Si è passati ad una gestione più coerente,
-				per cui vanno valorizzati tre flag in base a valori opportuni dell'elemento
-				sorgente, che era una semplice stringa. Inoltre, se presente l'elemento,
-				anche
-				vuoto, va valorizzato l'attributo "attivo"
-			-->
+			<!-- Gestione dell'accesso a internet. Si è passati ad una gestione più 
+				coerente, per cui vanno valorizzati tre flag in base a valori opportuni dell'elemento 
+				sorgente, che era una semplice stringa. Inoltre, se presente l'elemento, 
+				anche vuoto, va valorizzato l'attributo "attivo" -->
 			<xsl:if test="internet">
 				<xsl:element name="internet">
 					<xsl:attribute name="attivo">s</xsl:attribute>
@@ -452,17 +463,12 @@
 			</xsl:if>
 		</xsl:element>
 	</xsl:template>
-	<!--
-		Gestisce anche i limiti di età, ora ridotti ad una stringa libera,
-		controllata solo dai vocabolari. Notare che, siccome modalita-accesso
-		non può essere vuoto, viene controllato che condizioni-accesso non sia
-		vuoto.
-	-->
+	<!-- Gestisce anche i limiti di età, ora ridotti ad una stringa libera, 
+		controllata solo dai vocabolari. Notare che, siccome modalita-accesso non 
+		può essere vuoto, viene controllato che condizioni-accesso non sia vuoto. -->
 	<xsl:template match="accesso">
 		<xsl:element name="accesso">
-			<!--
-				<xsl:copy-of select="aperta"/>
-			-->
+			<!-- <xsl:copy-of select="aperta"/> -->
 			<aperta>s</aperta>
 			<xsl:copy-of select="handicap" />
 			<xsl:if test="condizioni-accesso/*">
@@ -484,28 +490,20 @@
 							<xsl:value-of select="@max" />
 						</xsl:element>
 					</xsl:for-each>
-					<!--
-						Il "modo" appuntamento arriva sempre in due forme (elemento e testo),
-						per cui quella per elemento si scarta.
-						<xsl:if test="condizioni-accesso/appuntamento">
-						<xsl:element name="modo">
-						<xsl:text>appuntamento</xsl:text>
-						</xsl:element>
-						</xsl:if>
-					-->
+					<!-- Il "modo" appuntamento arriva sempre in due forme (elemento e testo), 
+						per cui quella per elemento si scarta. <xsl:if test="condizioni-accesso/appuntamento"> 
+						<xsl:element name="modo"> <xsl:text>appuntamento</xsl:text> </xsl:element> 
+						</xsl:if> -->
 				</xsl:element>
 			</xsl:if>
 		</xsl:element>
 	</xsl:template>
-	<!--
-		Nella versione 1.5 i sistemi erano ancora ripetibili, ma non il loro
-		sottoelemento sistema. Ora invece, giustamente, è proprio il contrario,
-		quindi diversi elementi sistemi devono confluire in uno solo.
-		Il template va invocato, non applicato come di solito, perché altrimenti
-		pescherebbe ogni "sistemi" creando altrettanti elementi omonimi. Manca
-		ancora un test per essere sicuri che almeno un "sistemi" esista,
-		altrimenti ne viene creato uno vuoto.
-	-->
+	<!-- Nella versione 1.5 i sistemi erano ancora ripetibili, ma non il loro 
+		sottoelemento sistema. Ora invece, giustamente, è proprio il contrario, quindi 
+		diversi elementi sistemi devono confluire in uno solo. Il template va invocato, 
+		non applicato come di solito, perché altrimenti pescherebbe ogni "sistemi" 
+		creando altrettanti elementi omonimi. Manca ancora un test per essere sicuri 
+		che almeno un "sistemi" esista, altrimenti ne viene creato uno vuoto. -->
 	<xsl:template name="sistemi">
 		<xsl:if test="sistemi">
 			<xsl:element name="sistemi">
@@ -555,18 +553,18 @@
 			</xsl:when>
 			<xsl:otherwise>
 				<utenti-ammessi>
-					<xsl:value-of select="normalize-space(substring-before($text, $separator))" />
+					<xsl:value-of
+						select="normalize-space(substring-before($text, $separator))" />
 				</utenti-ammessi>
 				<xsl:call-template name="tokenize">
-					<xsl:with-param name="text" select="substring-after($text, $separator)" />
+					<xsl:with-param name="text"
+						select="substring-after($text, $separator)" />
 				</xsl:call-template>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
-	<!--
-		Orario, qualche elemento contenitore. Sarebbe opportuno non copiare elementi
-		"periodo" vuoti, ma comunque non disturbano l'import
-	-->
+	<!-- Orario, qualche elemento contenitore. Sarebbe opportuno non copiare 
+		elementi "periodo" vuoti, ma comunque non disturbano l'import -->
 	<xsl:template match="//orario">
 		<xsl:element name="orario">
 			<xsl:copy-of select="ufficiale" />
@@ -583,7 +581,7 @@
 			<xsl:copy-of select="settimane-apertura" />
 		</xsl:element>
 	</xsl:template>
-	<!-- sezione amministrativa, va copiato tutto eccetto la funzione-obiettivo;
+	<!-- sezione amministrativa, va copiato tutto eccetto la funzione-obiettivo; 
 		sicuramente il template si può fare molto meglio di così -->
 	<xsl:template match="//amministrativa">
 		<xsl:element name="amministrativa">
@@ -610,13 +608,10 @@
 			<xsl:copy-of select="partita-iva" />
 		</xsl:element>
 	</xsl:template>
-	<!--
-		I cataloghi generali con molteplici punti d'accesso sono spesso
-		arrivati vuoti. Quelli realmente tali acquistano
-		forma/digitale/supporto=online, e quelli che hanno già questo elemento
-		= "O" lo cambiano in "online", copiando eventuali altri contenuti.
-		Tutti gli altri sono copiati come sono.
-	-->
+	<!-- I cataloghi generali con molteplici punti d'accesso sono spesso arrivati 
+		vuoti. Quelli realmente tali acquistano forma/digitale/supporto=online, e 
+		quelli che hanno già questo elemento = "O" lo cambiano in "online", copiando 
+		eventuali altri contenuti. Tutti gli altri sono copiati come sono. -->
 	<xsl:template match="//catalogo-generale">
 		<xsl:choose>
 			<xsl:when test="contains(./@tipo, 'olteplici') and not(*)">
@@ -629,7 +624,8 @@
 					</forme>
 				</xsl:element>
 			</xsl:when>
-			<xsl:when test="contains(./@tipo, 'olteplici') and (forme/digitale/supporto = 'O')">
+			<xsl:when
+				test="contains(./@tipo, 'olteplici') and (forme/digitale/supporto = 'O')">
 				<xsl:element name="catalogo-generale">
 					<xsl:attribute name="tipo">Molteplici punti d'accesso</xsl:attribute>
 					<forme>
@@ -648,16 +644,16 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
-	
+
 	<xsl:template match="forme/schede">
 		<schede>
 			<xsl:if test="@percentuale">
 				<xsl:attribute name="percentuale">
 					<xsl:if test="contains(@percentuale, '%')">
-						<xsl:value-of select="translate(@percentuale, '%', '')"/>
+						<xsl:value-of select="translate(@percentuale, '%', '')" />
 					</xsl:if>
 					<xsl:if test="not(contains(@percentuale, '%'))">
-						<xsl:value-of select="@percentuale"/>
+						<xsl:value-of select="@percentuale" />
 					</xsl:if>
 				</xsl:attribute>
 			</xsl:if>
